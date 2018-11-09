@@ -1,8 +1,10 @@
-package ru.xunto.roleplaychat.features;
+package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.features.LabeledTemplate;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
 import java.util.HashMap;
@@ -15,7 +17,8 @@ public class ActionEndpoint extends Endpoint {
         colors.put("username", TextFormatting.GREEN);
     }
 
-    private Template template = new Template("* {{ username }} {{ text }}");
+    private ITemplate template = new LabeledTemplate(new Template("* {{ username }} {{ text }}"),
+        new Template("* {{ username }} ({{ label }}) {{ text }}"));
 
     @Override public boolean matchEndpoint(Environment environment) {
         return environment.getVariables().get("text").startsWith("*");

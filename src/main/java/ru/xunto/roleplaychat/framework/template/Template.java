@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class Template {
+public class Template implements ITemplate {
     private List<TemplatePart> tokens = new ArrayList<>();
 
     public Template(String template) {

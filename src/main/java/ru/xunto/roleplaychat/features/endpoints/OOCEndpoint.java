@@ -1,35 +1,37 @@
-package ru.xunto.roleplaychat.features;
+package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.features.LabeledTemplate;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class GmOOCEndpoint extends Endpoint {
+public class OOCEndpoint extends Endpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 
     static {
-        colors.put("default", TextFormatting.GOLD);
         colors.put("username", TextFormatting.GREEN);
+        colors.put("default", TextFormatting.LIGHT_PURPLE);
         colors.put("label", TextFormatting.WHITE);
     }
 
-    private Template template = new Template("{{ username }} {{label|(to GM):}} (( {{ text }} ))");
+    private ITemplate template =
+        new LabeledTemplate(new Template("{{ username }} {{label | (OOC):}} {{ text }}"),
+            new Template("{{ username }} ({{ label }}): {{ text }}"));
 
     @Override public boolean matchEndpoint(Environment environment) {
-        return environment.getVariables().get("text").startsWith("-");
+        return environment.getVariables().get("text").startsWith("_");
     }
 
     @Override public void processEndpoint(Environment environment) {
-        Map<String, String> variables = environment.getVariables();
-        String text = variables.get("text").substring(1).trim();
-        variables.put("text", text);
+        String text = environment.getVariables().get("text").substring(1).trim();
 
         environment.setTemplate(template);
+        environment.getVariables().put("text", text);
         environment.getColors().putAll(colors);
-        environment.getRecipients().clear();
     }
 }

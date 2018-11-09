@@ -2,8 +2,11 @@ package ru.xunto.roleplaychat.framework;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentBase;
-import ru.xunto.roleplaychat.features.*;
-import ru.xunto.roleplaychat.framework.api.Endpoint;
+import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.DefaultEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
+import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
+import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -16,7 +19,6 @@ public class Core {
     public final static Core instance = new Core();
 
     private List<Middleware> middleware = new ArrayList<>();
-    private List<Endpoint> endpoints = new ArrayList<>();
 
     private Core() {
         this.register(new DistanceMiddleware());
@@ -36,10 +38,6 @@ public class Core {
     }
 
     public void process(Request request, Environment response) {
-        for (Endpoint endpoint : endpoints) {
-            endpoint.process(request, response);
-        }
-
         for (Middleware middleware : this.middleware) {
             middleware.process(request, response);
         }
@@ -54,11 +52,6 @@ public class Core {
         for (EntityPlayer recipient : response.getRecipients()) {
             recipient.sendMessage(components);
         }
-    }
-
-    public void register(Endpoint newEndpoint) {
-        endpoints.add(newEndpoint);
-        endpoints.sort(Comparator.comparing(Middleware::getPriority));
     }
 
     public void register(Middleware newMiddleware) {

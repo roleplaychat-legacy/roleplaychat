@@ -1,4 +1,4 @@
-package ru.xunto.roleplaychat.features;
+package ru.xunto.roleplaychat.features.middleware;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;

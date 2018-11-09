@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.framework.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class Environment implements Cloneable {
 
     private Set<EntityPlayer> recipients = new HashSet<>();
 
-    private Template template = new Template("{{ username }}: {{ text }}");
+    private ITemplate template = new Template("{{ username }}: {{ text }}");
 
     private boolean processed = false;
 
@@ -39,11 +40,11 @@ public class Environment implements Cloneable {
         return recipients;
     }
 
-    public Template getTemplate() {
+    public ITemplate getTemplate() {
         return template;
     }
 
-    public void setTemplate(Template template) {
+    public void setTemplate(ITemplate template) {
         this.template = template;
     }
 
