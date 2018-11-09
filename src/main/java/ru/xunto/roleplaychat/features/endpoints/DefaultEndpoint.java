@@ -19,7 +19,7 @@ public class DefaultEndpoint extends Endpoint {
     }
 
     private ITemplate template = new LabeledTemplate(new Template("{{ username }}: {{ text }}"),
-        new Template("{{ username }} ({{ label }}): {{ text }}"));
+        new Template("{{ username }} {{ label }}: {{ text }}"));
 
     @Override public boolean matchEndpoint(Environment environment) {
         return true;

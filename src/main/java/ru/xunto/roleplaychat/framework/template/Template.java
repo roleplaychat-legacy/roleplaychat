@@ -31,8 +31,8 @@ public class Template implements ITemplate {
             String varDefault = "undefined";
             if (var.contains("|")) {
                 String[] split = var.split(Pattern.quote("|"), 2);
-                var = split[0];
-                varDefault = split[1];
+                var = split[0].trim();
+                varDefault = split[1].trim();
             }
 
             tokens.add(new VariableTemplatePart(var, varDefault));

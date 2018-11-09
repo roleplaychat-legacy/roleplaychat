@@ -5,5 +5,7 @@ public abstract class Middleware {
         return Priority.HIGH;
     }
 
+    public abstract Stage getStage();
+
     public abstract void process(Request request, Environment environment);
 }

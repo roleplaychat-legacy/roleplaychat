@@ -7,22 +7,22 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
-import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.api.Stage;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class ToGmMiddleware extends Middleware {
-
-    @Override public Priority getPriority() {
-        return Priority.LOW;
-    }
-
     @Override public void process(Request request, Environment environment) {
         Environment newEnvironment = environment.clone();
 
-        newEnvironment.getColors().put("default", TextFormatting.GRAY);
+        Map<String, TextFormatting> colors = newEnvironment.getColors();
+
+        if (colors.get("default") == null) {
+            newEnvironment.getColors().put("default", TextFormatting.GRAY);
+        }
 
         Set<EntityPlayer> originalRecipients = environment.getRecipients();
         Set<EntityPlayer> recipients = newEnvironment.getRecipients();
@@ -39,5 +39,9 @@ public class ToGmMiddleware extends Middleware {
         }
 
         Core.instance.send(newEnvironment);
+    }
+
+    @Override public Stage getStage() {
+        return Stage.POST;
     }
 }

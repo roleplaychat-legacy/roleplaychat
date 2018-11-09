@@ -4,10 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.xunto.roleplaychat.features.Distance;
-import ru.xunto.roleplaychat.framework.api.Environment;
-import ru.xunto.roleplaychat.framework.api.Middleware;
-import ru.xunto.roleplaychat.framework.api.Priority;
-import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +49,6 @@ public class DistanceMiddleware extends Middleware {
         int minus = DistanceMiddleware.countRangeShifts(request.getText(), '=');
 
         Distance range = DEFAULT_RANGE.shift(plus - minus);
-        System.out.println(range);
 
         World world = request.getWorld();
         Vec3d position = request.getRequester().getPositionVector();
@@ -68,13 +64,17 @@ public class DistanceMiddleware extends Middleware {
 
         String label = stringify(range);
         if (label != null)
-            variables.put("label", label);
+            variables.put("label", "(" + label + ")");
 
         variables.put("text", request.getText().substring(minus + plus));
     }
 
     @Override public Priority getPriority() {
         return Priority.HIGH;
+    }
+
+    @Override public Stage getStage() {
+        return Stage.PRE;
     }
 
 }

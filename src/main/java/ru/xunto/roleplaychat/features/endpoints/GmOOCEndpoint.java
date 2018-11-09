@@ -17,7 +17,7 @@ public class GmOOCEndpoint extends Endpoint {
         colors.put("label", TextFormatting.WHITE);
     }
 
-    private Template template = new Template("{{ username }} (to GM): (( {{ text }} ))");
+    private Template template = new Template("{{ username }} {{ label | (GM): }} (( {{ text }} ))");
 
     @Override public boolean matchEndpoint(Environment environment) {
         return environment.getVariables().get("text").startsWith("-");

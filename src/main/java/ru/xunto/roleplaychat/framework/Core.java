@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentBase;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.DefaultEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
@@ -12,7 +13,6 @@ import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Core {
@@ -27,6 +27,7 @@ public class Core {
         this.register(new DefaultEndpoint());
         this.register(new OOCEndpoint());
         this.register(new ActionEndpoint());
+        this.register(new GmOOCEndpoint());
     }
 
     public void process(Request request) {
@@ -56,6 +57,13 @@ public class Core {
 
     public void register(Middleware newMiddleware) {
         middleware.add(newMiddleware);
-        middleware.sort(Comparator.comparing(Middleware::getPriority));
+
+        middleware.sort((o1, o2) -> {
+            int compare = o1.getStage().compareTo(o2.getStage());
+            if (compare != 0)
+                return compare;
+
+            return o1.getPriority().compareTo(o2.getPriority());
+        });
     }
 }

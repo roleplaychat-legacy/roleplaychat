@@ -5,8 +5,8 @@ public abstract class Endpoint extends Middleware {
 
     public abstract void processEndpoint(Environment environment);
 
-    @Override public Priority getPriority() {
-        return Priority.LOW;
+    @Override public Stage getStage() {
+        return Stage.ENDPOINT;
     }
 
     @Override public void process(Request request, Environment environment) {

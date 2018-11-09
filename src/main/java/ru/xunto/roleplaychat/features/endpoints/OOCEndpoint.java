@@ -1,7 +1,6 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
-import ru.xunto.roleplaychat.features.LabeledTemplate;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
@@ -19,9 +18,7 @@ public class OOCEndpoint extends Endpoint {
         colors.put("label", TextFormatting.WHITE);
     }
 
-    private ITemplate template =
-        new LabeledTemplate(new Template("{{ username }} {{label | (OOC):}} {{ text }}"),
-            new Template("{{ username }} ({{ label }}): {{ text }}"));
+    private ITemplate template = new Template("{{ username }} {{ label | (OOC): }} (({{ text }}))");
 
     @Override public boolean matchEndpoint(Environment environment) {
         return environment.getVariables().get("text").startsWith("_");
