@@ -9,22 +9,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GmOOCEndpoint extends Endpoint {
-    private Template template =
-        new Template("{{ username }} {{label|(to GM):}} (( {{ text }} ))", TextFormatting.GOLD);
+    private static final Map<String, TextFormatting> colors = new HashMap<>();
+
+    static {
+        colors.put("default", TextFormatting.GOLD);
+        colors.put("username", TextFormatting.GREEN);
+        colors.put("label", TextFormatting.WHITE);
+    }
+
+    private Template template = new Template("{{ username }} {{label|(to GM):}} (( {{ text }} ))");
 
     @Override public boolean matchEndpoint(Environment environment) {
-        return environment.variables.get("text").startsWith("-");
+        return environment.getVariables().get("text").startsWith("-");
     }
 
     @Override public void processEndpoint(Environment environment) {
-        Map<String, TextFormatting> colors = new HashMap<>();
-        colors.put("username", TextFormatting.GREEN);
-        colors.put("label", TextFormatting.WHITE);
+        Map<String, String> variables = environment.getVariables();
+        String text = variables.get("text").substring(1).trim();
+        variables.put("text", text);
 
-        String text = environment.variables.get("text").substring(1).trim();
-        environment.variables.put("text", text);
-        environment.setComponent(template.build(environment.variables, colors));
-
+        environment.setTemplate(template);
+        environment.getColors().putAll(colors);
         environment.getRecipients().clear();
     }
 }

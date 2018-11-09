@@ -10,11 +10,9 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Template {
-    private final TextFormatting defaultColor;
     private List<TemplatePart> tokens = new ArrayList<>();
 
-    public Template(String template, TextFormatting defaultColor) {
-        this.defaultColor = defaultColor;
+    public Template(String template) {
         String left = template;
 
         while (true) {
@@ -45,7 +43,7 @@ public class Template {
 
     public TextComponentBase build(Map<String, String> values, Map<String, TextFormatting> colors) {
         TextComponentBase parts = new TextComponentString("");
-        parts.getStyle().setColor(defaultColor);
+        parts.getStyle().setColor(colors.getOrDefault("default", TextFormatting.WHITE));
 
         for (TemplatePart token : tokens) {
             parts.appendSibling(token.build(values, colors));

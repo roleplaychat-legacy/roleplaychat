@@ -45,8 +45,7 @@ public class DistanceMiddleware extends Middleware {
             }
         }
 
-        environment.variables.put("text", request.getText().substring(minus + plus));
-        environment.setRecipients(recipients);
+        environment.getVariables().put("text", request.getText().substring(minus + plus));
     }
 
     @Override public Priority getPriority() {

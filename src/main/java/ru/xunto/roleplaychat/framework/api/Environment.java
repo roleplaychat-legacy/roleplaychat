@@ -1,18 +1,22 @@
 package ru.xunto.roleplaychat.framework.api;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentBase;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.framework.template.Template;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Environment {
-    public Map<String, String> variables = new HashMap<>();
+public class Environment implements Cloneable {
+    private Map<String, String> variables = new HashMap<>();
+    private Map<String, TextFormatting> colors = new HashMap<>();
+
     private Set<EntityPlayer> recipients = new HashSet<>();
-    private TextComponentBase component = new TextComponentString("");
+
+    private Template template = new Template("{{ username }}: {{ text }}");
+
     private boolean processed = false;
 
     public boolean isProcessed() {
@@ -23,19 +27,36 @@ public class Environment {
         this.processed = processed;
     }
 
+    public Map<String, TextFormatting> getColors() {
+        return colors;
+    }
+
+    public Map<String, String> getVariables() {
+        return variables;
+    }
+
     public Set<EntityPlayer> getRecipients() {
         return recipients;
     }
 
-    public void setRecipients(Set<EntityPlayer> recipients) {
-        this.recipients = recipients;
+    public Template getTemplate() {
+        return template;
     }
 
-    public TextComponentBase getComponent() {
-        return component;
+    public void setTemplate(Template template) {
+        this.template = template;
     }
 
-    public void setComponent(TextComponentBase component) {
-        this.component = component;
+    @Override public Environment clone() {
+        try {
+            Environment environment = (Environment) super.clone();
+            environment.colors = new HashMap<>(colors);
+            environment.variables = new HashMap<>(variables);
+            environment.recipients = new HashSet<>(recipients);
+
+            return environment;
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 }

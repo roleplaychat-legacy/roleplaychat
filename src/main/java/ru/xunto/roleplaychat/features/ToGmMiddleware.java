@@ -1,26 +1,43 @@
 package ru.xunto.roleplaychat.features;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.server.permission.PermissionAPI;
+import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
+import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 import java.util.Objects;
 import java.util.Set;
 
 public class ToGmMiddleware extends Middleware {
+
+    @Override public Priority getPriority() {
+        return Priority.LOW;
+    }
+
     @Override public void process(Request request, Environment environment) {
-        Set<EntityPlayer> recipients = environment.getRecipients();
+        Environment newEnvironment = environment.clone();
+
+        newEnvironment.getColors().put("default", TextFormatting.GRAY);
+
+        Set<EntityPlayer> originalRecipients = environment.getRecipients();
+        Set<EntityPlayer> recipients = newEnvironment.getRecipients();
+        recipients.clear();
 
         World[] worlds = Objects.requireNonNull(request.getWorld().getMinecraftServer()).worlds;
 
         for (World world : worlds) {
             for (EntityPlayer player : world.playerEntities) {
-                if (PermissionAPI.hasPermission(player, "gm"))
+                boolean allowed = PermissionAPI.hasPermission(player, "gm");
+                if (allowed && !originalRecipients.contains(player))
                     recipients.add(player);
             }
         }
+
+        Core.instance.send(newEnvironment);
     }
 }

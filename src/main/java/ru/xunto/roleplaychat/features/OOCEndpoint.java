@@ -9,20 +9,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OOCEndpoint extends Endpoint {
-    private Template template = new Template("{{ username }} {{label|(OOC):}} (( {{ text }} ))",
-        TextFormatting.LIGHT_PURPLE);
+    private static final Map<String, TextFormatting> colors = new HashMap<>();
+
+    static {
+        colors.put("username", TextFormatting.GREEN);
+        colors.put("label", TextFormatting.WHITE);
+    }
+
+    private Template template = new Template("{{ username }} {{label|(OOC):}} (( {{ text }} ))");
 
     @Override public boolean matchEndpoint(Environment environment) {
-        return environment.variables.get("text").startsWith("_");
+        return environment.getVariables().get("text").startsWith("_");
     }
 
     @Override public void processEndpoint(Environment environment) {
-        Map<String, TextFormatting> colors = new HashMap<>();
-        colors.put("username", TextFormatting.GREEN);
-        colors.put("label", TextFormatting.WHITE);
+        String text = environment.getVariables().get("text").substring(1).trim();
 
-        String text = environment.variables.get("text").substring(1).trim();
-        environment.variables.put("text", text);
-        environment.setComponent(template.build(environment.variables, colors));
+        environment.setTemplate(template);
+        environment.getVariables().put("text", text);
+        environment.getColors().putAll(colors);
     }
 }

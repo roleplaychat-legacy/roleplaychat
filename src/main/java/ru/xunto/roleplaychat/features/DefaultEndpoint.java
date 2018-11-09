@@ -10,17 +10,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DefaultEndpoint extends Endpoint {
-    private Template template = new Template("{{ username }}: {{ text }}", TextFormatting.WHITE);
+    private static final Map<String, TextFormatting> colors = new HashMap<>();
+
+    static {
+        colors.put("username", TextFormatting.GREEN);
+    }
+
+    private Template template = new Template("{{ username }}: {{ text }}");
 
     @Override public boolean matchEndpoint(Environment environment) {
         return true;
     }
 
     @Override public void processEndpoint(Environment response) {
-        Map<String, TextFormatting> colors = new HashMap<>();
-        colors.put("username", TextFormatting.GREEN);
-
-        response.setComponent(template.build(response.variables, colors));
+        response.setTemplate(template);
+        response.getColors().putAll(colors);
     }
 
     @Override public Priority getPriority() {

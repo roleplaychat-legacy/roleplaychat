@@ -9,18 +9,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActionEndpoint extends Endpoint {
-    private Template template = new Template("* {{ username }} {{ text }}", TextFormatting.WHITE);
+    private static final Map<String, TextFormatting> colors = new HashMap<>();
+
+    static {
+        colors.put("username", TextFormatting.GREEN);
+    }
+
+    private Template template = new Template("* {{ username }} {{ text }}");
 
     @Override public boolean matchEndpoint(Environment environment) {
-        return environment.variables.get("text").startsWith("*");
+        return environment.getVariables().get("text").startsWith("*");
     }
 
     @Override public void processEndpoint(Environment environment) {
-        Map<String, TextFormatting> colors = new HashMap<>();
-        colors.put("username", TextFormatting.GREEN);
+        String text = environment.getVariables().get("text").substring(1).trim();
 
-        String text = environment.variables.get("text").substring(1).trim();
-        environment.variables.put("text", text);
-        environment.setComponent(template.build(environment.variables, colors));
+        environment.setTemplate(template);
+        environment.getVariables().put("text", text);
+        environment.getColors().putAll(colors);
     }
 }
