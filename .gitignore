@@ -1,5 +1,6 @@
 .gitignore
 .gradle/
 .idea/
-RoleplayChatForge.iml
 run/
+*.iml
+build/
