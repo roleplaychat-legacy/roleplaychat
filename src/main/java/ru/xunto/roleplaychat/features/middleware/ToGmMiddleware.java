@@ -21,7 +21,7 @@ public class ToGmMiddleware extends Middleware {
         Map<String, TextFormatting> colors = newEnvironment.getColors();
 
         if (colors.get("default") == null) {
-            newEnvironment.getColors().put("default", TextFormatting.GRAY);
+            newEnvironment.getColors().put("default", TextFormatting.DARK_GRAY);
         }
 
         Set<EntityPlayer> originalRecipients = environment.getRecipients();

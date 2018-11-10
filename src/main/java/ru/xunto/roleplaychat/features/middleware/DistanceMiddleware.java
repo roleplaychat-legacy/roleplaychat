@@ -17,15 +17,15 @@ public class DistanceMiddleware extends Middleware {
             case QUITE_WHISPER:
                 return "едва слышно";
             case WHISPER:
-                return "шепчет";
+                return "очень тихо";
             case QUITE:
-                return "вполголоса";
+                return "тихо";
             case LOUD:
-                return "восклицает";
+                return "громко";
             case SHOUT:
-                return "кричит";
+                return "очень громко";
             case LOUD_SHOUT:
-                return "орёт";
+                return "громогласно";
             default:
                 return null;
         }

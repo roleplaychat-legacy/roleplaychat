@@ -18,14 +18,19 @@ public class RoleplayChat {
     public static final String NAME = "@MODID@";
     public static final String VERSION = "@VERSION@";
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ServerChatEvent event) {
         ITextComponent component = Core.instance.process(
             new Request(event.getMessage(), event.getPlayer(), event.getPlayer().getServerWorld()));
 
         event.setComponent(component);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void cancelChatMessage(ServerChatEvent event) {
         event.setCanceled(true);
     }
+
 
     @Mod.EventHandler public void startServer(FMLServerStartingEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
