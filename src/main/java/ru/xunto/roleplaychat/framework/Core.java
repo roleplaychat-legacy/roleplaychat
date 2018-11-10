@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.framework;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentBase;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.DefaultEndpoint;
@@ -30,29 +31,31 @@ public class Core {
         this.register(new GmOOCEndpoint());
     }
 
-    public void process(Request request) {
+    public ITextComponent process(Request request) {
         Environment response = new Environment();
         response.getVariables().put("username", request.getRequester().getName());
         response.getVariables().put("text", request.getText());
 
-        this.process(request, response);
+        return this.process(request, response);
     }
 
-    public void process(Request request, Environment response) {
+    public ITextComponent process(Request request, Environment response) {
         for (Middleware middleware : this.middleware) {
             middleware.process(request, response);
         }
 
-        this.send(response);
+        return this.send(response);
     }
 
-    public void send(Environment response) {
+    public ITextComponent send(Environment response) {
         TextComponentBase components =
             response.getTemplate().build(response.getVariables(), response.getColors());
 
         for (EntityPlayer recipient : response.getRecipients()) {
             recipient.sendMessage(components);
         }
+
+        return components;
     }
 
     public void register(Middleware newMiddleware) {

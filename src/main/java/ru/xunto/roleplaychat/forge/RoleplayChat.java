@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.forge;
 
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,8 +20,10 @@ public class RoleplayChat {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatMessage(ServerChatEvent event) {
-        Core.instance.process(
+        ITextComponent component = Core.instance.process(
             new Request(event.getMessage(), event.getPlayer(), event.getPlayer().getServerWorld()));
+
+        event.setComponent(component);
         event.setCanceled(true);
     }
 
