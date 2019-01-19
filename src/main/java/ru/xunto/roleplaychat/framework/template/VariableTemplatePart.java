@@ -1,8 +1,8 @@
 package ru.xunto.roleplaychat.framework.template;
 
-import net.minecraft.util.text.TextComponentBase;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Map;
 
@@ -16,9 +16,9 @@ public class VariableTemplatePart extends TemplatePart {
     }
 
     @Override
-    public TextComponentBase build(Map<String, String> values, Map<String, TextFormatting> colors) {
-        TextComponentBase component =
-            new TextComponentString(values.getOrDefault(this.var, varDefault));
+    public ITextComponent build(Map<String, String> values, Map<String, TextFormatting> colors) {
+        String text = values.getOrDefault(this.var, varDefault);
+        ITextComponent component = ForgeHooks.newChatWithLinks(text);
         component.getStyle().setColor(colors.get(this.var));
         return component;
     }

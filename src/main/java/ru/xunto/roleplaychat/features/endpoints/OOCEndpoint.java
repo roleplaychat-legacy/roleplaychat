@@ -18,7 +18,8 @@ public class OOCEndpoint extends Endpoint {
         colors.put("label", TextFormatting.WHITE);
     }
 
-    private ITemplate template = new Template("{{ username }} {{ label | (OOC): }} (({{ text }}))");
+    private ITemplate template =
+        new Template("{{ username }} {{ label | (OOC): }} (( {{ text }} ))");
 
     @Override public boolean matchEndpoint(Environment environment) {
         return environment.getVariables().get("text").startsWith("_");
