@@ -3,13 +3,13 @@ package ru.xunto.roleplaychat.features.middleware;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import ru.xunto.roleplaychat.features.Distance;
 import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.Map;
 import java.util.Set;
 
 public class DistanceMiddleware extends Middleware {
+    public final static DistanceMiddleware INSTANCE = new DistanceMiddleware();
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
     private static String stringify(Distance range) {
@@ -41,14 +41,26 @@ public class DistanceMiddleware extends Middleware {
         return shift;
     }
 
+    public Environment markDistance(Environment environment, Distance distance) {
+        environment.getVariables().put("distance", Integer.toString(distance.getIndex()));
+        return environment;
+    }
+
     @Override public void process(Request request, Environment environment) {
         if (!environment.getRecipients().isEmpty())
             return;
 
-        int plus = DistanceMiddleware.countRangeShifts(request.getText(), '!');
-        int minus = DistanceMiddleware.countRangeShifts(request.getText(), '=');
-
-        Distance range = DEFAULT_RANGE.shift(plus - minus);
+        Distance range;
+        String text = request.getText();
+        if (environment.getVariables().containsKey("distance")) {
+            String range_string = environment.getVariables().get("distance");
+            range = Distance.get(Integer.valueOf(range_string));
+        } else {
+            int plus = DistanceMiddleware.countRangeShifts(request.getText(), '!');
+            int minus = DistanceMiddleware.countRangeShifts(request.getText(), '=');
+            range = DEFAULT_RANGE.shift(plus - minus);
+            text = text.substring(minus + plus);
+        }
 
         World world = request.getWorld();
         Vec3d position = request.getRequester().getPositionVector();
@@ -66,7 +78,7 @@ public class DistanceMiddleware extends Middleware {
         if (label != null)
             variables.put("label", "(" + label + ")");
 
-        variables.put("text", request.getText().substring(minus + plus));
+        variables.put("text", text);
     }
 
     @Override public Priority getPriority() {
@@ -77,4 +89,41 @@ public class DistanceMiddleware extends Middleware {
         return Stage.PRE;
     }
 
+    public enum Distance {
+        QUITE_WHISPER(0, 1), WHISPER(1, 3), QUITE(2, 9), NORMAL(3, 18), LOUD(4, 36), SHOUT(5,
+            60), LOUD_SHOUT(6, 80);
+
+        private static final Distance[] VALUES = new Distance[7];
+
+        static {
+            for (Distance value : Distance.values()) {
+                VALUES[value.index] = value;
+            }
+        }
+
+        private final int index;
+        private final int distance;
+
+        Distance(int index, int distance) {
+            this.index = index;
+            this.distance = distance;
+        }
+
+        public static Distance get(int index) {
+            return VALUES[index];
+        }
+
+        public Distance shift(int shift) {
+            int index = Math.max(Math.min(this.index + shift, VALUES.length - 1), 0);
+            return Distance.VALUES[index];
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public int getDistance() {
+            return distance;
+        }
+    }
 }
