@@ -21,8 +21,8 @@ public class GmActionEndpoint extends Endpoint {
     private ITemplate template = new Template("*** {{text}} ***");
 
     @Override public boolean matchEndpoint(Request request, Environment environment) {
-        return PermissionAPI.hasPermission(request.getRequester(), "gm") && environment
-            .getVariables().get("text").startsWith("#");
+        return environment.getVariables().get("text").startsWith("#") && PermissionAPI
+            .hasPermission(request.getRequester(), "gm");
     }
 
     @Override public void processEndpoint(Environment environment) {
