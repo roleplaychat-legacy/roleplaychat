@@ -3,10 +3,7 @@ package ru.xunto.roleplaychat.framework;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentBase;
-import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
-import ru.xunto.roleplaychat.features.endpoints.DefaultEndpoint;
-import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
-import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.*;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
@@ -22,13 +19,14 @@ public class Core {
     private List<Middleware> middleware = new ArrayList<>();
 
     private Core() {
-        this.register(new DistanceMiddleware());
+        this.register(DistanceMiddleware.INSTANCE);
         this.register(new ToGmMiddleware());
 
         this.register(new DefaultEndpoint());
         this.register(new OOCEndpoint());
         this.register(new ActionEndpoint());
         this.register(new GmOOCEndpoint());
+        this.register(new GmActionEndpoint());
     }
 
     public ITextComponent process(Request request) {

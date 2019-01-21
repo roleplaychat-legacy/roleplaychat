@@ -4,6 +4,7 @@ import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.features.LabeledTemplate;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
@@ -23,7 +24,7 @@ public class ActionEndpoint extends Endpoint {
         new LabeledTemplate(new Template("* {{ username }} {{ action }} * {{ text }}"),
             new Template("* {{ username }} {{ label }}  {{ action }} * {{ text }}"));
 
-    @Override public boolean matchEndpoint(Environment environment) {
+    @Override public boolean matchEndpoint(Request request, Environment environment) {
         return environment.getVariables().get("text").startsWith("*");
     }
 

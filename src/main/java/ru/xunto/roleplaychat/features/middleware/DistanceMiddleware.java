@@ -12,6 +12,9 @@ public class DistanceMiddleware extends Middleware {
     public final static DistanceMiddleware INSTANCE = new DistanceMiddleware();
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
+    private DistanceMiddleware() {
+    }
+
     private static String stringify(Distance range) {
         switch (range) {
             case QUITE_WHISPER:
