@@ -9,14 +9,15 @@ import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
-import ru.xunto.roleplaychat.framework.state.StringProperty;
+import ru.xunto.roleplaychat.framework.state.IProperty;
+import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Core {
-    public final static StringProperty USERNAME = new StringProperty("username");
-    public final static StringProperty TEXT = new StringProperty("text");
+    public final static IProperty<String> USERNAME = new Property<>("username");
+    public final static IProperty<String> TEXT = new Property<>("text");
 
     private List<Middleware> middleware = new ArrayList<>();
 

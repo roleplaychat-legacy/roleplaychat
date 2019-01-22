@@ -4,13 +4,13 @@ import net.minecraft.util.text.TextComponentBase;
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
-import ru.xunto.roleplaychat.framework.state.StringProperty;
+import ru.xunto.roleplaychat.framework.state.Property;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
 
 import java.util.Map;
 
 public class LabeledTemplate implements ITemplate {
-    public static final IProperty<String> LABEL = new StringProperty("label");
+    public static final IProperty<String> LABEL = new Property<>("label");
 
     private final ITemplate template;
     private final ITemplate labeledTemplate;

@@ -8,7 +8,7 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
-import ru.xunto.roleplaychat.framework.state.StringProperty;
+import ru.xunto.roleplaychat.framework.state.Property;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ActionEndpoint extends Endpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
-    public static final IProperty<String> ACTION = new StringProperty("action");
+    public static final IProperty<String> ACTION = new Property<>("action");
 
     static {
         colors.put("default", TextFormatting.GRAY);
