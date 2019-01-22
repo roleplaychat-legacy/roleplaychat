@@ -1,4 +1,4 @@
-package ru.xunto.roleplaychat.framework.template;
+package ru.xunto.roleplaychat.framework.template.tokens;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -6,10 +6,10 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.Map;
 
-public class TextTemplatePart extends TemplatePart {
+public class TextToken extends Token {
     private String text;
 
-    TextTemplatePart(String text) {
+    public TextToken(String text) {
         this.text = text;
     }
 

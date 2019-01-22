@@ -3,6 +3,9 @@ package ru.xunto.roleplaychat.framework.template;
 import net.minecraft.util.text.TextComponentBase;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.framework.template.tokens.TextToken;
+import ru.xunto.roleplaychat.framework.template.tokens.Token;
+import ru.xunto.roleplaychat.framework.template.tokens.VariableToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Template implements ITemplate {
-    private List<TemplatePart> tokens = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
 
     public Template(String template) {
         String left = template;
@@ -26,7 +29,7 @@ public class Template implements ITemplate {
             String var = left.substring(begin + 2, end).trim();
             left = left.substring(end + 2);
 
-            tokens.add(new TextTemplatePart(text));
+            tokens.add(new TextToken(text));
 
             String varDefault = "undefined";
             if (var.contains("|")) {
@@ -35,17 +38,17 @@ public class Template implements ITemplate {
                 varDefault = split[1].trim();
             }
 
-            tokens.add(new VariableTemplatePart(var, varDefault));
+            tokens.add(new VariableToken(var, varDefault));
         }
 
-        tokens.add(new TextTemplatePart(left));
+        tokens.add(new TextToken(left));
     }
 
     public TextComponentBase build(Map<String, String> values, Map<String, TextFormatting> colors) {
         TextComponentBase parts = new TextComponentString("");
         parts.getStyle().setColor(colors.getOrDefault("default", TextFormatting.WHITE));
 
-        for (TemplatePart token : tokens) {
+        for (Token token : tokens) {
             parts.appendSibling(token.build(values, colors));
         }
         return parts;
