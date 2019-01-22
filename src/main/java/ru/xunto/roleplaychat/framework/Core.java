@@ -15,14 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Core {
-    public final static Core instance = new Core();
-
     public final static StringProperty USERNAME = new StringProperty("username");
     public final static StringProperty TEXT = new StringProperty("text");
 
     private List<Middleware> middleware = new ArrayList<>();
 
-    private Core() {
+    public Core() {
         this.register(DistanceMiddleware.INSTANCE);
         this.register(new ToGmMiddleware());
 
@@ -41,19 +39,21 @@ public class Core {
         return this.process(request, response);
     }
 
-    public ITextComponent process(Request request, Environment response) {
+    public ITextComponent process(Request request, Environment environment) {
+        environment.setCore(this);
+
         for (Middleware middleware : this.middleware) {
-            middleware.process(request, response);
+            middleware.process(request, environment);
         }
 
-        return this.send(response);
+        return this.send(environment);
     }
 
-    public ITextComponent send(Environment response) {
+    public ITextComponent send(Environment environment) {
         TextComponentBase components =
-            response.getTemplate().build(response.getState(), response.getColors());
+            environment.getTemplate().build(environment.getState(), environment.getColors());
 
-        for (EntityPlayer recipient : response.getRecipients()) {
+        for (EntityPlayer recipient : environment.getRecipients()) {
             recipient.sendMessage(components);
         }
 

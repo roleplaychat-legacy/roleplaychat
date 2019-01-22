@@ -18,9 +18,11 @@ public class RoleplayChat {
     public static final String NAME = "@MODID@";
     public static final String VERSION = "@VERSION@";
 
+    public final static Core chat = new Core();
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ServerChatEvent event) {
-        ITextComponent component = Core.instance.process(
+        ITextComponent component = chat.process(
             new Request(event.getMessage(), event.getPlayer(), event.getPlayer().getServerWorld()));
 
         event.setComponent(component);

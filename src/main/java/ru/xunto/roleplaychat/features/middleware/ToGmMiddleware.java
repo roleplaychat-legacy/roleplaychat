@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.server.permission.PermissionAPI;
-import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -38,7 +37,7 @@ public class ToGmMiddleware extends Middleware {
             }
         }
 
-        Core.instance.send(newEnvironment);
+        environment.getCore().send(newEnvironment);
     }
 
     @Override public Stage getStage() {
