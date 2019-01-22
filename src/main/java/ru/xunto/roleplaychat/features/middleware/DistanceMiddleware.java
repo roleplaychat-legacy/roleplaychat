@@ -3,13 +3,18 @@ package ru.xunto.roleplaychat.features.middleware;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import ru.xunto.roleplaychat.features.LabeledTemplate;
+import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.*;
+import ru.xunto.roleplaychat.framework.state.IProperty;
+import ru.xunto.roleplaychat.framework.state.MessageState;
+import ru.xunto.roleplaychat.framework.state.Property;
 
-import java.util.Map;
 import java.util.Set;
 
 public class DistanceMiddleware extends Middleware {
     public final static DistanceMiddleware INSTANCE = new DistanceMiddleware();
+    public final static IProperty<Distance> DISTANCE = new Property<>("distance");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
     private DistanceMiddleware() {
@@ -44,25 +49,21 @@ public class DistanceMiddleware extends Middleware {
         return shift;
     }
 
-    public Environment markDistance(Environment environment, Distance distance) {
-        environment.getVariables().put("distance", Integer.toString(distance.getIndex()));
-        return environment;
-    }
-
     @Override public void process(Request request, Environment environment) {
         if (!environment.getRecipients().isEmpty())
             return;
 
-        Distance range;
+        MessageState state = environment.getState();
         String text = request.getText();
-        if (environment.getVariables().containsKey("distance")) {
-            String range_string = environment.getVariables().get("distance");
-            range = Distance.get(Integer.valueOf(range_string));
-        } else {
-            int plus = DistanceMiddleware.countRangeShifts(request.getText(), '!');
-            int minus = DistanceMiddleware.countRangeShifts(request.getText(), '=');
-            range = DEFAULT_RANGE.shift(plus - minus);
+
+        Distance range = state.getValue(DISTANCE);
+        if (state.getValue(DISTANCE) == null) {
+            int plus = countRangeShifts(request.getText(), '!');
+            int minus = countRangeShifts(request.getText(), '=');
             text = text.substring(minus + plus);
+
+            range = DEFAULT_RANGE.shift(plus - minus);
+            state.setValue(DISTANCE, range);
         }
 
         World world = request.getWorld();
@@ -75,13 +76,11 @@ public class DistanceMiddleware extends Middleware {
             }
         }
 
-        Map<String, String> variables = environment.getVariables();
-
         String label = stringify(range);
         if (label != null)
-            variables.put("label", "(" + label + ")");
+            state.setValue(LabeledTemplate.LABEL, "(" + label + ")");
 
-        variables.put("text", text);
+        state.setValue(Core.TEXT, text);
     }
 
     @Override public Priority getPriority() {

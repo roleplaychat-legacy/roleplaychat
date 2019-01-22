@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.framework.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
@@ -11,7 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class Environment implements Cloneable {
-    private Map<String, String> variables = new HashMap<>();
+    private MessageState state = new MessageState();
+
     private Map<String, TextFormatting> colors = new HashMap<>();
 
     private Set<EntityPlayer> recipients = new HashSet<>();
@@ -32,10 +34,6 @@ public class Environment implements Cloneable {
         return colors;
     }
 
-    public Map<String, String> getVariables() {
-        return variables;
-    }
-
     public Set<EntityPlayer> getRecipients() {
         return recipients;
     }
@@ -52,12 +50,16 @@ public class Environment implements Cloneable {
         try {
             Environment environment = (Environment) super.clone();
             environment.colors = new HashMap<>(colors);
-            environment.variables = new HashMap<>(variables);
+            environment.state = state.clone();
             environment.recipients = new HashSet<>(recipients);
 
             return environment;
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+    public MessageState getState() {
+        return state;
     }
 }

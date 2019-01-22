@@ -9,12 +9,16 @@ import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.state.StringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Core {
     public final static Core instance = new Core();
+
+    public final static StringProperty USERNAME = new StringProperty("username");
+    public final static StringProperty TEXT = new StringProperty("text");
 
     private List<Middleware> middleware = new ArrayList<>();
 
@@ -31,8 +35,8 @@ public class Core {
 
     public ITextComponent process(Request request) {
         Environment response = new Environment();
-        response.getVariables().put("username", request.getRequester().getName());
-        response.getVariables().put("text", request.getText());
+        response.getState().setValue(USERNAME, request.getRequester().getName());
+        response.getState().setValue(TEXT, request.getText());
 
         return this.process(request, response);
     }
@@ -47,7 +51,7 @@ public class Core {
 
     public ITextComponent send(Environment response) {
         TextComponentBase components =
-            response.getTemplate().build(response.getVariables(), response.getColors());
+            response.getTemplate().build(response.getState(), response.getColors());
 
         for (EntityPlayer recipient : response.getRecipients()) {
             recipient.sendMessage(components);

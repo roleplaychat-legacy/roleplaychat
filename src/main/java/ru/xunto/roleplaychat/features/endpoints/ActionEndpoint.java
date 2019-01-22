@@ -2,9 +2,13 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.features.LabeledTemplate;
+import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.state.IProperty;
+import ru.xunto.roleplaychat.framework.state.MessageState;
+import ru.xunto.roleplaychat.framework.state.StringProperty;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
@@ -13,6 +17,7 @@ import java.util.Map;
 
 public class ActionEndpoint extends Endpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
+    public static final IProperty<String> ACTION = new StringProperty("action");
 
     static {
         colors.put("default", TextFormatting.GRAY);
@@ -25,18 +30,20 @@ public class ActionEndpoint extends Endpoint {
             new Template("* {{ username }} {{ label }}  {{ action }} * {{ text }}"));
 
     @Override public boolean matchEndpoint(Request request, Environment environment) {
-        return environment.getVariables().get("text").startsWith("*");
+        return environment.getState().getValue(Core.TEXT).startsWith("*");
     }
 
     @Override public void processEndpoint(Environment environment) {
-        Map<String, String> variables = environment.getVariables();
-        String text = variables.get("text").substring(1).trim();
+        MessageState state = environment.getState();
+        String text = state.getValue(Core.TEXT).substring(1).trim();
 
         String[] strings = text.split("\\*");
 
         environment.setTemplate(template);
-        variables.put("action", strings[0].trim());
-        variables.put("text", strings.length > 1 ? strings[1].trim() : "");
+
+        state.setValue(ACTION, strings[0].trim());
+        state.setValue(Core.TEXT, strings.length > 1 ? strings[1].trim() : "");
+
         environment.getColors().putAll(colors);
     }
 }

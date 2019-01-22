@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.framework.template;
 import net.minecraft.util.text.TextComponentBase;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.template.tokens.TextToken;
 import ru.xunto.roleplaychat.framework.template.tokens.Token;
 import ru.xunto.roleplaychat.framework.template.tokens.VariableToken;
@@ -44,12 +45,12 @@ public class Template implements ITemplate {
         tokens.add(new TextToken(left));
     }
 
-    public TextComponentBase build(Map<String, String> values, Map<String, TextFormatting> colors) {
+    public TextComponentBase build(MessageState state, Map<String, TextFormatting> colors) {
         TextComponentBase parts = new TextComponentString("");
         parts.getStyle().setColor(colors.getOrDefault("default", TextFormatting.WHITE));
 
         for (Token token : tokens) {
-            parts.appendSibling(token.build(values, colors));
+            parts.appendSibling(token.build(state, colors));
         }
         return parts;
     }
