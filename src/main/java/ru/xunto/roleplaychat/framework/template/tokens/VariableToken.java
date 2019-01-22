@@ -1,4 +1,4 @@
-package ru.xunto.roleplaychat.framework.template;
+package ru.xunto.roleplaychat.framework.template.tokens;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -6,11 +6,11 @@ import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Map;
 
-public class VariableTemplatePart extends TemplatePart {
+public class VariableToken extends Token {
     private String var;
     private String varDefault;
 
-    VariableTemplatePart(String var, String varDefault) {
+    public VariableToken(String var, String varDefault) {
         this.var = var;
         this.varDefault = varDefault;
     }

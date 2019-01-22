@@ -5,6 +5,7 @@ import ru.xunto.roleplaychat.features.LabeledTemplate;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Priority;
+import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.template.ITemplate;
 import ru.xunto.roleplaychat.framework.template.Template;
 
@@ -21,7 +22,7 @@ public class DefaultEndpoint extends Endpoint {
     private ITemplate template = new LabeledTemplate(new Template("{{ username }}: {{ text }}"),
         new Template("{{ username }} {{ label }}: {{ text }}"));
 
-    @Override public boolean matchEndpoint(Environment environment) {
+    @Override public boolean matchEndpoint(Request request, Environment environment) {
         return true;
     }
 

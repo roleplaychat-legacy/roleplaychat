@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class Request {
-    private String text;
-    private EntityPlayer requester;
-    private World world;
+    private final String text;
+    private final EntityPlayer requester;
+    private final World world;
 
     public Request(String text, EntityPlayer requester, World world) {
         this.text = text;
