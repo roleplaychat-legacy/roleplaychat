@@ -25,10 +25,15 @@ public class Core {
         this.register(new ToGmMiddleware());
 
         this.register(new DefaultEndpoint());
-        this.register(new OOCEndpoint());
         this.register(new ActionEndpoint());
-        this.register(new GmOOCEndpoint());
-        this.register(new GmActionEndpoint());
+
+        try {
+            this.register(new OOCEndpoint());
+            this.register(new GmOOCEndpoint());
+            this.register(new GmActionEndpoint());
+        } catch (PrefixEndpoint.EmptyPrefixException e) {
+            e.printStackTrace();
+        }
     }
 
     public ITextComponent process(Request request) {

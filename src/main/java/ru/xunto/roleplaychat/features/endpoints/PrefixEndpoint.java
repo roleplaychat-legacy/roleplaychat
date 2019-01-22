@@ -9,7 +9,9 @@ import ru.xunto.roleplaychat.framework.state.MessageState;
 public abstract class PrefixEndpoint extends Endpoint {
     private final String[] prefixes;
 
-    PrefixEndpoint(String... prefixes) {
+    PrefixEndpoint(String... prefixes) throws EmptyPrefixException {
+        if (prefixes.length == 0)
+            throw new EmptyPrefixException();
         this.prefixes = prefixes;
     }
 
@@ -26,5 +28,8 @@ public abstract class PrefixEndpoint extends Endpoint {
         }
 
         return false;
+    }
+
+    public class EmptyPrefixException extends Exception {
     }
 }

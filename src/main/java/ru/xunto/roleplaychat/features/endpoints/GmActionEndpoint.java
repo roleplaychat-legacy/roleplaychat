@@ -19,7 +19,7 @@ public class GmActionEndpoint extends PrefixEndpoint {
 
     private ITemplate template = new Template("*** {{text}} ***");
 
-    public GmActionEndpoint() {
+    public GmActionEndpoint() throws EmptyPrefixException {
         super("#", "№");
     }
 

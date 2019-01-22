@@ -20,7 +20,7 @@ public class OOCEndpoint extends PrefixEndpoint {
     private ITemplate template =
         new Template("{{ username }} {{ label | (OOC)}}: (( {{ text }} ))");
 
-    public OOCEndpoint() {
+    public OOCEndpoint() throws EmptyPrefixException {
         super("_");
     }
 

@@ -18,7 +18,7 @@ public class GmOOCEndpoint extends PrefixEndpoint {
 
     private Template template = new Template("{{ username }} {{ label | (GM): }} (( {{ text }} ))");
 
-    public GmOOCEndpoint() {
+    public GmOOCEndpoint() throws EmptyPrefixException {
         super("-");
     }
 
