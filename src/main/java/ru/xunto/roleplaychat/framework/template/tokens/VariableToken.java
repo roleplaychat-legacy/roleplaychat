@@ -16,6 +16,12 @@ public class VariableToken extends Token {
         this.varDefault = varDefault;
     }
 
+    protected ITextComponent createComponent(String text, TextFormatting color) {
+        ITextComponent component = ForgeHooks.newChatWithLinks(text);
+        component.getStyle().setColor(color);
+        return component;
+    }
+
     @Override public ITextComponent build(MessageState state, Map<String, TextFormatting> colors) {
         String text = state.getValue(varName);
         if (text == null)
@@ -23,8 +29,6 @@ public class VariableToken extends Token {
         if (text == null)
             text = varName;
 
-        ITextComponent component = ForgeHooks.newChatWithLinks(text);
-        component.getStyle().setColor(colors.get(this.varName));
-        return component;
+        return this.createComponent(text, colors.get(this.varName));
     }
 }

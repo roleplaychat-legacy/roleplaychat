@@ -6,6 +6,7 @@ import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.template.tokens.TextToken;
 import ru.xunto.roleplaychat.framework.template.tokens.Token;
+import ru.xunto.roleplaychat.framework.template.tokens.TranslationToken;
 import ru.xunto.roleplaychat.framework.template.tokens.VariableToken;
 
 import java.util.ArrayList;
@@ -39,7 +40,14 @@ public class Template implements ITemplate {
                 varDefault = split[1].trim();
             }
 
-            tokens.add(new VariableToken(var, varDefault));
+            VariableToken token;
+            if (var.startsWith("!")) {
+                token = new TranslationToken(var.substring(1), varDefault);
+            } else {
+                token = new VariableToken(var, varDefault);
+            }
+
+            tokens.add(token);
         }
 
         tokens.add(new TextToken(left));
