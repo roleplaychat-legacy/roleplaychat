@@ -7,9 +7,14 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import org.jtwig.environment.EnvironmentConfiguration;
 import org.jtwig.environment.EnvironmentConfigurationBuilder;
+import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import static ru.xunto.roleplaychat.features.endpoints.ActionEndpoint.ACTION_PARTS;
+import static ru.xunto.roleplaychat.features.endpoints.ActionEndpoint.START_WITH_ACTION;
 
 public class JTwigTemplate implements ITemplate<JTwigState> {
     private final static String COLOR_MARKER = "$";
@@ -81,7 +86,73 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
         JtwigModel model = state.getModel();
         String content = template.render(model);
 
-
         return this.renderText(content, colors);
+    }
+
+    public static void testCase(ITemplate template, JTwigState state, String expectedResult) {
+        Map<String, TextFormatting> colors = new HashMap<>();
+        String result = template.render(state, colors).getUnformattedText();
+
+        if (!result.equals(expectedResult)) {
+            System.out.println(String.format("%s != %s", result, expectedResult));
+            System.exit(1);
+        }
+
+        System.out.println(String.format("Result (%s): [OK]", result));
+    }
+
+
+    public static JTwigState setUpState() {
+        JTwigState state = new JTwigState();
+        state.setValue(Environment.USERNAME, "username");
+        state.setValue(Environment.TEXT, "text");
+        return state;
+    }
+
+    public static void main(String args[]) {
+
+        ITemplate template;
+        JTwigState state;
+
+        // Default
+        System.out.println("=== Default ===");
+        state = setUpState();
+        template = new JTwigTemplate("templates/default.twig");
+        testCase(template, state, "username: text");
+        state.setValue(Environment.LABEL, "label");
+        testCase(template, state, "username (label): text");
+
+        System.out.println("=== GM OOC ===");
+        state = setUpState();
+        template = new JTwigTemplate("templates/gm_ooc.twig");
+        testCase(template, state, "username (To GM): (( text ))");
+
+        System.out.println("=== OOC ===");
+        state = setUpState();
+        template = new JTwigTemplate("templates/ooc.twig");
+        testCase(template, state, "username (OOC): (( text ))");
+        state.setValue(Environment.LABEL, "label");
+        testCase(template, state, "username (label): (( text ))");
+
+        state = setUpState();
+        template = new JTwigTemplate("templates/action.twig");
+        state.setValue(ACTION_PARTS, new String[] {"text1", "text2", "text3", "text4"});
+
+        // Action without label
+        System.out.println("=== Action without label ===");
+        state.setValue(START_WITH_ACTION, false);
+        testCase(template, state, "username: text1 * text2 * text3 * text4 *");
+        state.setValue(START_WITH_ACTION, true);
+        testCase(template, state, "* username text1 * text2 * text3 * text4");
+
+        // Action with label
+        System.out.println("=== Action with label ===");
+
+        state.setValue(Environment.LABEL, "label");
+        state.setValue(START_WITH_ACTION, false);
+        testCase(template, state, "username (label): text1 * text2 * text3 * text4 *");
+        state.setValue(START_WITH_ACTION, true);
+        testCase(template, state, "* username (label) text1 * text2 * text3 * text4");
+
     }
 }
