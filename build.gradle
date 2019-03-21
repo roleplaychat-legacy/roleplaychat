@@ -36,12 +36,12 @@ dependencies {
     shade("org.jtwig:jtwig-core:5.87.0.RELEASE") {
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'org.ow2.asm', module: 'asm'
-    };
+    }
 }
 
 jar {
     configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
+        from(project.zipTree(dep)) {
             exclude 'META-INF', 'META-INF/**'
         }
     }
