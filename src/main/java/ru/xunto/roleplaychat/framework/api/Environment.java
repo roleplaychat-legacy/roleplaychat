@@ -3,9 +3,9 @@ package ru.xunto.roleplaychat.framework.api;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.Core;
-import ru.xunto.roleplaychat.framework.state.MessageState;
-import ru.xunto.roleplaychat.framework.template.ITemplate;
-import ru.xunto.roleplaychat.framework.template.Template;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
+import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,11 +15,11 @@ import java.util.Set;
 public class Environment implements Cloneable {
     private Core core;
 
-    private MessageState state = new MessageState();
+    private JTwigState state = new JTwigState();
     private Map<String, TextFormatting> colors = new HashMap<>();
     private Set<EntityPlayer> recipients = new HashSet<>();
 
-    private ITemplate template = new Template("{{ username }}: {{ text }}");
+    private ITemplate<JTwigState> template = new JTwigTemplate("templates/default.twig");
 
     private boolean processed = false;
 
@@ -39,11 +39,11 @@ public class Environment implements Cloneable {
         return recipients;
     }
 
-    public ITemplate getTemplate() {
+    public ITemplate<JTwigState> getTemplate() {
         return template;
     }
 
-    public void setTemplate(ITemplate template) {
+    public void setTemplate(JTwigTemplate template) {
         this.template = template;
     }
 
@@ -60,7 +60,7 @@ public class Environment implements Cloneable {
         }
     }
 
-    public MessageState getState() {
+    public JTwigState getState() {
         return state;
     }
 
