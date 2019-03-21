@@ -1,7 +1,6 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
-import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -28,12 +27,12 @@ public class ActionEndpoint extends Endpoint {
     private JTwigTemplate template = new JTwigTemplate("templates/action.twig");
 
     @Override public boolean matchEndpoint(Request request, Environment environment) {
-        return environment.getState().getValue(Core.TEXT).contains("*");
+        return environment.getState().getValue(Environment.TEXT).contains("*");
     }
 
-    @Override public void processEndpoint(Environment environment) {
+    @Override public void processEndpoint(Request request, Environment environment) {
         MessageState state = environment.getState();
-        String text = state.getValue(Core.TEXT);
+        String text = state.getValue(Environment.TEXT);
 
         state.setValue(START_WITH_ACTION, text.startsWith("*"));
 

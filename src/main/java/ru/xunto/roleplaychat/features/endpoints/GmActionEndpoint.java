@@ -27,7 +27,7 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
             .hasPermission(request.getRequester(), "gm");
     }
 
-    @Override public void processEndpoint(Environment environment) {
+    @Override public void processEndpoint(Request request, Environment environment) {
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
     }

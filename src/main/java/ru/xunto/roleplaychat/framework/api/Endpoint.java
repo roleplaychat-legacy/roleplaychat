@@ -3,7 +3,7 @@ package ru.xunto.roleplaychat.framework.api;
 public abstract class Endpoint extends Middleware {
     public abstract boolean matchEndpoint(Request request, Environment environment);
 
-    public abstract void processEndpoint(Environment environment);
+    public abstract void processEndpoint(Request request, Environment environment);
 
     @Override public Stage getStage() {
         return Stage.ENDPOINT;
@@ -16,7 +16,7 @@ public abstract class Endpoint extends Middleware {
         if (!this.matchEndpoint(request, environment))
             return;
 
-        this.processEndpoint(environment);
+        this.processEndpoint(request, environment);
         environment.setProcessed(true);
     }
 }

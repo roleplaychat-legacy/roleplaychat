@@ -1,12 +1,17 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class GmOOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
@@ -23,14 +28,21 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
         super("-");
     }
 
-    @Override public void processEndpoint(Environment environment) {
+    @Override public void processEndpoint(Request request, Environment environment) {
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
-        environment.getRecipients().clear();
-    }
 
-    @Override public void process(Request request, Environment environment) {
-        super.process(request, environment);
-        environment.getRecipients().add(request.getRequester());
+        Set<EntityPlayer> recipients = environment.getRecipients();
+        recipients.clear();
+
+        World[] worlds = Objects.requireNonNull(request.getWorld().getMinecraftServer()).worlds;
+        for (World world : worlds) {
+            for (EntityPlayer player : world.playerEntities) {
+                if (PermissionAPI.hasPermission(player, "gm"))
+                    recipients.add(player);
+            }
+        }
+
+        recipients.add(request.getRequester());
     }
 }

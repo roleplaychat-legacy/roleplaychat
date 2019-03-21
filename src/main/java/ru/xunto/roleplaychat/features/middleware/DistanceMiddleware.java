@@ -3,7 +3,6 @@ package ru.xunto.roleplaychat.features.middleware;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.*;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
@@ -77,9 +76,9 @@ public class DistanceMiddleware extends Middleware {
 
         String label = stringify(range);
         if (label != null)
-            state.setValue(Core.LABEL, "(" + label + ")");
+            state.setValue(Environment.LABEL, "(" + label + ")");
 
-        state.setValue(Core.TEXT, text);
+        state.setValue(Environment.TEXT, text);
     }
 
     @Override public Priority getPriority() {

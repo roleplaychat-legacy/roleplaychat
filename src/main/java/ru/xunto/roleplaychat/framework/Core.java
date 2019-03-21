@@ -2,7 +2,6 @@ package ru.xunto.roleplaychat.framework;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.features.endpoints.*;
@@ -11,16 +10,11 @@ import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
-import ru.xunto.roleplaychat.framework.state.IProperty;
-import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Core {
-    public final static IProperty<String> USERNAME = new Property<>("username");
-    public final static IProperty<String> LABEL = new Property<>("label");
-    public final static IProperty<String> TEXT = new Property<>("text");
 
     private List<Middleware> middleware = new ArrayList<>();
 
@@ -41,13 +35,7 @@ public class Core {
     }
 
     public ITextComponent process(Request request) {
-        Environment response = new Environment();
-
-        response.getState().setValue(USERNAME, request.getRequester().getName());
-        response.getState().setValue(TEXT, request.getText());
-
-        response.getColors().put("default", TextFormatting.WHITE);
-        response.getColors().put("username", TextFormatting.GREEN);
+        Environment response = new Environment(request.getRequester().getName(), request.getText());
 
         return this.process(request, response);
     }

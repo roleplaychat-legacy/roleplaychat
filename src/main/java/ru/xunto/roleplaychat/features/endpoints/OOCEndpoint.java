@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
         super("_");
     }
 
-    @Override public void processEndpoint(Environment environment) {
+    @Override public void processEndpoint(Request request, Environment environment) {
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
     }
