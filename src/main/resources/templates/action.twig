@@ -1,10 +1,20 @@
 {%- import 'color_markers.twig' as markers -%}
+
 {%- set parts = [] -%}
+
+{%- set sep = wrapColor("*", "action") -%}
+{%- set start = start_with_action ? sep ~ " ": "" -%}
+{%- set end = odd(length(parts)) ? " " ~ sep: "" -%}
+
+{%- set odd_label = start_with_action ? "action": "text" -%}
+{%- set even_label = start_with_action ? "text": "action" -%}
+
 {%- for part in action_parts -%}
     {%- if (odd(loop.index)) -%}
-        {%- set parts = merge(parts, wrapColor(part, "action")) -%}
+        {%- set parts = merge(parts, wrapColor(part, odd_label)) -%}
     {%- else %}
-        {%- set parts = merge(parts, wrapColor(part, "text")) -%}
+        {%- set parts = merge(parts, wrapColor(part, even_label)) -%}
     {%- endif -%}
 {%- endfor -%}
-* {{ username }} {{ markers.label(label) -}} {{ join(parts, " * ") }} {{ odd(length(parts)) ? "*": "" -}}
+
+{{- start -}} {{ username }}{{ not start_with_action ? ":" : "" }} {{ markers.label(label) -}} {{ join(parts, " " ~ sep ~ " ") }} {{- end -}}

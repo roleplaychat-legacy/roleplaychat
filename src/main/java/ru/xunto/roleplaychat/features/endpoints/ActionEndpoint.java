@@ -15,23 +15,31 @@ import java.util.Map;
 
 public class ActionEndpoint extends Endpoint {
     public static final IProperty<String[]> ACTION_PARTS = new Property<>("action_parts");
+    public static final IProperty<Boolean> START_WITH_ACTION = new Property<>("start_with_action");
+
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 
     static {
-        colors.put("default", TextFormatting.GRAY);
         colors.put("text", TextFormatting.WHITE);
+        colors.put("action", TextFormatting.GRAY);
         colors.put("username", TextFormatting.GREEN);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/action.twig");
 
     @Override public boolean matchEndpoint(Request request, Environment environment) {
-        return environment.getState().getValue(Core.TEXT).startsWith("*");
+        return environment.getState().getValue(Core.TEXT).contains("*");
     }
 
     @Override public void processEndpoint(Environment environment) {
         MessageState state = environment.getState();
-        String text = state.getValue(Core.TEXT).substring(1).trim();
+        String text = state.getValue(Core.TEXT);
+
+        state.setValue(START_WITH_ACTION, text.startsWith("*"));
+
+        if (text.startsWith("*")) {
+            text = text.substring(1).trim();
+        }
 
         String[] strings = text.split("\\*");
         for (int i = 0; i < strings.length; i++) {
@@ -39,6 +47,7 @@ public class ActionEndpoint extends Endpoint {
         }
 
         state.setValue(ACTION_PARTS, strings);
+
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
     }
