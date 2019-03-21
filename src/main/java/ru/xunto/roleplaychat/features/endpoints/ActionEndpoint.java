@@ -1,23 +1,21 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
-import ru.xunto.roleplaychat.features.LabeledTemplate;
 import ru.xunto.roleplaychat.framework.Core;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
-import ru.xunto.roleplaychat.framework.template.ITemplate;
-import ru.xunto.roleplaychat.framework.template.Template;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ActionEndpoint extends Endpoint {
+    public static final IProperty<String[]> ACTION_PARTS = new Property<>("action_parts");
     private static final Map<String, TextFormatting> colors = new HashMap<>();
-    public static final IProperty<String> ACTION = new Property<>("action");
 
     static {
         colors.put("default", TextFormatting.GRAY);
@@ -25,9 +23,7 @@ public class ActionEndpoint extends Endpoint {
         colors.put("username", TextFormatting.GREEN);
     }
 
-    private ITemplate template =
-        new LabeledTemplate(new Template("* {{ username }} {{ action }} * {{ text }}"),
-            new Template("* {{ username }} {{ label }}  {{ action }} * {{ text }}"));
+    private JTwigTemplate template = new JTwigTemplate("templates/action.twig");
 
     @Override public boolean matchEndpoint(Request request, Environment environment) {
         return environment.getState().getValue(Core.TEXT).startsWith("*");
@@ -38,12 +34,14 @@ public class ActionEndpoint extends Endpoint {
         String text = state.getValue(Core.TEXT).substring(1).trim();
 
         String[] strings = text.split("\\*");
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = strings[i].trim();
+        }
 
+        state.setValue(ACTION_PARTS, strings);
         environment.setTemplate(template);
-
-        state.setValue(ACTION, strings[0].trim());
-        state.setValue(Core.TEXT, strings.length > 1 ? strings[1].trim() : "");
-
         environment.getColors().putAll(colors);
     }
+
+
 }

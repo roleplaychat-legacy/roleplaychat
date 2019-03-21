@@ -2,13 +2,12 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.api.Environment;
-import ru.xunto.roleplaychat.framework.template.ITemplate;
-import ru.xunto.roleplaychat.framework.template.Template;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class OOCEndpoint extends PrefixEndpoint {
+public class OOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 
     static {
@@ -17,8 +16,7 @@ public class OOCEndpoint extends PrefixEndpoint {
         colors.put("label", TextFormatting.WHITE);
     }
 
-    private ITemplate template =
-        new Template("{{ username }} {{ label | (OOC)}}: (( {{ text }} ))");
+    private JTwigTemplate template = new JTwigTemplate("templates/ooc.twig");
 
     public OOCEndpoint() throws EmptyPrefixException {
         super("_");

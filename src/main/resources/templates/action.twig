@@ -1,0 +1,10 @@
+{%- import 'color_markers.twig' as markers -%}
+{%- set parts = [] -%}
+{%- for part in action_parts -%}
+    {%- if (odd(loop.index)) -%}
+        {%- set parts = merge(parts, wrapColor(part, "action")) -%}
+    {%- else %}
+        {%- set parts = merge(parts, wrapColor(part, "text")) -%}
+    {%- endif -%}
+{%- endfor -%}
+* {{ username }} {{ markers.label(label) -}} {{ join(parts, " * ") }} {{ odd(length(parts)) ? "*": "" -}}

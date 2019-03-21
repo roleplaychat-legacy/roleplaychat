@@ -6,10 +6,10 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 
-public abstract class PrefixEndpoint extends Endpoint {
+public abstract class PrefixMatchEndpoint extends Endpoint {
     private final String[] prefixes;
 
-    PrefixEndpoint(String... prefixes) throws EmptyPrefixException {
+    PrefixMatchEndpoint(String... prefixes) throws EmptyPrefixException {
         if (prefixes.length == 0)
             throw new EmptyPrefixException();
         this.prefixes = prefixes;

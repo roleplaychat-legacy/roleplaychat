@@ -2,12 +2,13 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.api.Environment;
-import ru.xunto.roleplaychat.framework.template.Template;
+import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class GmOOCEndpoint extends PrefixEndpoint {
+public class GmOOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 
     static {
@@ -16,7 +17,7 @@ public class GmOOCEndpoint extends PrefixEndpoint {
         colors.put("label", TextFormatting.WHITE);
     }
 
-    private Template template = new Template("{{ username }} {{ label | (GM): }} (( {{ text }} ))");
+    private JTwigTemplate template = new JTwigTemplate("templates/gm_ooc.twig");
 
     public GmOOCEndpoint() throws EmptyPrefixException {
         super("-");
@@ -26,5 +27,10 @@ public class GmOOCEndpoint extends PrefixEndpoint {
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
         environment.getRecipients().clear();
+    }
+
+    @Override public void process(Request request, Environment environment) {
+        super.process(request, environment);
+        environment.getRecipients().add(request.getRequester());
     }
 }
