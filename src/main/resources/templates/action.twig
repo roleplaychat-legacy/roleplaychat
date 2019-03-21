@@ -21,4 +21,4 @@
     {%- endif -%}
 {%- endfor -%}
 
-{{- start -}} {{ username }}{{ not start_with_action ? ":" : "" }} {{ markers.label(label) -}} {{ join(parts, " " ~ sep ~ " ") }} {{- end -}}
+{{- start -}} {{ username }}{{- markers.label(label) -}}{{- not start_with_action ? ":" : "" }} {{ join(parts, " " ~ sep ~ " ") }} {{- end -}}
