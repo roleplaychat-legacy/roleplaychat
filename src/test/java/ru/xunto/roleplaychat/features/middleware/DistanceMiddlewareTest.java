@@ -35,14 +35,23 @@ public class DistanceMiddlewareTest {
         Environment environment = setUpEnvironment(text);
         instance.process(request, environment);
 
-        assertEquals(environment.getState().getValue(DistanceMiddleware.DISTANCE), distance);
+        assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
 
-    @Test public void testLabel() {
+    @Test public void testDistances() {
         testLabel("test", DistanceMiddleware.Distance.NORMAL);
         testLabel("= test", DistanceMiddleware.Distance.QUITE);
         testLabel("== test", DistanceMiddleware.Distance.WHISPER);
         testLabel("=== test", DistanceMiddleware.Distance.QUITE_WHISPER);
         testLabel("==== test", DistanceMiddleware.Distance.QUITE_WHISPER);
+        testLabel("! test", DistanceMiddleware.Distance.LOUD);
+        testLabel("!! test", DistanceMiddleware.Distance.SHOUT);
+        testLabel("!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
+        testLabel("!!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
+
+        testLabel("!=! test", DistanceMiddleware.Distance.LOUD);
+        testLabel("=!= test", DistanceMiddleware.Distance.QUITE);
     }
+
+
 }

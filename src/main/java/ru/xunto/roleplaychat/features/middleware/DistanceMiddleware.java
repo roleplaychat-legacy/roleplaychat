@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.xunto.roleplaychat.framework.api.*;
@@ -9,6 +10,7 @@ import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class DistanceMiddleware extends Middleware {
     public final static DistanceMiddleware INSTANCE = new DistanceMiddleware();
@@ -68,7 +70,7 @@ public class DistanceMiddleware extends Middleware {
         Vec3d position = request.getRequester().getPositionVector();
 
         Set<EntityPlayer> recipients = environment.getRecipients();
-        for (EntityPlayer recipient : world.playerEntities) {
+        for (EntityPlayer recipient : world.getPlayers(EntityPlayer.class, player -> true)) {
             if (position.distanceTo(recipient.getPositionVector()) <= range.getDistance()) {
                 recipients.add(recipient);
             }
