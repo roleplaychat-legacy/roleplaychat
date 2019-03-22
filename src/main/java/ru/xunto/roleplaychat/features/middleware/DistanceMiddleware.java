@@ -42,6 +42,8 @@ public class DistanceMiddleware extends Middleware {
     private static int countRangeShifts(String text, char symbol) {
         int shift = 0;
 
+        if (text.length() < 1) return shift;
+
         char[] chars = text.toCharArray();
         while (chars[shift] == symbol)
             shift++;

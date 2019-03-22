@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,26 +12,35 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
 
 public class DistanceMiddlewareTest {
-    @Mock EntityPlayer player;
     @Mock World world;
 
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     private Middleware instance = DistanceMiddleware.INSTANCE;
 
+    private EntityPlayer setUpPlayer(Vec3d vec3d) {
+        EntityPlayer player = mock(EntityPlayer.class);
+        doReturn(vec3d).when(player).getPositionVector();
+        return player;
+    }
+
     private Request setUpRequest(String text) {
-        return new Request(text, player, world);
+        return new Request(text, setUpPlayer(new Vec3d(0, 0, 0)), world);
     }
 
     private Environment setUpEnvironment(String text) {
         return new Environment("username", "text");
     }
 
-    private void testLabel(String text, DistanceMiddleware.Distance distance) {
+    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
         Request request = setUpRequest(text);
         Environment environment = setUpEnvironment(text);
         instance.process(request, environment);
@@ -38,20 +48,47 @@ public class DistanceMiddlewareTest {
         assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
 
-    @Test public void testDistances() {
-        testLabel("test", DistanceMiddleware.Distance.NORMAL);
-        testLabel("= test", DistanceMiddleware.Distance.QUITE);
-        testLabel("== test", DistanceMiddleware.Distance.WHISPER);
-        testLabel("=== test", DistanceMiddleware.Distance.QUITE_WHISPER);
-        testLabel("==== test", DistanceMiddleware.Distance.QUITE_WHISPER);
-        testLabel("! test", DistanceMiddleware.Distance.LOUD);
-        testLabel("!! test", DistanceMiddleware.Distance.SHOUT);
-        testLabel("!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
-        testLabel("!!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
+    @Test public void testDistanceFromMessage() {
+        testDistanceFromMessageCase("test", DistanceMiddleware.Distance.NORMAL);
+        testDistanceFromMessageCase("= test", DistanceMiddleware.Distance.QUITE);
+        testDistanceFromMessageCase("== test", DistanceMiddleware.Distance.WHISPER);
+        testDistanceFromMessageCase("=== test", DistanceMiddleware.Distance.QUITE_WHISPER);
+        testDistanceFromMessageCase("==== test", DistanceMiddleware.Distance.QUITE_WHISPER);
+        testDistanceFromMessageCase("! test", DistanceMiddleware.Distance.LOUD);
+        testDistanceFromMessageCase("!! test", DistanceMiddleware.Distance.SHOUT);
+        testDistanceFromMessageCase("!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
+        testDistanceFromMessageCase("!!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
 
-        testLabel("!=! test", DistanceMiddleware.Distance.LOUD);
-        testLabel("=!= test", DistanceMiddleware.Distance.QUITE);
+        testDistanceFromMessageCase("!=! test", DistanceMiddleware.Distance.LOUD);
+        testDistanceFromMessageCase("=!= test", DistanceMiddleware.Distance.QUITE);
     }
 
+    public void testRecipientHandlingCase(Distance distance, int number) {
+        Request request = setUpRequest("");
+        Environment environment = setUpEnvironment("");
 
+        environment.getState().setValue(DistanceMiddleware.DISTANCE, distance);
+
+        instance.process(request, environment);
+        assertEquals(number, environment.getRecipients().size());
+    }
+
+    @Test public void testRecipientHandling() {
+        List<EntityPlayer> players = Arrays
+            .asList(setUpPlayer(new Vec3d(Distance.QUITE_WHISPER.getDistance(), 0, 0)),
+                setUpPlayer(new Vec3d(Distance.QUITE.getDistance(), 0, 0)),
+                setUpPlayer(new Vec3d(Distance.NORMAL.getDistance(), 0, 0)),
+                setUpPlayer(new Vec3d(Distance.LOUD.getDistance(), 0, 0)),
+                setUpPlayer(new Vec3d(Distance.SHOUT.getDistance(), 0, 0)),
+                setUpPlayer(new Vec3d(Distance.LOUD_SHOUT.getDistance(), 0, 0)));
+
+        doReturn(players).when(world).getPlayers(eq(EntityPlayer.class), any());
+
+        testRecipientHandlingCase(Distance.QUITE_WHISPER, 1);
+        testRecipientHandlingCase(Distance.QUITE, 2);
+        testRecipientHandlingCase(Distance.NORMAL, 3);
+        testRecipientHandlingCase(Distance.LOUD, 4);
+        testRecipientHandlingCase(Distance.SHOUT, 5);
+        testRecipientHandlingCase(Distance.LOUD_SHOUT, 6);
+    }
 }
