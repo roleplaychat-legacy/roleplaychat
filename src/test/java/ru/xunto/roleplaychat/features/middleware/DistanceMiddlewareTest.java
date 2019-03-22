@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import ru.xunto.roleplaychat.ChatTest;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -19,26 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
 
-public class DistanceMiddlewareTest {
-    @Mock World world;
+public class DistanceMiddlewareTest extends ChatTest {
 
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     private Middleware instance = DistanceMiddleware.INSTANCE;
-
-    private EntityPlayer setUpPlayer(Vec3d vec3d) {
-        EntityPlayer player = mock(EntityPlayer.class);
-        doReturn(vec3d).when(player).getPositionVector();
-        return player;
-    }
-
-    private Request setUpRequest(String text) {
-        return new Request(text, setUpPlayer(new Vec3d(0, 0, 0)), world);
-    }
-
-    private Environment setUpEnvironment(String text) {
-        return new Environment("username", "text");
-    }
 
     private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
         Request request = setUpRequest(text);
