@@ -76,7 +76,7 @@ public class DistanceMiddleware extends Middleware {
 
         String label = stringify(range);
         if (label != null)
-            state.setValue(Environment.LABEL, "(" + label + ")");
+            state.setValue(Environment.LABEL, label);
 
         state.setValue(Environment.TEXT, text);
     }
