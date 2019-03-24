@@ -2,7 +2,7 @@ package ru.xunto.roleplaychat.framework.api;
 
 public abstract class Middleware {
     public Priority getPriority() {
-        return Priority.HIGH;
+        return Priority.NORMAL;
     }
 
     public abstract Stage getStage();

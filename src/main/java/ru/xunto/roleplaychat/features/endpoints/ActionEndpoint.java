@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 import ru.xunto.roleplaychat.framework.state.IProperty;
@@ -25,6 +26,10 @@ public class ActionEndpoint extends Endpoint {
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/action.twig");
+
+    @Override public Priority getPriority() {
+        return Priority.LOW;
+    }
 
     @Override public boolean matchEndpoint(Request request, Environment environment) {
         return environment.getState().getValue(Environment.TEXT).contains("*");
