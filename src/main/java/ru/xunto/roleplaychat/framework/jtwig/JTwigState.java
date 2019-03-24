@@ -13,7 +13,7 @@ public class JTwigState extends MessageState {
 
     public static Object getProperty(IProperty property, Object value) {
         if (value instanceof String) {
-            if (property != null) {
+            if (property != null && property.isColorful()) {
                 return new JTwigColoredProperty(property, value);
             } else {
                 return new JTwigEscapedProperty(value);

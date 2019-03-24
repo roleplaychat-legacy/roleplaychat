@@ -4,4 +4,6 @@ public interface IProperty<T> {
     String getName();
 
     String stringify(T value);
+
+    boolean isColorful();
 }

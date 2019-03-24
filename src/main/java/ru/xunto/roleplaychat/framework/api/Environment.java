@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class Environment implements Cloneable {
     public final static IProperty<String> USERNAME = new Property<>("username");
-    public final static IProperty<String> LABEL = new Property<>("label");
+    public final static IProperty<String> LABEL = new Property<>("label", false);
     public final static IProperty<String> TEXT = new Property<>("text");
 
     private Core core;
