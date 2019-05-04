@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import org.junit.Test;
 import ru.xunto.roleplaychat.ChatTest;
+import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Environment;
 
 import static org.testng.Assert.*;
@@ -18,14 +19,14 @@ public class ActionEndpointTest extends ChatTest {
         testMatchCase("test * test2 * tes");
     }
 
-    public Environment testProcessCase(String text) {
+    public Environment testProcessCase(String text) throws ChatException {
         Environment environment = setUpEnvironment(text);
         instance.process(setUpRequest(text), environment);
 
         return environment;
     }
 
-    @Test public void testProcess() {
+    @Test public void testProcess() throws ChatException {
         Environment environment = testProcessCase("text * text * text");
 
         assertEquals(new String[] {"text", "text", "text"},

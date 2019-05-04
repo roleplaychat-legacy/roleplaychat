@@ -2,13 +2,12 @@ package ru.xunto.roleplaychat.features.middleware;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import ru.xunto.roleplaychat.ChatTest;
+import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -26,7 +25,8 @@ public class DistanceMiddlewareTest extends ChatTest {
 
     private Middleware instance = DistanceMiddleware.INSTANCE;
 
-    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
+    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance)
+        throws ChatException {
         Request request = setUpRequest(text);
         Environment environment = setUpEnvironment(text);
         instance.process(request, environment);
@@ -34,7 +34,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
 
-    @Test public void testDistanceFromMessage() {
+    @Test public void testDistanceFromMessage() throws ChatException {
         testDistanceFromMessageCase("test", DistanceMiddleware.Distance.NORMAL);
         testDistanceFromMessageCase("= test", DistanceMiddleware.Distance.QUITE);
         testDistanceFromMessageCase("== test", DistanceMiddleware.Distance.WHISPER);
@@ -49,7 +49,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         testDistanceFromMessageCase("=!= test", DistanceMiddleware.Distance.QUITE);
     }
 
-    public void testRecipientHandlingCase(Distance distance, int number) {
+    public void testRecipientHandlingCase(Distance distance, int number) throws ChatException {
         Request request = setUpRequest("");
         Environment environment = setUpEnvironment("");
 
@@ -59,7 +59,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(number, environment.getRecipients().size());
     }
 
-    @Test public void testRecipientHandling() {
+    @Test public void testRecipientHandling() throws ChatException {
         List<EntityPlayer> players = Arrays
             .asList(setUpPlayer(new Vec3d(Distance.QUITE_WHISPER.getDistance(), 0, 0)),
                 setUpPlayer(new Vec3d(Distance.QUITE.getDistance(), 0, 0)),
