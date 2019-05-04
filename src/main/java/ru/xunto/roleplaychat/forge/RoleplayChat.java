@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.forge;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,11 +29,14 @@ public class RoleplayChat {
         try {
             component = chat.process(new Request(event.getMessage(), event.getPlayer(),
                 event.getPlayer().getServerWorld()));
-            event.setComponent(component);
         } catch (ChatException e) {
-            event.getPlayer().sendMessage(new TextComponentString(e.getMessage()));
+            component = new TextComponentString(e.getMessage());
+            component.getStyle().setColor(TextFormatting.RED);
+            event.getPlayer().sendMessage(component);
             e.printStackTrace();
         }
+
+        event.setComponent(component);
         event.setCanceled(true);
     }
 
