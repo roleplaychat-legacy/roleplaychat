@@ -7,6 +7,7 @@ import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.features.endpoints.*;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
+import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -34,13 +35,13 @@ public class Core {
         this.warmUpRenderer();
     }
 
-    public ITextComponent process(Request request) {
+    public ITextComponent process(Request request) throws ChatException {
         Environment response = new Environment(request.getRequester().getName(), request.getText());
 
         return this.process(request, response);
     }
 
-    public ITextComponent process(Request request, Environment environment) {
+    public ITextComponent process(Request request, Environment environment) throws ChatException {
         environment.setCore(this);
 
         for (Middleware middleware : this.middleware) {

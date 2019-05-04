@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.forge;
 
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.Core;
+import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 @Mod(modid = RoleplayChat.MODID, name = RoleplayChat.NAME, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
@@ -22,10 +24,16 @@ public class RoleplayChat {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ServerChatEvent event) {
-        ITextComponent component = chat.process(
-            new Request(event.getMessage(), event.getPlayer(), event.getPlayer().getServerWorld()));
-
-        event.setComponent(component);
+        ITextComponent component = null;
+        try {
+            component = chat.process(new Request(event.getMessage(), event.getPlayer(),
+                event.getPlayer().getServerWorld()));
+            event.setComponent(component);
+        } catch (ChatException e) {
+            event.getPlayer().sendMessage(new TextComponentString(e.getMessage()));
+            e.printStackTrace();
+        }
+        event.setCanceled(true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -9,7 +9,7 @@ public abstract class Endpoint extends Middleware {
         return Stage.ENDPOINT;
     }
 
-    @Override public void process(Request request, Environment environment) {
+    @Override public void process(Request request, Environment environment) throws ChatException {
         if (environment.isProcessed())
             return;
 
