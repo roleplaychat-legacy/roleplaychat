@@ -37,10 +37,6 @@ public class RoleplayChat {
         }
 
         event.setComponent(component);
-        cancelChatMessage(event);
-    }
-
-    private void cancelChatMessage(ServerChatEvent event) {
         event.setCanceled(true);
     }
 
