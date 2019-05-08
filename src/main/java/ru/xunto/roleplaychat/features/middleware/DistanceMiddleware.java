@@ -60,6 +60,9 @@ public class DistanceMiddleware extends Middleware {
 
         Distance range = state.getValue(DISTANCE);
         if (state.getValue(DISTANCE) == null) {
+            /* TODO:
+                    remove this hardcode with '!' and '='
+            */
             int plus = countRangeShifts(request.getText(), '!');
             int minus = countRangeShifts(request.getText(), '=');
             text = text.substring(minus + plus);
