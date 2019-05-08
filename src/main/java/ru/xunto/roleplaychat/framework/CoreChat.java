@@ -13,6 +13,7 @@ import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CoreChat {
@@ -65,13 +66,7 @@ public class CoreChat {
     public void register(Middleware newMiddleware) {
         middleware.add(newMiddleware);
 
-        middleware.sort((o1, o2) -> {
-            int compare = o1.getStage().compareTo(o2.getStage());
-            if (compare != 0)
-                return compare;
-
-            return o1.getPriority().compareTo(o2.getPriority());
-        });
+        middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
     }
 
     public void warmUpRenderer() {
