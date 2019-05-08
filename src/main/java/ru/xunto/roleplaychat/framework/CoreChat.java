@@ -69,6 +69,8 @@ public class CoreChat {
         middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
     }
 
+
+    // Initialize the JTwig in advance 'cause there may be freezes
     public void warmUpRenderer() {
         JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
