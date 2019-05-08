@@ -21,6 +21,9 @@ public class DistanceMiddleware extends Middleware {
     }
 
     private static String stringify(Distance range) {
+        /* TODO:
+                    remove this hardcode; maybe add to localisation
+        */
         switch (range) {
             case QUITE_WHISPER:
                 return "едва слышно";
