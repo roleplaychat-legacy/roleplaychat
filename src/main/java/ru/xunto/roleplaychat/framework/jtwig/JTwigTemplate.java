@@ -11,6 +11,14 @@ import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 
 import java.util.Map;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - ITextComponent
+            - TextComponentString
+            - TextFormatting
+*/
+
 public class JTwigTemplate implements ITemplate<JTwigState> {
     private final static String COLOR_MARKER = "$";
     private final static String COLOR_MARKER_ESCAPED = "\16";

@@ -13,14 +13,22 @@ import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class Core {
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - TextFormatting
+*/
+
+public class CoreChat {
 
     private List<Middleware> middleware = new ArrayList<>();
 
-    public Core() {
-        this.register(DistanceMiddleware.INSTANCE);
+    public CoreChat() {
+        this.register(new DistanceMiddleware());
         this.register(new ToGmMiddleware());
         this.register(new ActionEndpoint());
 
@@ -65,16 +73,12 @@ public class Core {
     public void register(Middleware newMiddleware) {
         middleware.add(newMiddleware);
 
-        middleware.sort((o1, o2) -> {
-            int compare = o1.getStage().compareTo(o2.getStage());
-            if (compare != 0)
-                return compare;
-
-            return o1.getPriority().compareTo(o2.getPriority());
-        });
+        middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
     }
 
-    public void warmUpRenderer() {
+
+    // Initialize the JTwig in advance 'cause there may be freezes
+    private void warmUpRenderer() {
         JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
 }

@@ -23,7 +23,7 @@ public class DistanceMiddlewareTest extends ChatTest {
 
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    private Middleware instance = DistanceMiddleware.INSTANCE;
+    private Middleware instance = new DistanceMiddleware();
 
     private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance)
         throws ChatException {

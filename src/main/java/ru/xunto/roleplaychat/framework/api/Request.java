@@ -3,6 +3,13 @@ package ru.xunto.roleplaychat.framework.api;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - World
+*/
+
 public class Request {
     private final String text;
     private final EntityPlayer requester;

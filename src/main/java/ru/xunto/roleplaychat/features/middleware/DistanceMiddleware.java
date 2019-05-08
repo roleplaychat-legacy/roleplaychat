@@ -1,7 +1,6 @@
 package ru.xunto.roleplaychat.features.middleware;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.xunto.roleplaychat.framework.api.*;
@@ -10,17 +9,27 @@ import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.Set;
-import java.util.function.Predicate;
+
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - World
+            - Vec3d
+ */
 
 public class DistanceMiddleware extends Middleware {
-    public final static DistanceMiddleware INSTANCE = new DistanceMiddleware();
+
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
-    private DistanceMiddleware() {
+    public DistanceMiddleware() {
     }
 
     private static String stringify(Distance range) {
+        /* TODO:
+                    remove this hardcode; maybe add to localisation
+        */
         switch (range) {
             case QUITE_WHISPER:
                 return "едва слышно";
@@ -60,6 +69,9 @@ public class DistanceMiddleware extends Middleware {
 
         Distance range = state.getValue(DISTANCE);
         if (state.getValue(DISTANCE) == null) {
+            /* TODO:
+                    remove this hardcode with '!' and '='; maybe add to external config file
+            */
             int plus = countRangeShifts(request.getText(), '!');
             int minus = countRangeShifts(request.getText(), '=');
             text = text.substring(minus + plus);
