@@ -64,7 +64,7 @@ public class DistanceMiddleware extends Middleware {
         Distance range = state.getValue(DISTANCE);
         if (state.getValue(DISTANCE) == null) {
             /* TODO:
-                    remove this hardcode with '!' and '='
+                    remove this hardcode with '!' and '='; maybe add to external config file
             */
             int plus = countRangeShifts(request.getText(), '!');
             int minus = countRangeShifts(request.getText(), '=');
