@@ -1,7 +1,6 @@
 package ru.xunto.roleplaychat.features.middleware;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.xunto.roleplaychat.framework.api.*;
@@ -10,7 +9,14 @@ import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.Set;
-import java.util.function.Predicate;
+
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - World
+            - Vec3d
+ */
 
 public class DistanceMiddleware extends Middleware {
 

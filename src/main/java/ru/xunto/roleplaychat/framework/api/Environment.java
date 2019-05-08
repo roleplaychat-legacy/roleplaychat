@@ -14,6 +14,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - TextFormatting
+*/
+
 public class Environment implements Cloneable {
     public final static IProperty<String> USERNAME = new Property<>("username");
     public final static IProperty<String> LABEL = new Property<>("label", false);

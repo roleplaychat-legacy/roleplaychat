@@ -16,6 +16,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - TextFormatting
+*/
+
 public class CoreChat {
 
     private List<Middleware> middleware = new ArrayList<>();

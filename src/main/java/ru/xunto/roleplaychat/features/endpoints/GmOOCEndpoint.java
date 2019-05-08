@@ -13,6 +13,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - TextFormatting
+            - World
+            - PermissionAPI
+*/
+
 public class GmOOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 

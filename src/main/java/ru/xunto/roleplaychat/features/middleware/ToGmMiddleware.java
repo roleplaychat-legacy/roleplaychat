@@ -12,6 +12,15 @@ import ru.xunto.roleplaychat.framework.api.Stage;
 import java.util.Objects;
 import java.util.Set;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - EntityPlayer
+            - TextFormatting
+            - World
+            - PermissionAPI
+*/
+
 public class ToGmMiddleware extends Middleware {
     @Override public void process(Request request, Environment environment) {
         Environment newEnvironment = environment.clone();

@@ -13,6 +13,12 @@ import ru.xunto.roleplaychat.framework.state.Property;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+    TODO:
+        incapsulate the minecraft-forge dependencies:
+            - TextFormatting
+*/
+
 public class ActionEndpoint extends Endpoint {
     public static final IProperty<String[]> ACTION_PARTS = new Property<>("action_parts");
     public static final IProperty<Boolean> START_WITH_ACTION = new Property<>("start_with_action");
