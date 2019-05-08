@@ -21,7 +21,7 @@ public class CoreChat {
     private List<Middleware> middleware = new ArrayList<>();
 
     public CoreChat() {
-        this.register(DistanceMiddleware.INSTANCE);
+        this.register(new DistanceMiddleware());
         this.register(new ToGmMiddleware());
         this.register(new ActionEndpoint());
 

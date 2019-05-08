@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class DistanceMiddleware extends Middleware {
-    public final static DistanceMiddleware INSTANCE = new DistanceMiddleware();
+
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
-    private DistanceMiddleware() {
+    public DistanceMiddleware() {
     }
 
     private static String stringify(Distance range) {
