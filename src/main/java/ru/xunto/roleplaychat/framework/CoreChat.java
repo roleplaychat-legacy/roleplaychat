@@ -15,11 +15,11 @@ import ru.xunto.roleplaychat.framework.api.Request;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Core {
+public class CoreChat {
 
     private List<Middleware> middleware = new ArrayList<>();
 
-    public Core() {
+    public CoreChat() {
         this.register(DistanceMiddleware.INSTANCE);
         this.register(new ToGmMiddleware());
         this.register(new ActionEndpoint());

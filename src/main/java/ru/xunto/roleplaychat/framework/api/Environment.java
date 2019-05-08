@@ -2,7 +2,7 @@ package ru.xunto.roleplaychat.framework.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
-import ru.xunto.roleplaychat.framework.Core;
+import ru.xunto.roleplaychat.framework.CoreChat;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 import ru.xunto.roleplaychat.framework.renderer.ITemplate;
@@ -19,7 +19,7 @@ public class Environment implements Cloneable {
     public final static IProperty<String> LABEL = new Property<>("label", false);
     public final static IProperty<String> TEXT = new Property<>("text");
 
-    private Core core;
+    private CoreChat core;
     private ITemplate<JTwigState> template = new JTwigTemplate("templates/default.twig");
     private boolean processed = false;
 
@@ -76,11 +76,11 @@ public class Environment implements Cloneable {
         return state;
     }
 
-    public Core getCore() {
+    public CoreChat getCore() {
         return core;
     }
 
-    public void setCore(Core core) {
+    public void setCore(CoreChat core) {
         this.core = core;
     }
 }

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
-import ru.xunto.roleplaychat.framework.Core;
+import ru.xunto.roleplaychat.framework.CoreChat;
 import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Request;
 
@@ -21,7 +21,7 @@ public class RoleplayChat {
     public static final String NAME = "@MODID@";
     public static final String VERSION = "@VERSION@";
 
-    public final static Core chat = new Core();
+    public final static CoreChat chat = new CoreChat();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ServerChatEvent event) {
