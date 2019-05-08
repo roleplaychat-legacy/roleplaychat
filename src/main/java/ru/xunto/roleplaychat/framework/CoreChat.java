@@ -71,7 +71,7 @@ public class CoreChat {
 
 
     // Initialize the JTwig in advance 'cause there may be freezes
-    public void warmUpRenderer() {
+    private void warmUpRenderer() {
         JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
 }
