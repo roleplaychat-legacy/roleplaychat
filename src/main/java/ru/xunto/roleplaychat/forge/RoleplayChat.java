@@ -37,14 +37,12 @@ public class RoleplayChat {
         }
 
         event.setComponent(component);
-        event.setCanceled(true);
+        cancelChatMessage(event);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void cancelChatMessage(ServerChatEvent event) {
+    private void cancelChatMessage(ServerChatEvent event) {
         event.setCanceled(true);
     }
-
 
     @Mod.EventHandler public void startServer(FMLServerStartingEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
