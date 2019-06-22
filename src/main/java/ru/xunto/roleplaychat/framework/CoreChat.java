@@ -6,11 +6,9 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.features.endpoints.*;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
+import ru.xunto.roleplaychat.features.middleware.RememberMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
-import ru.xunto.roleplaychat.framework.api.ChatException;
-import ru.xunto.roleplaychat.framework.api.Environment;
-import ru.xunto.roleplaychat.framework.api.Middleware;
-import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,10 +22,10 @@ import java.util.List;
 */
 
 public class CoreChat {
-
     private List<Middleware> middleware = new ArrayList<>();
 
     public CoreChat() {
+        this.register(new RememberMiddleware());
         this.register(new DistanceMiddleware());
         this.register(new ToGmMiddleware());
         this.register(new ActionEndpoint());
@@ -76,6 +74,9 @@ public class CoreChat {
         middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
     }
 
+    public List<Middleware> getMiddleware() {
+        return middleware;
+    }
 
     // Initialize the JTwig in advance 'cause there may be freezes
     private void warmUpRenderer() {

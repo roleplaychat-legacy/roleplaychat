@@ -18,6 +18,7 @@ import java.util.Set;
             - Vec3d
  */
 
+
 public class DistanceMiddleware extends Middleware {
 
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
@@ -51,19 +52,14 @@ public class DistanceMiddleware extends Middleware {
     private static int countRangeShifts(String text, char symbol) {
         int shift = 0;
 
-        if (text.length() < 1) return shift;
-
         char[] chars = text.toCharArray();
-        while (chars[shift] == symbol)
+        while (shift< text.length() && chars[shift] == symbol)
             shift++;
 
         return shift;
     }
 
-    @Override public void process(Request request, Environment environment) {
-        if (!environment.getRecipients().isEmpty())
-            return;
-
+    public static Distance processDistanceState(Request request, Environment environment) {
         MessageState state = environment.getState();
         String text = request.getText();
 
@@ -74,11 +70,27 @@ public class DistanceMiddleware extends Middleware {
             */
             int plus = countRangeShifts(request.getText(), '!');
             int minus = countRangeShifts(request.getText(), '=');
+
             text = text.substring(minus + plus);
 
             range = DEFAULT_RANGE.shift(plus - minus);
             state.setValue(DISTANCE, range);
         }
+
+        String label = stringify(range);
+        if (label != null)
+            state.setValue(Environment.LABEL, label);
+
+        state.setValue(Environment.TEXT, text);
+
+        return range;
+    }
+
+    @Override public void process(Request request, Environment environment) {
+        if (!environment.getRecipients().isEmpty())
+            return;
+
+        Distance range = processDistanceState(request, environment);
 
         World world = request.getWorld();
         Vec3d position = request.getRequester().getPositionVector();
@@ -89,12 +101,6 @@ public class DistanceMiddleware extends Middleware {
                 recipients.add(recipient);
             }
         }
-
-        String label = stringify(range);
-        if (label != null)
-            state.setValue(Environment.LABEL, label);
-
-        state.setValue(Environment.TEXT, text);
     }
 
     @Override public Priority getPriority() {
@@ -141,5 +147,16 @@ public class DistanceMiddleware extends Middleware {
         public int getDistance() {
             return distance;
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(countRangeShifts("", '='));
+        System.out.println(countRangeShifts("test", '='));
+        System.out.println(countRangeShifts("=", '='));
+        System.out.println(countRangeShifts("==", '='));
+        System.out.println(countRangeShifts("===", '='));
+        System.out.println(countRangeShifts("=test", '='));
+        System.out.println(countRangeShifts("==test", '='));
+        System.out.println(countRangeShifts("===test", '='));
     }
 }
