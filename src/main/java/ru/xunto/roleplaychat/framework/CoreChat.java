@@ -6,8 +6,10 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.features.endpoints.*;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
-import ru.xunto.roleplaychat.features.middleware.RememberMiddleware;
+import ru.xunto.roleplaychat.features.middleware.remember.AbstractRecallMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
+import ru.xunto.roleplaychat.features.middleware.remember.RecallDistanceMiddleware;
+import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddleware;
 import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ public class CoreChat {
     private List<Middleware> middleware = new ArrayList<>();
 
     public CoreChat() {
-        this.register(new RememberMiddleware());
+        this.register(new RecallDistanceMiddleware());
+        this.register(new RecallEndpointMiddleware());
         this.register(new DistanceMiddleware());
         this.register(new ToGmMiddleware());
         this.register(new ActionEndpoint());
