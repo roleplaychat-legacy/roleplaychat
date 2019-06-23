@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware.remember;
 
 import net.minecraft.entity.player.EntityPlayer;
+import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
 import ru.xunto.roleplaychat.framework.api.*;
@@ -27,10 +28,11 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
             Distance forcedRange = DistanceMiddleware.processDistanceState(request, environment);
             if (storedRange != forcedRange) {
                 ranges.put(request.getRequester(), forcedRange);
-                throw new ChatException("Set distance: " + forcedRange.toString());
+                throw new ChatException(String
+                    .format(Translations.DISTANCE_SET, DistanceMiddleware.stringify(forcedRange)));
             } else {
                 ranges.remove(request.getRequester());
-                throw new ChatException("Distance was reset");
+                throw new ChatException(Translations.DISTANCE_RESET);
             }
         }
 

@@ -27,7 +27,7 @@ public class DistanceMiddleware extends Middleware {
     public DistanceMiddleware() {
     }
 
-    private static String stringify(Distance range) {
+    public static String stringify(Distance range) {
         /* TODO:
                     remove this hardcode; maybe add to localisation
         */

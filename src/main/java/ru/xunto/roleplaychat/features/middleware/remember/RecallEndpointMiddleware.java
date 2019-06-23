@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware.remember;
 
 import net.minecraft.entity.player.EntityPlayer;
+import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.HashMap;
@@ -34,20 +35,24 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
     }
 
     @Override public void process(Request request, Environment environment) throws ChatException {
-        Class<? extends PrefixMatchEndpoint> storedEndpoint = endpoints.getOrDefault(request.getRequester(), null);
-        Class<? extends PrefixMatchEndpoint> forcedEndpoint = getForcedEndpoint(request, environment);
+        Class<? extends PrefixMatchEndpoint> storedEndpoint =
+            endpoints.getOrDefault(request.getRequester(), null);
+        Class<? extends PrefixMatchEndpoint> forcedEndpoint =
+            getForcedEndpoint(request, environment);
 
         if (forcedEndpoint != null) {
             if (storedEndpoint == null) {
                 endpoints.put(request.getRequester(), forcedEndpoint);
-                throw new ChatException("Set endpoint: " + forcedEndpoint.toString());
+                throw new ChatException(
+                    String.format(Translations.ENDPOINT_SET, forcedEndpoint.getSimpleName()));
             } else {
                 endpoints.remove(request.getRequester());
-                throw new ChatException("Endpoint was reset.");
+                throw new ChatException(Translations.ENDPOINT_RESET);
             }
         }
 
 
-        if (storedEndpoint != null) environment.getState().setValue(FORCED_ENDPOINT, storedEndpoint);
+        if (storedEndpoint != null)
+            environment.getState().setValue(FORCED_ENDPOINT, storedEndpoint);
     }
 }
