@@ -1,16 +1,17 @@
 package ru.xunto.roleplaychat.features.middleware.remember;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Stage;
 
 public abstract class AbstractRecallMiddleware extends Middleware {
-    @Override public Stage getStage() {
-        return Stage.PRE;
-    }
-
-    @Override public Priority getPriority() {
-        return Priority.HIGH;
+    static void sendSetMessage(EntityPlayer requester, String text) {
+        TextComponentString component = new TextComponentString(text);
+        component.getStyle().setColor(TextFormatting.GREEN);
+        requester.sendMessage(component);
     }
 
     static boolean isSetRequest(String text, String[] prefixes) {
@@ -24,5 +25,13 @@ public abstract class AbstractRecallMiddleware extends Middleware {
         }
 
         return controls && text.isEmpty();
+    }
+
+    @Override public Stage getStage() {
+        return Stage.PRE;
+    }
+
+    @Override public Priority getPriority() {
+        return Priority.HIGH;
     }
 }

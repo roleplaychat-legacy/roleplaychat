@@ -44,17 +44,18 @@ public class CoreChat {
         this.warmUpRenderer();
     }
 
-    public ITextComponent process(Request request) throws ChatException {
+    public ITextComponent process(Request request) {
         Environment response = new Environment(request.getRequester().getName(), request.getText());
 
         return this.process(request, response);
     }
 
-    public ITextComponent process(Request request, Environment environment) throws ChatException {
+    public ITextComponent process(Request request, Environment environment) {
         environment.setCore(this);
 
         for (Middleware middleware : this.middleware) {
             middleware.process(request, environment);
+            if (environment.isInterrupted()) return null;
         }
 
         return this.send(environment);

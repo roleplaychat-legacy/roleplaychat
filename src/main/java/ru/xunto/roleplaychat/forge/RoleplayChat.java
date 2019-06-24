@@ -1,8 +1,6 @@
 package ru.xunto.roleplaychat.forge;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -11,7 +9,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.CoreChat;
-import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
@@ -29,22 +26,17 @@ public class RoleplayChat {
         if (event instanceof CompatServerChatEvent)
             return;
 
-        ITextComponent component;
-        try {
-            component = chat.process(new Request(event.getMessage(), event.getPlayer(),
-                event.getPlayer().getServerWorld()));
-        } catch (ChatException e) {
-            component = new TextComponentString(e.getMessage());
-            component.getStyle().setColor(TextFormatting.RED);
-            event.getPlayer().sendMessage(component);
-            e.printStackTrace();
-        }
+        ITextComponent component = chat.process(
+            new Request(event.getMessage(), event.getPlayer(), event.getPlayer().getServerWorld()));
 
         event.setComponent(component);
         event.setCanceled(true);
 
-        EVENT_BUS.post(new CompatServerChatEvent(event.getPlayer(), component.getUnformattedText(),
-            component));
+        if (component != null) {
+            EVENT_BUS.post(
+                new CompatServerChatEvent(event.getPlayer(), component.getUnformattedText(),
+                    component));
+        }
     }
 
     @Mod.EventHandler public void startServer(FMLServerStartingEvent event) {

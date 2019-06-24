@@ -20,6 +20,13 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
+    private void sendSetEndpointMessage(EntityPlayer requester,
+        Class<? extends PrefixMatchEndpoint> endpoint) {
+        sendSetMessage(requester,
+            String.format(Translations.ENDPOINT_SET, endpoint.getSimpleName()));
+    }
+
+
     private Class<? extends PrefixMatchEndpoint> getForcedEndpoint(Request request,
         Environment environment) {
         for (Middleware middleware : environment.getCore().getMiddleware()) {
@@ -34,21 +41,24 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return null;
     }
 
-    @Override public void process(Request request, Environment environment) throws ChatException {
+    @Override public void process(Request request, Environment environment) {
         Class<? extends PrefixMatchEndpoint> storedEndpoint =
             endpoints.getOrDefault(request.getRequester(), null);
         Class<? extends PrefixMatchEndpoint> forcedEndpoint =
             getForcedEndpoint(request, environment);
 
         if (forcedEndpoint != null) {
+            EntityPlayer requester = request.getRequester();
+
             if (storedEndpoint == null) {
-                endpoints.put(request.getRequester(), forcedEndpoint);
-                throw new ChatException(
-                    String.format(Translations.ENDPOINT_SET, forcedEndpoint.getSimpleName()));
+                endpoints.put(requester, forcedEndpoint);
+                sendSetEndpointMessage(requester, forcedEndpoint);
             } else {
-                endpoints.remove(request.getRequester());
-                throw new ChatException(Translations.ENDPOINT_RESET);
+                endpoints.remove(requester);
+                sendSetMessage(requester, Translations.ENDPOINT_RESET);
             }
+
+            environment.interrupt();
         }
 
 

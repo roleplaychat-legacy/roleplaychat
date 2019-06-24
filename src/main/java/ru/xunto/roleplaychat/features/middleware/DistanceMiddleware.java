@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.middleware;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
@@ -25,28 +26,6 @@ public class DistanceMiddleware extends Middleware {
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
     public DistanceMiddleware() {
-    }
-
-    public static String stringify(Distance range) {
-        /* TODO:
-                    remove this hardcode; maybe add to localisation
-        */
-        switch (range) {
-            case QUITE_WHISPER:
-                return "едва слышно";
-            case WHISPER:
-                return "очень тихо";
-            case QUITE:
-                return "тихо";
-            case LOUD:
-                return "громко";
-            case SHOUT:
-                return "очень громко";
-            case LOUD_SHOUT:
-                return "громогласно";
-            default:
-                return null;
-        }
     }
 
     private static int countRangeShifts(String text, char symbol) {
@@ -77,7 +56,7 @@ public class DistanceMiddleware extends Middleware {
             state.setValue(DISTANCE, range);
         }
 
-        String label = stringify(range);
+        String label = Translations.stringifyDistance(range);
         if (label != null)
             state.setValue(Environment.LABEL, label);
 
