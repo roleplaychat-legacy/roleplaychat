@@ -50,7 +50,7 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         if (forcedEndpoint != null) {
             EntityPlayer requester = request.getRequester();
 
-            if (storedEndpoint == null) {
+            if (storedEndpoint != forcedEndpoint) {
                 endpoints.put(requester, forcedEndpoint);
                 sendSetEndpointMessage(requester, forcedEndpoint);
             } else {
