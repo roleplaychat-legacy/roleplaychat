@@ -43,18 +43,16 @@ public class DistanceMiddleware extends Middleware {
         String text = request.getText();
 
         Distance range = state.getValue(DISTANCE);
-        if (state.getValue(DISTANCE) == null) {
-            /* TODO:
-                    remove this hardcode with '!' and '='; maybe add to external config file
-            */
-            int plus = countRangeShifts(request.getText(), '!');
-            int minus = countRangeShifts(request.getText(), '=');
 
+        int plus = countRangeShifts(request.getText(), '!');
+        int minus = countRangeShifts(request.getText(), '=');
+
+        if (plus - minus != 0 || range == null) {
             text = text.substring(minus + plus);
-
             range = DEFAULT_RANGE.shift(plus - minus);
-            state.setValue(DISTANCE, range);
         }
+
+        state.setValue(DISTANCE, range);
 
         String label = Translations.stringifyDistance(range);
         if (label != null)
