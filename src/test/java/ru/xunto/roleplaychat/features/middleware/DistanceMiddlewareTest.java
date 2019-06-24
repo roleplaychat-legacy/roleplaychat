@@ -7,16 +7,17 @@ import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import ru.xunto.roleplaychat.ChatTest;
-import ru.xunto.roleplaychat.framework.api.ChatException;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.DISTANCE;
 import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
 
 public class DistanceMiddlewareTest extends ChatTest {
@@ -25,8 +26,7 @@ public class DistanceMiddlewareTest extends ChatTest {
 
     private Middleware instance = new DistanceMiddleware();
 
-    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance)
-        throws ChatException {
+    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
         Request request = setUpRequest(text);
         Environment environment = setUpEnvironment(text);
         instance.process(request, environment);
@@ -34,7 +34,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
 
-    @Test public void testDistanceFromMessage() throws ChatException {
+    @Test public void testDistanceFromMessage()  {
         testDistanceFromMessageCase("test", DistanceMiddleware.Distance.NORMAL);
         testDistanceFromMessageCase("= test", DistanceMiddleware.Distance.QUITE);
         testDistanceFromMessageCase("== test", DistanceMiddleware.Distance.WHISPER);
@@ -49,7 +49,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         testDistanceFromMessageCase("=!= test", DistanceMiddleware.Distance.QUITE);
     }
 
-    public void testRecipientHandlingCase(Distance distance, int number) throws ChatException {
+    public void testRecipientHandlingCase(Distance distance, int number) {
         Request request = setUpRequest("");
         Environment environment = setUpEnvironment("");
 
@@ -59,7 +59,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(number, environment.getRecipients().size());
     }
 
-    @Test public void testRecipientHandling() throws ChatException {
+    @Test public void testRecipientHandling() {
         List<EntityPlayer> players = Arrays
             .asList(setUpPlayer(new Vec3d(Distance.QUITE_WHISPER.getDistance(), 0, 0)),
                 setUpPlayer(new Vec3d(Distance.QUITE.getDistance(), 0, 0)),
@@ -76,5 +76,27 @@ public class DistanceMiddlewareTest extends ChatTest {
         testRecipientHandlingCase(Distance.LOUD, 4);
         testRecipientHandlingCase(Distance.SHOUT, 5);
         testRecipientHandlingCase(Distance.LOUD_SHOUT, 6);
+    }
+
+    @Test public void ensurePreferInMessageDistance() {
+        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+
+        Request request = setUpRequest("=test");
+        Environment environment = setUpEnvironment("");
+        environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
+
+        instance.process(request, environment);
+        assertEquals(environment.getState().getValue(DISTANCE), Distance.QUITE);
+    }
+
+    @Test public void testForcedDistance() {
+        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+
+        Request request = setUpRequest("test");
+        Environment environment = setUpEnvironment("");
+        environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
+
+        instance.process(request, environment);
+        assertEquals(environment.getState().getValue(DISTANCE), Distance.LOUD_SHOUT);
     }
 }

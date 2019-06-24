@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.middleware;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
@@ -18,6 +19,7 @@ import java.util.Set;
             - Vec3d
  */
 
+
 public class DistanceMiddleware extends Middleware {
 
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
@@ -26,59 +28,46 @@ public class DistanceMiddleware extends Middleware {
     public DistanceMiddleware() {
     }
 
-    private static String stringify(Distance range) {
-        /* TODO:
-                    remove this hardcode; maybe add to localisation
-        */
-        switch (range) {
-            case QUITE_WHISPER:
-                return "едва слышно";
-            case WHISPER:
-                return "очень тихо";
-            case QUITE:
-                return "тихо";
-            case LOUD:
-                return "громко";
-            case SHOUT:
-                return "очень громко";
-            case LOUD_SHOUT:
-                return "громогласно";
-            default:
-                return null;
-        }
-    }
-
     private static int countRangeShifts(String text, char symbol) {
         int shift = 0;
 
-        if (text.length() < 1) return shift;
-
         char[] chars = text.toCharArray();
-        while (chars[shift] == symbol)
+        while (shift< text.length() && chars[shift] == symbol)
             shift++;
 
         return shift;
+    }
+
+    public static Distance processDistanceState(Request request, Environment environment) {
+        MessageState state = environment.getState();
+        String text = request.getText();
+
+        Distance range = state.getValue(DISTANCE);
+
+        int plus = countRangeShifts(request.getText(), '!');
+        int minus = countRangeShifts(request.getText(), '=');
+
+        if (plus - minus != 0 || range == null) {
+            text = text.substring(minus + plus);
+            range = DEFAULT_RANGE.shift(plus - minus);
+        }
+
+        state.setValue(DISTANCE, range);
+
+        String label = Translations.stringifyDistance(range);
+        if (label != null)
+            state.setValue(Environment.LABEL, label);
+
+        state.setValue(Environment.TEXT, text);
+
+        return range;
     }
 
     @Override public void process(Request request, Environment environment) {
         if (!environment.getRecipients().isEmpty())
             return;
 
-        MessageState state = environment.getState();
-        String text = request.getText();
-
-        Distance range = state.getValue(DISTANCE);
-        if (state.getValue(DISTANCE) == null) {
-            /* TODO:
-                    remove this hardcode with '!' and '='; maybe add to external config file
-            */
-            int plus = countRangeShifts(request.getText(), '!');
-            int minus = countRangeShifts(request.getText(), '=');
-            text = text.substring(minus + plus);
-
-            range = DEFAULT_RANGE.shift(plus - minus);
-            state.setValue(DISTANCE, range);
-        }
+        Distance range = processDistanceState(request, environment);
 
         World world = request.getWorld();
         Vec3d position = request.getRequester().getPositionVector();
@@ -89,12 +78,6 @@ public class DistanceMiddleware extends Middleware {
                 recipients.add(recipient);
             }
         }
-
-        String label = stringify(range);
-        if (label != null)
-            state.setValue(Environment.LABEL, label);
-
-        state.setValue(Environment.TEXT, text);
     }
 
     @Override public Priority getPriority() {
@@ -141,5 +124,16 @@ public class DistanceMiddleware extends Middleware {
         public int getDistance() {
             return distance;
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(countRangeShifts("", '='));
+        System.out.println(countRangeShifts("test", '='));
+        System.out.println(countRangeShifts("=", '='));
+        System.out.println(countRangeShifts("==", '='));
+        System.out.println(countRangeShifts("===", '='));
+        System.out.println(countRangeShifts("=test", '='));
+        System.out.println(countRangeShifts("==test", '='));
+        System.out.println(countRangeShifts("===test", '='));
     }
 }

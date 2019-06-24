@@ -6,11 +6,11 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.features.endpoints.*;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
+import ru.xunto.roleplaychat.features.middleware.remember.AbstractRecallMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
-import ru.xunto.roleplaychat.framework.api.ChatException;
-import ru.xunto.roleplaychat.framework.api.Environment;
-import ru.xunto.roleplaychat.framework.api.Middleware;
-import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.features.middleware.remember.RecallDistanceMiddleware;
+import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddleware;
+import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,10 +24,11 @@ import java.util.List;
 */
 
 public class CoreChat {
-
     private List<Middleware> middleware = new ArrayList<>();
 
     public CoreChat() {
+        this.register(new RecallDistanceMiddleware());
+        this.register(new RecallEndpointMiddleware());
         this.register(new DistanceMiddleware());
         this.register(new ToGmMiddleware());
         this.register(new ActionEndpoint());
@@ -43,17 +44,18 @@ public class CoreChat {
         this.warmUpRenderer();
     }
 
-    public ITextComponent process(Request request) throws ChatException {
+    public ITextComponent process(Request request) {
         Environment response = new Environment(request.getRequester().getName(), request.getText());
 
         return this.process(request, response);
     }
 
-    public ITextComponent process(Request request, Environment environment) throws ChatException {
+    public ITextComponent process(Request request, Environment environment) {
         environment.setCore(this);
 
         for (Middleware middleware : this.middleware) {
             middleware.process(request, environment);
+            if (environment.isInterrupted()) return null;
         }
 
         return this.send(environment);
@@ -76,6 +78,9 @@ public class CoreChat {
         middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
     }
 
+    public List<Middleware> getMiddleware() {
+        return middleware;
+    }
 
     // Initialize the JTwig in advance 'cause there may be freezes
     private void warmUpRenderer() {

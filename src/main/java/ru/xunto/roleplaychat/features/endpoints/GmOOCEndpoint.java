@@ -5,6 +5,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 

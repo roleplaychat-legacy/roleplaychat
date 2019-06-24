@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 
