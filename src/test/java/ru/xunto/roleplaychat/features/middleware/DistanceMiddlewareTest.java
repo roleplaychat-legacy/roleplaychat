@@ -11,11 +11,13 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.DISTANCE;
 import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
 
 public class DistanceMiddlewareTest extends ChatTest {
@@ -74,5 +76,27 @@ public class DistanceMiddlewareTest extends ChatTest {
         testRecipientHandlingCase(Distance.LOUD, 4);
         testRecipientHandlingCase(Distance.SHOUT, 5);
         testRecipientHandlingCase(Distance.LOUD_SHOUT, 6);
+    }
+
+    @Test public void ensurePreferInMessageDistance() {
+        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+
+        Request request = setUpRequest("=test");
+        Environment environment = setUpEnvironment("");
+        environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
+
+        instance.process(request, environment);
+        assertEquals(environment.getState().getValue(DISTANCE), Distance.QUITE);
+    }
+
+    @Test public void testForcedDistance() {
+        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+
+        Request request = setUpRequest("test");
+        Environment environment = setUpEnvironment("");
+        environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
+
+        instance.process(request, environment);
+        assertEquals(environment.getState().getValue(DISTANCE), Distance.LOUD_SHOUT);
     }
 }
