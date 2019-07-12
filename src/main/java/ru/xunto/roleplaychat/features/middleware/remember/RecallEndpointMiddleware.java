@@ -5,11 +5,12 @@ import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import static ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint.FORCED_ENDPOINT;
 
 public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
-    private HashMap<String, PrefixMatchEndpoint> endpoints = new HashMap<>();
+    private HashMap<UUID, PrefixMatchEndpoint> endpoints = new HashMap<>();
 
     @Override public Priority getPriority() {
         return Priority.HIGHEST;
@@ -38,17 +39,18 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
     }
 
     @Override public void process(Request request, Environment environment) {
-        PrefixMatchEndpoint storedEndpoint = endpoints.getOrDefault(request.getRequester(), null);
+        PrefixMatchEndpoint storedEndpoint =
+            endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
         PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);
 
         if (forcedEndpoint != null) {
             EntityPlayer requester = request.getRequester();
 
             if (storedEndpoint != forcedEndpoint) {
-                endpoints.put(requester.getName(), forcedEndpoint);
+                endpoints.put(requester.getUniqueID(), forcedEndpoint);
                 sendSetEndpointMessage(requester, forcedEndpoint);
             } else {
-                endpoints.remove(requester.getName());
+                endpoints.remove(requester.getUniqueID());
                 sendSetMessage(requester, Translations.ENDPOINT_RESET);
             }
 

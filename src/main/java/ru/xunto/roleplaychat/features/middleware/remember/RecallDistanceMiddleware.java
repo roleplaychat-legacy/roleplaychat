@@ -10,11 +10,12 @@ import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.api.Stage;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.DISTANCE;
 
 public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
-    private HashMap<String, Distance> ranges = new HashMap<>();
+    private HashMap<UUID, Distance> ranges = new HashMap<>();
 
     @Override public Priority getPriority() {
         return Priority.HIGHEST;
@@ -30,17 +31,17 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
     }
 
     @Override public void process(Request request, Environment environment) {
-        Distance storedRange = ranges.getOrDefault(request.getRequester(), null);
+        Distance storedRange = ranges.getOrDefault(request.getRequester().getUniqueID(), null);
 
         if (isSetRequest(request.getText(), new String[] {"!", "="})) {
             EntityPlayer requester = request.getRequester();
             Distance forcedRange = DistanceMiddleware.processDistanceState(request, environment);
 
             if (storedRange != forcedRange) {
-                ranges.put(requester.getName(), forcedRange);
+                ranges.put(requester.getUniqueID(), forcedRange);
                 sendSetDistanceMessage(requester, forcedRange);
             } else {
-                ranges.remove(requester.getName());
+                ranges.remove(requester.getUniqueID());
                 sendSetMessage(requester, Translations.DISTANCE_RESET);
             }
 
