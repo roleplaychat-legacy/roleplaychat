@@ -14,7 +14,7 @@ import java.util.HashMap;
 import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.DISTANCE;
 
 public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
-    private HashMap<EntityPlayer, Distance> ranges = new HashMap<>();
+    private HashMap<String, Distance> ranges = new HashMap<>();
 
     @Override public Priority getPriority() {
         return Priority.HIGHEST;
@@ -37,10 +37,10 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
             Distance forcedRange = DistanceMiddleware.processDistanceState(request, environment);
 
             if (storedRange != forcedRange) {
-                ranges.put(requester, forcedRange);
+                ranges.put(requester.getName(), forcedRange);
                 sendSetDistanceMessage(requester, forcedRange);
             } else {
-                ranges.remove(requester);
+                ranges.remove(requester.getName());
                 sendSetMessage(requester, Translations.DISTANCE_RESET);
             }
 

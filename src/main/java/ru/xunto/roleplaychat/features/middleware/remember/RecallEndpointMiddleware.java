@@ -9,7 +9,7 @@ import java.util.HashMap;
 import static ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint.FORCED_ENDPOINT;
 
 public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
-    private HashMap<EntityPlayer, PrefixMatchEndpoint> endpoints = new HashMap<>();
+    private HashMap<String, PrefixMatchEndpoint> endpoints = new HashMap<>();
 
     @Override public Priority getPriority() {
         return Priority.HIGHEST;
@@ -45,10 +45,10 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
             EntityPlayer requester = request.getRequester();
 
             if (storedEndpoint != forcedEndpoint) {
-                endpoints.put(requester, forcedEndpoint);
+                endpoints.put(requester.getName(), forcedEndpoint);
                 sendSetEndpointMessage(requester, forcedEndpoint);
             } else {
-                endpoints.remove(requester);
+                endpoints.remove(requester.getName());
                 sendSetMessage(requester, Translations.ENDPOINT_RESET);
             }
 
