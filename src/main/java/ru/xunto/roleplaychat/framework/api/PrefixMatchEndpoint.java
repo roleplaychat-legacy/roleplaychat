@@ -31,7 +31,7 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
 
         for (String prefix : prefixes) {
             if (text.startsWith(prefix)) {
-                text = text.substring(1).trim();
+                text = text.replaceFirst(prefix, "").trim();
                 state.setValue(Environment.TEXT, text);
                 return true;
             }
