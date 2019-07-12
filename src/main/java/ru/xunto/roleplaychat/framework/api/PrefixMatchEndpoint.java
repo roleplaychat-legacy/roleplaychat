@@ -1,14 +1,11 @@
 package ru.xunto.roleplaychat.framework.api;
 
-import ru.xunto.roleplaychat.framework.api.Endpoint;
-import ru.xunto.roleplaychat.framework.api.Environment;
-import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
 public abstract class PrefixMatchEndpoint extends Endpoint {
-    public final static IProperty<Class<? extends PrefixMatchEndpoint>> FORCED_ENDPOINT = new Property<>("endpoint");
+    public final static IProperty<PrefixMatchEndpoint> FORCED_ENDPOINT = new Property<>("endpoint");
 
     private final String[] prefixes;
 
@@ -26,7 +23,7 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         MessageState state = environment.getState();
         String text = state.getValue(Environment.TEXT);
 
-        boolean forced = environment.getState().getValue(FORCED_ENDPOINT) == this.getClass();
+        boolean forced = environment.getState().getValue(FORCED_ENDPOINT) == this;
         if (forced) return true;
 
         for (String prefix : prefixes) {
@@ -38,6 +35,10 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         }
 
         return false;
+    }
+
+    public String getName() {
+        return this.getClass().getSimpleName();
     }
 
     public class EmptyPrefixException extends Exception {
