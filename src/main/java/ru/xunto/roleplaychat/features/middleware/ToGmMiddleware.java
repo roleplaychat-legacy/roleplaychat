@@ -22,7 +22,7 @@ import java.util.Set;
 */
 
 public class ToGmMiddleware extends Middleware {
-    @Override public void process(Request request, Environment environment) {
+    @Override public void process(Request request, Environment environment, Runnable next) {
         Environment newEnvironment = environment.clone();
 
         Set<EntityPlayer> originalRecipients = environment.getRecipients();
@@ -44,6 +44,8 @@ public class ToGmMiddleware extends Middleware {
 
         if (recipients.size() > 0)
             environment.getCore().send(newEnvironment);
+
+        next.run();
     }
 
     @Override public Stage getStage() {

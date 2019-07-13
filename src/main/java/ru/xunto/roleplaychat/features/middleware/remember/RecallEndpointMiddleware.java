@@ -45,7 +45,7 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return null;
     }
 
-    @Override public void process(Request request, Environment environment) {
+    @Override public void process(Request request, Environment environment, Runnable next) {
         PrefixMatchEndpoint storedEndpoint =
             endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
         PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);
@@ -61,11 +61,13 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
                 sendSetMessage(requester, Translations.ENDPOINT_RESET);
             }
 
-            environment.interrupt();
+            return;
         }
 
 
         if (storedEndpoint != null)
             environment.getState().setValue(FORCED_ENDPOINT, storedEndpoint);
+
+        next.run();
     }
 }

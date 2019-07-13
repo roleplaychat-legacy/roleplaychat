@@ -4,17 +4,24 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-import ru.xunto.roleplaychat.features.endpoints.*;
+import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.GmActionEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
+import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
-import ru.xunto.roleplaychat.features.middleware.remember.AbstractRecallMiddleware;
 import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallDistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddleware;
-import ru.xunto.roleplaychat.framework.api.*;
+import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.Middleware;
+import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
+import ru.xunto.roleplaychat.framework.api.Request;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /*
     TODO:
@@ -53,10 +60,17 @@ public class CoreChat {
     public ITextComponent process(Request request, Environment environment) {
         environment.setCore(this);
 
-        for (Middleware middleware : this.middleware) {
-            middleware.process(request, environment);
-            if (environment.isInterrupted()) return null;
-        }
+        Queue<Middleware> middlewareQueue = new LinkedBlockingQueue<>(this.middleware);
+        Runnable next = new Runnable() {
+            @Override public void run() {
+                Middleware nextMiddleware = middlewareQueue.poll();
+                if (nextMiddleware == null)
+                    return;
+                nextMiddleware.process(request, environment, this);
+            }
+        };
+
+        next.run();
 
         return this.send(environment);
     }
