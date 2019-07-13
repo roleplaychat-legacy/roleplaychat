@@ -30,7 +30,7 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
             String.format(Translations.DISTANCE_SET, Translations.stringifyDistance(distance)));
     }
 
-    @Override public void process(Request request, Environment environment) {
+    @Override public void process(Request request, Environment environment, Runnable next) {
         Distance storedRange = ranges.getOrDefault(request.getRequester().getUniqueID(), null);
 
         if (isSetRequest(request.getText(), new String[] {"!", "="})) {
@@ -45,11 +45,13 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
                 sendSetMessage(requester, Translations.DISTANCE_RESET);
             }
 
-            environment.interrupt();
+            return;
         }
 
 
         if (storedRange != null)
             environment.getState().setValue(DISTANCE, storedRange);
+
+        next.run();
     }
 }

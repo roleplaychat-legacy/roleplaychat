@@ -12,9 +12,7 @@ public abstract class Endpoint extends Middleware {
     public void preProcessEndpoint(Request request, Environment environment) {
     }
 
-    ;
-
-    @Override public void process(Request request, Environment environment) {
+    public void process(Request request, Environment environment) {
         if (environment.isProcessed())
             return;
 
@@ -24,5 +22,10 @@ public abstract class Endpoint extends Middleware {
         this.preProcessEndpoint(request, environment);
         this.processEndpoint(request, environment);
         environment.setProcessed(true);
+    }
+
+    @Override public void process(Request request, Environment environment, Runnable next) {
+        this.process(request, environment);
+        next.run();
     }
 }

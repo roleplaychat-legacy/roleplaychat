@@ -30,8 +30,6 @@ public class Environment implements Cloneable {
     private CoreChat core;
     private ITemplate<JTwigState> template = new JTwigTemplate("templates/default.twig");
     private boolean processed = false;
-    private boolean interrupted = false;
-
 
     private JTwigState state = new JTwigState();
     private Map<String, TextFormatting> colors = new HashMap<>();
@@ -68,10 +66,6 @@ public class Environment implements Cloneable {
         this.template = template;
     }
 
-    public void interrupt() {
-        this.setInterrupted(true);
-    }
-
     @Override public Environment clone() {
         try {
             Environment environment = (Environment) super.clone();
@@ -95,13 +89,5 @@ public class Environment implements Cloneable {
 
     public void setCore(CoreChat core) {
         this.core = core;
-    }
-
-    public boolean isInterrupted() {
-        return interrupted;
-    }
-
-    public void setInterrupted(boolean interrupted) {
-        this.interrupted = interrupted;
     }
 }
