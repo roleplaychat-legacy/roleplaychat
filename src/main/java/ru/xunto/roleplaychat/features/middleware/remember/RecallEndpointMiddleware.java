@@ -24,13 +24,20 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         sendSetMessage(requester, String.format(Translations.ENDPOINT_SET, endpoint.getName()));
     }
 
-    private PrefixMatchEndpoint getForcedEndpoint(Request request,
-        Environment environment) {
+    private PrefixMatchEndpoint getForcedEndpoint(Request request, Environment environment) {
+
         for (Middleware middleware : environment.getCore().getMiddleware()) {
             if (middleware instanceof PrefixMatchEndpoint) {
                 PrefixMatchEndpoint endpoint = (PrefixMatchEndpoint) middleware;
-                if (isSetRequest(request.getText(), endpoint.getPrefixes())) {
-                    return endpoint;
+
+                if (endpoint.matchEndpoint(request, environment)) {
+                    Environment clone = environment.clone();
+                    endpoint.removePrefix(clone);
+                    String text = clone.getState().getValue(Environment.TEXT);
+
+                    if (text.trim().isEmpty()) {
+                        return endpoint;
+                    }
                 }
             }
         }

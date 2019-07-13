@@ -82,7 +82,8 @@ public class DistanceMiddleware extends Middleware {
 
     @Override public void process(Request request, Environment environment) {
         JTwigState state = environment.getState();
-        if (state.getValue(CANCEL))
+        Boolean canceled = state.getValue(CANCEL);
+        if (canceled != null && canceled)
             return;
 
         Distance range = processDistanceState(request, environment);
