@@ -5,10 +5,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /*
@@ -21,7 +23,7 @@ import java.util.Set;
 
 
 public class DistanceMiddleware extends Middleware {
-
+    public final static IProperty<Boolean> CANCEL = new Property<>("cancel_distance");
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
@@ -32,7 +34,7 @@ public class DistanceMiddleware extends Middleware {
         int shift = 0;
 
         char[] chars = text.toCharArray();
-        while (shift< text.length() && chars[shift] == symbol)
+        while (shift < text.length() && chars[shift] == symbol)
             shift++;
 
         return shift;
@@ -63,21 +65,30 @@ public class DistanceMiddleware extends Middleware {
         return range;
     }
 
-    @Override public void process(Request request, Environment environment) {
-        if (!environment.getRecipients().isEmpty())
-            return;
-
-        Distance range = processDistanceState(request, environment);
-
+    public static Set<EntityPlayer> fetchRecipients(Request request, Environment environment,
+        Distance range) {
         World world = request.getWorld();
         Vec3d position = request.getRequester().getPositionVector();
 
-        Set<EntityPlayer> recipients = environment.getRecipients();
+        Set<EntityPlayer> recipients = new HashSet<>();
         for (EntityPlayer recipient : world.getPlayers(EntityPlayer.class, player -> true)) {
             if (position.distanceTo(recipient.getPositionVector()) <= range.getDistance()) {
                 recipients.add(recipient);
             }
         }
+
+        return recipients;
+    }
+
+    @Override public void process(Request request, Environment environment) {
+        JTwigState state = environment.getState();
+        if (state.getValue(CANCEL))
+            return;
+
+        Distance range = processDistanceState(request, environment);
+        Set<EntityPlayer> recipients = fetchRecipients(request, environment, range);
+
+        environment.getRecipients().addAll(recipients);
     }
 
     @Override public Priority getPriority() {
