@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import org.junit.Test;
 import ru.xunto.roleplaychat.ChatTest;
+import ru.xunto.roleplaychat.TestUtility;
 import ru.xunto.roleplaychat.framework.api.Environment;
 
 import static org.testng.Assert.*;
@@ -20,7 +21,7 @@ public class ActionEndpointTest extends ChatTest {
 
     public Environment testProcessCase(String text) {
         Environment environment = setUpEnvironment(text);
-        instance.process(setUpRequest(text), environment);
+        instance.processWrapped(setUpRequest(text), environment, TestUtility.DO_NOTHING);
 
         return environment;
     }

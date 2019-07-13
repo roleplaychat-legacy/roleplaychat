@@ -52,7 +52,8 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         }
     }
 
-    @Override public void preProcessEndpoint(Request request, Environment environment) {
+    @Override
+    public void preProcessEndpoint(Request request, Environment environment, Runnable next) {
         removePrefix(environment);
     }
 
