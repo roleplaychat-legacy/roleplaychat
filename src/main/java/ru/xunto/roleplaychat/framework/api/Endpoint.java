@@ -19,9 +19,9 @@ public abstract class Endpoint extends Middleware {
         if (!this.matchEndpoint(request, environment))
             return;
 
+        environment.setProcessed(true);
         this.preProcessEndpoint(request, environment);
         this.processEndpoint(request, environment);
-        environment.setProcessed(true);
     }
 
     @Override public void process(Request request, Environment environment, Runnable next) {
