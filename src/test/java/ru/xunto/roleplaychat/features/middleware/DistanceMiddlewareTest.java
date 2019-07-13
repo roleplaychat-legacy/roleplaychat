@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import ru.xunto.roleplaychat.ChatTest;
+import ru.xunto.roleplaychat.TestUtility;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -29,7 +30,7 @@ public class DistanceMiddlewareTest extends ChatTest {
     private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
         Request request = setUpRequest(text);
         Environment environment = setUpEnvironment(text);
-        instance.process(request, environment);
+        instance.process(request, environment, TestUtility.DO_NOTHING);
 
         assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
@@ -55,7 +56,7 @@ public class DistanceMiddlewareTest extends ChatTest {
 
         environment.getState().setValue(DistanceMiddleware.DISTANCE, distance);
 
-        instance.process(request, environment);
+        instance.process(request, environment, TestUtility.DO_NOTHING);
         assertEquals(number, environment.getRecipients().size());
     }
 
@@ -85,7 +86,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         Environment environment = setUpEnvironment("");
         environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
 
-        instance.process(request, environment);
+        instance.process(request, environment, TestUtility.DO_NOTHING);
         assertEquals(environment.getState().getValue(DISTANCE), Distance.QUITE);
     }
 
@@ -96,7 +97,7 @@ public class DistanceMiddlewareTest extends ChatTest {
         Environment environment = setUpEnvironment("");
         environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
 
-        instance.process(request, environment);
+        instance.process(request, environment, TestUtility.DO_NOTHING);
         assertEquals(environment.getState().getValue(DISTANCE), Distance.LOUD_SHOUT);
     }
 }
