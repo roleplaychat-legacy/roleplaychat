@@ -4,11 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
-import ru.xunto.roleplaychat.framework.MiddlewareCallback;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.api.Stage;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -26,8 +26,7 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
-    @Override
-    public void process(Request request, Environment environment, MiddlewareCallback next) {
+    @Override public void process(Request request, Environment environment, Flow next) {
         Distance storedRange = ranges.getOrDefault(request.getRequester().getUniqueID(), null);
 
         if (isSetRequest(request.getText(), new String[] {"!", "="})) {

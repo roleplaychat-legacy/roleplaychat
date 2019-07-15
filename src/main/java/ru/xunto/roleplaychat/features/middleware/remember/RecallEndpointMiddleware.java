@@ -2,8 +2,8 @@ package ru.xunto.roleplaychat.features.middleware.remember;
 
 import net.minecraft.entity.player.EntityPlayer;
 import ru.xunto.roleplaychat.features.Translations;
-import ru.xunto.roleplaychat.framework.MiddlewareCallback;
 import ru.xunto.roleplaychat.framework.api.*;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -21,8 +21,7 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
-    @Override
-    public void process(Request request, Environment environment, MiddlewareCallback next) {
+    @Override public void process(Request request, Environment environment, Flow next) {
         PrefixMatchEndpoint storedEndpoint =
             endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
         PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);

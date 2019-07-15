@@ -4,11 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.server.permission.PermissionAPI;
-import ru.xunto.roleplaychat.framework.MiddlewareCallback;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.api.Stage;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 import java.util.Objects;
 import java.util.Set;
@@ -28,8 +28,7 @@ public class ToGmMiddleware extends Middleware {
         return Stage.POST;
     }
 
-    @Override
-    public void process(Request request, Environment environment, MiddlewareCallback next) {
+    @Override public void process(Request request, Environment environment, Flow next) {
         Environment newEnvironment = environment.clone();
 
         Set<EntityPlayer> originalRecipients = environment.getRecipients();
@@ -50,8 +49,7 @@ public class ToGmMiddleware extends Middleware {
         }
 
         if (recipients.size() > 0)
-            next.call(newEnvironment);
-            environment.getCore().send(newEnvironment);
+            next.fork(newEnvironment);
 
         next.call();
     }

@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.xunto.roleplaychat.features.Translations;
-import ru.xunto.roleplaychat.framework.MiddlewareCallback;
 import ru.xunto.roleplaychat.framework.api.*;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
@@ -62,8 +62,7 @@ public class DistanceMiddleware extends Middleware {
         return Stage.PRE;
     }
 
-    @Override
-    public void process(Request request, Environment environment, MiddlewareCallback next) {
+    @Override public void process(Request request, Environment environment, Flow next) {
         JTwigState state = environment.getState();
         Boolean canceled = state.getValue(CANCEL, false);
         if (canceled)

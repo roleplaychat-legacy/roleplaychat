@@ -16,6 +16,7 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 import java.util.*;
 
@@ -70,8 +71,7 @@ public class CoreChat {
         environment.setCore(this);
 
         Set<Environment> toSend = new HashSet<>();
-        MiddlewareCallback next =
-            new MiddlewareCallback(this.middleware, request, environment, toSend::add);
+        Flow next = new Flow(this.middleware, request, environment, toSend::add);
         next.call();
 
         List<ITextComponent> result = new ArrayList<>();
