@@ -8,7 +8,15 @@ public class MessageState implements Cloneable {
     private Map<IProperty, Object> state = new HashMap<>();
 
     public <E> E getValue(IProperty<E> property) {
-        Object value = state.get(property);
+        return getValue(property, null);
+    }
+
+    public <E> E getValue(IProperty<E> property, E defaultValue) {
+        Object value = state.getOrDefault(property, defaultValue);
+
+        if (value == null)
+            return null;
+
         return (E) value;
     }
 

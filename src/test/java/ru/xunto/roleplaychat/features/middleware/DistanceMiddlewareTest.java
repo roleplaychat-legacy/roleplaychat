@@ -18,22 +18,13 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.DISTANCE;
-import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
+import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.*;
 
 public class DistanceMiddlewareTest extends ChatTest {
 
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     private Middleware instance = new DistanceMiddleware();
-
-    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
-        Request request = setUpRequest(text);
-        Environment environment = setUpEnvironment(text);
-        instance.process(request, environment, TestUtility.DO_NOTHING);
-
-        assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
-    }
 
     @Test public void testDistanceFromMessage()  {
         testDistanceFromMessageCase("test", DistanceMiddleware.Distance.NORMAL);
@@ -50,14 +41,12 @@ public class DistanceMiddlewareTest extends ChatTest {
         testDistanceFromMessageCase("=!= test", DistanceMiddleware.Distance.QUITE);
     }
 
-    public void testRecipientHandlingCase(Distance distance, int number) {
-        Request request = setUpRequest("");
-        Environment environment = setUpEnvironment("");
-
-        environment.getState().setValue(DistanceMiddleware.DISTANCE, distance);
-
+    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
+        Request request = setUpRequest(text);
+        Environment environment = setUpEnvironment(text);
         instance.process(request, environment, TestUtility.DO_NOTHING);
-        assertEquals(number, environment.getRecipients().size());
+
+        assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
 
     @Test public void testRecipientHandling() {
@@ -79,15 +68,37 @@ public class DistanceMiddlewareTest extends ChatTest {
         testRecipientHandlingCase(Distance.LOUD_SHOUT, 6);
     }
 
+    public void testRecipientHandlingCase(Distance distance, int number) {
+        Request request = setUpRequest("");
+        Environment environment = setUpEnvironment("");
+
+        environment.getState().setValue(DistanceMiddleware.DISTANCE, distance);
+
+        instance.process(request, environment, TestUtility.DO_NOTHING);
+        assertEquals(number, environment.getRecipients().size());
+    }
+
     @Test public void ensurePreferInMessageDistance() {
+        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+
+        Request request = setUpRequest("=test");
+        Environment environment = setUpEnvironment("=test");
+        environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
+
+        instance.process(request, environment, TestUtility.DO_NOTHING);
+        assertEquals(Distance.QUITE, environment.getState().getValue(DISTANCE));
+    }
+
+    @Test public void testForcedEnvironment() {
         doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
 
         Request request = setUpRequest("=test");
         Environment environment = setUpEnvironment("");
         environment.getState().setValue(DISTANCE, Distance.LOUD_SHOUT);
+        environment.getState().setValue(FORCE_ENVIRONMENT, true);
 
         instance.process(request, environment, TestUtility.DO_NOTHING);
-        assertEquals(environment.getState().getValue(DISTANCE), Distance.QUITE);
+        assertEquals(Distance.LOUD_SHOUT, environment.getState().getValue(DISTANCE));
     }
 
     @Test public void testForcedDistance() {

@@ -24,10 +24,23 @@ import java.util.Set;
 
 public class DistanceMiddleware extends Middleware {
     public final static IProperty<Boolean> CANCEL = new Property<>("cancel_distance");
+    public final static IProperty<Boolean> FORCE_ENVIRONMENT =
+        new Property<>("force_environment_distance");
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
     public DistanceMiddleware() {
+    }
+
+    public static void main(String[] args) {
+        System.out.println(countRangeShifts("", '='));
+        System.out.println(countRangeShifts("test", '='));
+        System.out.println(countRangeShifts("=", '='));
+        System.out.println(countRangeShifts("==", '='));
+        System.out.println(countRangeShifts("===", '='));
+        System.out.println(countRangeShifts("=test", '='));
+        System.out.println(countRangeShifts("==test", '='));
+        System.out.println(countRangeShifts("===test", '='));
     }
 
     private static int countRangeShifts(String text, char symbol) {
@@ -40,35 +53,12 @@ public class DistanceMiddleware extends Middleware {
         return shift;
     }
 
-    @Override public void process(Request request, Environment environment, Runnable next) {
-        JTwigState state = environment.getState();
-        Boolean canceled = state.getValue(CANCEL);
-        if (canceled != null && canceled)
-            return;
-
-        Distance range = state.getValue(DISTANCE);
-        if (range == null)
-            range = processDistanceState(request, environment);
-        Set<EntityPlayer> recipients = fetchRecipients(request, environment, range);
-
-        environment.getRecipients().addAll(recipients);
-
-        next.run();
+    @Override public Priority getPriority() {
+        return Priority.HIGH;
     }
 
-    public static Set<EntityPlayer> fetchRecipients(Request request, Environment environment,
-        Distance range) {
-        World world = request.getWorld();
-        Vec3d position = request.getRequester().getPositionVector();
-
-        Set<EntityPlayer> recipients = new HashSet<>();
-        for (EntityPlayer recipient : world.getPlayers(EntityPlayer.class, player -> true)) {
-            if (position.distanceTo(recipient.getPositionVector()) <= range.getDistance()) {
-                recipients.add(recipient);
-            }
-        }
-
-        return recipients;
+    @Override public Stage getStage() {
+        return Stage.PRE;
     }
 
     public static Distance processDistanceState(Request request, Environment environment) {
@@ -96,12 +86,39 @@ public class DistanceMiddleware extends Middleware {
         return range;
     }
 
-    @Override public Priority getPriority() {
-        return Priority.HIGH;
+    @Override public void process(Request request, Environment environment, Runnable next) {
+        JTwigState state = environment.getState();
+        Boolean canceled = state.getValue(CANCEL, false);
+        if (canceled)
+            return;
+
+        Distance range;
+        Boolean forceEnvironment = state.getValue(FORCE_ENVIRONMENT, false);
+
+        if (forceEnvironment)
+            range = state.getValue(DISTANCE, DEFAULT_RANGE);
+        else
+            range = processDistanceState(request, environment);
+
+        Set<EntityPlayer> recipients = fetchRecipients(request, environment, range);
+        environment.getRecipients().addAll(recipients);
+
+        next.run();
     }
 
-    @Override public Stage getStage() {
-        return Stage.PRE;
+    public static Set<EntityPlayer> fetchRecipients(Request request, Environment environment,
+        Distance range) {
+        World world = request.getWorld();
+        Vec3d position = request.getRequester().getPositionVector();
+
+        Set<EntityPlayer> recipients = new HashSet<>();
+        for (EntityPlayer recipient : world.getPlayers(EntityPlayer.class, player -> true)) {
+            if (position.distanceTo(recipient.getPositionVector()) <= range.getDistance()) {
+                recipients.add(recipient);
+            }
+        }
+
+        return recipients;
     }
 
     public enum Distance {
@@ -140,16 +157,5 @@ public class DistanceMiddleware extends Middleware {
         public int getDistance() {
             return distance;
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(countRangeShifts("", '='));
-        System.out.println(countRangeShifts("test", '='));
-        System.out.println(countRangeShifts("=", '='));
-        System.out.println(countRangeShifts("==", '='));
-        System.out.println(countRangeShifts("===", '='));
-        System.out.println(countRangeShifts("=test", '='));
-        System.out.println(countRangeShifts("==test", '='));
-        System.out.println(countRangeShifts("===test", '='));
     }
 }
