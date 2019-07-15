@@ -78,7 +78,11 @@ public class CoreChat {
 
         List<ITextComponent> result = new ArrayList<>();
         for (Environment resultEnvironment : toSend) {
-            result.add(this.send(resultEnvironment));
+            ITextComponent send = this.send(resultEnvironment);
+
+            if (!resultEnvironment.getState().getValue(Flow.IS_LIGHT_FORK, false)) {
+                result.add(send);
+            }
         }
 
         return result;

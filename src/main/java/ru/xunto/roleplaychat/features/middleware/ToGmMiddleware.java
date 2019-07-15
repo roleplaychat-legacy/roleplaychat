@@ -49,7 +49,7 @@ public class ToGmMiddleware extends Middleware {
         }
 
         if (recipients.size() > 0)
-            flow.fork(newEnvironment);
+            flow.lightFork(newEnvironment);
 
         flow.next();
     }
