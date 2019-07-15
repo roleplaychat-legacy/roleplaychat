@@ -19,6 +19,7 @@ import java.util.Map;
             - TextFormatting
 */
 
+
 public class JTwigTemplate implements ITemplate<JTwigState> {
     private final static String COLOR_MARKER = "$";
     private final static String COLOR_MARKER_ESCAPED = "\16";
@@ -31,12 +32,12 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
         this.template = JtwigTemplate.classpathTemplate(path, CONF);
     }
 
-    public static String color(String colorName) {
-        return COLOR_MARKER + colorName + COLOR_MARKER;
-    }
-
     public static String wrapWithColor(String value, String colorName) {
         return color(colorName) + value + color("default");
+    }
+
+    public static String color(String colorName) {
+        return COLOR_MARKER + colorName + COLOR_MARKER;
     }
 
     public static String escape(String text) {
@@ -45,12 +46,6 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
 
     public static String unescape(String escapedText) {
         return escapedText.replace(COLOR_MARKER_ESCAPED, COLOR_MARKER);
-    }
-
-    private ITextComponent coloredComponent(String content, TextFormatting color) {
-        ITextComponent component = new TextComponentString(content);
-        component.getStyle().setColor(color);
-        return component;
     }
 
     private ITextComponent renderText(String content, Map<String, TextFormatting> colors) {
@@ -90,5 +85,11 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
         String content = template.render(model);
 
         return this.renderText(content, colors);
+    }
+
+    private ITextComponent coloredComponent(String content, TextFormatting color) {
+        ITextComponent component = new TextComponentString(content);
+        component.getStyle().setColor(color);
+        return component;
     }
 }

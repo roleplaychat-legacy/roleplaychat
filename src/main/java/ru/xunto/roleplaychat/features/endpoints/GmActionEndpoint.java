@@ -17,6 +17,7 @@ import java.util.Map;
             - PermissionAPI
 */
 
+
 public class GmActionEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 

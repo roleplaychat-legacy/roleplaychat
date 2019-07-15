@@ -40,6 +40,10 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         return false;
     }
 
+    @Override public void preProcessEndpoint(Request request, Environment environment) {
+        removePrefix(environment);
+    }
+
     public void removePrefix(Environment environment) {
         MessageState state = environment.getState();
         String text = state.getValue(Environment.TEXT);
@@ -50,11 +54,6 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
                 state.setValue(Environment.TEXT, text);
             }
         }
-    }
-
-    @Override
-    public void preProcessEndpoint(Request request, Environment environment, Runnable next) {
-        removePrefix(environment);
     }
 
     public String getName() {

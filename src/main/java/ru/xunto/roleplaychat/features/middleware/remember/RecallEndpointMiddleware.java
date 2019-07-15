@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.middleware.remember;
 import net.minecraft.entity.player.EntityPlayer;
 import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -20,8 +21,30 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
-    private void sendSetEndpointMessage(EntityPlayer requester, PrefixMatchEndpoint endpoint) {
-        sendSetMessage(requester, String.format(Translations.ENDPOINT_SET, endpoint.getName()));
+    @Override public void process(Request request, Environment environment, Flow next) {
+        PrefixMatchEndpoint storedEndpoint =
+            endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
+        PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);
+
+        if (forcedEndpoint != null) {
+            EntityPlayer requester = request.getRequester();
+
+            if (storedEndpoint != forcedEndpoint) {
+                endpoints.put(requester.getUniqueID(), forcedEndpoint);
+                sendSetEndpointMessage(requester, forcedEndpoint);
+            } else {
+                endpoints.remove(requester.getUniqueID());
+                sendSetMessage(requester, Translations.ENDPOINT_RESET);
+            }
+
+            return;
+        }
+
+
+        if (storedEndpoint != null)
+            environment.getState().setValue(FORCED_ENDPOINT, storedEndpoint);
+
+        next.call();
     }
 
     private PrefixMatchEndpoint getForcedEndpoint(Request request, Environment environment) {
@@ -45,29 +68,7 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return null;
     }
 
-    @Override public void process(Request request, Environment environment, Runnable next) {
-        PrefixMatchEndpoint storedEndpoint =
-            endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
-        PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);
-
-        if (forcedEndpoint != null) {
-            EntityPlayer requester = request.getRequester();
-
-            if (storedEndpoint != forcedEndpoint) {
-                endpoints.put(requester.getUniqueID(), forcedEndpoint);
-                sendSetEndpointMessage(requester, forcedEndpoint);
-            } else {
-                endpoints.remove(requester.getUniqueID());
-                sendSetMessage(requester, Translations.ENDPOINT_RESET);
-            }
-
-            return;
-        }
-
-
-        if (storedEndpoint != null)
-            environment.getState().setValue(FORCED_ENDPOINT, storedEndpoint);
-
-        next.run();
+    private void sendSetEndpointMessage(EntityPlayer requester, PrefixMatchEndpoint endpoint) {
+        sendSetMessage(requester, String.format(Translations.ENDPOINT_SET, endpoint.getName()));
     }
 }

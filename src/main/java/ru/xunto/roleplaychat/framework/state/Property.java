@@ -21,11 +21,11 @@ public class Property<T> implements IProperty<T>, Cloneable {
         return value.toString();
     }
 
-    @Override protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
     public boolean isColorful() {
         return colorful;
+    }
+
+    @Override protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

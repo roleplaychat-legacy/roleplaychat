@@ -9,6 +9,7 @@ import ru.xunto.roleplaychat.framework.api.Environment;
             - ITextComponent
 */
 
+
 public abstract class Renderer {
     public abstract ITextComponent render(Environment environment);
 }

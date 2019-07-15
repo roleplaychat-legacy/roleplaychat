@@ -8,6 +8,7 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.api.Stage;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 import java.util.Objects;
 import java.util.Set;
@@ -21,8 +22,13 @@ import java.util.Set;
             - PermissionAPI
 */
 
+
 public class ToGmMiddleware extends Middleware {
-    @Override public void process(Request request, Environment environment, Runnable next) {
+    @Override public Stage getStage() {
+        return Stage.POST;
+    }
+
+    @Override public void process(Request request, Environment environment, Flow next) {
         Environment newEnvironment = environment.clone();
 
         Set<EntityPlayer> originalRecipients = environment.getRecipients();
@@ -43,12 +49,8 @@ public class ToGmMiddleware extends Middleware {
         }
 
         if (recipients.size() > 0)
-            environment.getCore().send(newEnvironment);
+            next.fork(newEnvironment);
 
-        next.run();
-    }
-
-    @Override public Stage getStage() {
-        return Stage.POST;
+        next.call();
     }
 }
