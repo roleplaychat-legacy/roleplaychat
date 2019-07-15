@@ -9,5 +9,5 @@ public abstract class Middleware {
 
     public abstract Stage getStage();
 
-    public abstract void process(Request request, Environment environment, Flow next);
+    public abstract void process(Request request, Environment environment, Flow flow);
 }

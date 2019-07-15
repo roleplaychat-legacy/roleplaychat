@@ -73,8 +73,8 @@ public class CoreChat {
         environment.setCore(this);
 
         List<Environment> toSend = new ArrayList<>();
-        Flow next = new Flow(this.middleware, request, environment, toSend::add);
-        next.call();
+        Flow flow = new Flow(this.middleware, request, environment, toSend::add);
+        flow.next();
 
         List<ITextComponent> result = new ArrayList<>();
         for (Environment resultEnvironment : toSend) {

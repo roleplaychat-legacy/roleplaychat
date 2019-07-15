@@ -26,7 +26,7 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
-    @Override public void process(Request request, Environment environment, Flow next) {
+    @Override public void process(Request request, Environment environment, Flow flow) {
         Distance storedRange = ranges.getOrDefault(request.getRequester().getUniqueID(), null);
 
         if (isSetRequest(request.getText(), new String[] {"!", "="})) {
@@ -48,7 +48,7 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
         if (storedRange != null)
             environment.getState().setValue(DISTANCE, storedRange);
 
-        next.call();
+        flow.next();
     }
 
     private void sendSetDistanceMessage(EntityPlayer requester, Distance distance) {

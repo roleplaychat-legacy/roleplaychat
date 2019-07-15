@@ -62,7 +62,7 @@ public class DistanceMiddleware extends Middleware {
         return Stage.PRE;
     }
 
-    @Override public void process(Request request, Environment environment, Flow next) {
+    @Override public void process(Request request, Environment environment, Flow flow) {
         JTwigState state = environment.getState();
         Boolean canceled = state.getValue(CANCEL, false);
         if (canceled)
@@ -79,7 +79,7 @@ public class DistanceMiddleware extends Middleware {
         Set<EntityPlayer> recipients = fetchRecipients(request, environment, range);
         environment.getRecipients().addAll(recipients);
 
-        next.call();
+        flow.next();
     }
 
     public static Distance processDistanceState(Request request, Environment environment) {

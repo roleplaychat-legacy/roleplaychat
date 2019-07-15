@@ -28,7 +28,7 @@ public class ToGmMiddleware extends Middleware {
         return Stage.POST;
     }
 
-    @Override public void process(Request request, Environment environment, Flow next) {
+    @Override public void process(Request request, Environment environment, Flow flow) {
         Environment newEnvironment = environment.clone();
 
         Set<EntityPlayer> originalRecipients = environment.getRecipients();
@@ -49,8 +49,8 @@ public class ToGmMiddleware extends Middleware {
         }
 
         if (recipients.size() > 0)
-            next.fork(newEnvironment);
+            flow.fork(newEnvironment);
 
-        next.call();
+        flow.next();
     }
 }

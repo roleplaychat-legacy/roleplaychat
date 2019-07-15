@@ -21,7 +21,7 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
-    @Override public void process(Request request, Environment environment, Flow next) {
+    @Override public void process(Request request, Environment environment, Flow flow) {
         PrefixMatchEndpoint storedEndpoint =
             endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
         PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);
@@ -44,7 +44,7 @@ public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
         if (storedEndpoint != null)
             environment.getState().setValue(FORCED_ENDPOINT, storedEndpoint);
 
-        next.call();
+        flow.next();
     }
 
     private PrefixMatchEndpoint getForcedEndpoint(Request request, Environment environment) {

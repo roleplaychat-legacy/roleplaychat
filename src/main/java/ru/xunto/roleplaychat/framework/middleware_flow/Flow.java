@@ -9,11 +9,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Consumer;
 
-public class Flow implements IFork {
+public class Flow {
     private final Request request;
     private final Environment environment;
     private final Consumer<Environment> endCallback;
     private Queue<Middleware> middlewareQueue;
+
+    private boolean stopped = false;
 
     public Flow(Collection<Middleware> middleware, Request request, Environment environment,
         Consumer<Environment> endCallback) {
@@ -23,12 +25,15 @@ public class Flow implements IFork {
         this.endCallback = endCallback;
     }
 
-    @Override public void fork(Environment environment) {
+    public void fork(Environment environment) {
         Flow newFlow = new Flow(middlewareQueue, request, environment, endCallback);
-        newFlow.call();
+        newFlow.next();
     }
 
-    public void call() {
+    public void next() {
+        if (stopped)
+            return;
+
         Middleware nextMiddleware = middlewareQueue.poll();
 
         if (nextMiddleware == null) {
@@ -37,5 +42,9 @@ public class Flow implements IFork {
         }
 
         nextMiddleware.process(request, environment, this);
+    }
+
+    public void stop() {
+        stopped = true;
     }
 }
