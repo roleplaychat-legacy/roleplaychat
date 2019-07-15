@@ -17,11 +17,7 @@ import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.*;
 
 /*
     TODO:
@@ -29,6 +25,7 @@ import java.util.concurrent.LinkedBlockingQueue;
             - EntityPlayer
             - TextFormatting
 */
+
 
 public class CoreChat {
     private List<Middleware> middleware = new ArrayList<>();
@@ -51,28 +48,38 @@ public class CoreChat {
         this.warmUpRenderer();
     }
 
-    public ITextComponent process(Request request) {
+    public void register(Middleware newMiddleware) {
+        middleware.add(newMiddleware);
+
+        middleware.sort(
+            Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
+    }
+
+    // Initialize the JTwig in advance 'cause there may be freezes
+    private void warmUpRenderer() {
+        JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
+    }
+
+    public List<ITextComponent> process(Request request) {
         Environment response = new Environment(request.getRequester().getName(), request.getText());
 
         return this.process(request, response);
     }
 
-    public ITextComponent process(Request request, Environment environment) {
+    public List<ITextComponent> process(Request request, Environment environment) {
         environment.setCore(this);
 
-        Queue<Middleware> middlewareQueue = new LinkedBlockingQueue<>(this.middleware);
-        Runnable next = new Runnable() {
-            @Override public void run() {
-                Middleware nextMiddleware = middlewareQueue.poll();
-                if (nextMiddleware == null)
-                    return;
-                nextMiddleware.process(request, environment, this);
-            }
-        };
+        Set<Environment> toSend = new HashSet<>();
+        MiddlewareCallback next =
+            new MiddlewareCallback(this.middleware, request, environment, toSend::add);
+        next.call();
 
-        next.run();
+        List<ITextComponent> result = new ArrayList<>();
+        for (Environment resultEnvironment : toSend) {
+            result.add(this.send(resultEnvironment));
+        }
 
-        return this.send(environment);
+        return result;
     }
 
     public ITextComponent send(Environment environment) {
@@ -86,18 +93,7 @@ public class CoreChat {
         return components;
     }
 
-    public void register(Middleware newMiddleware) {
-        middleware.add(newMiddleware);
-
-        middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
-    }
-
     public List<Middleware> getMiddleware() {
         return middleware;
-    }
-
-    // Initialize the JTwig in advance 'cause there may be freezes
-    private void warmUpRenderer() {
-        JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
 }

@@ -13,6 +13,7 @@ import java.util.Map;
             - TextFormatting
 */
 
+
 public interface ITemplate<E extends MessageState> {
     public ITextComponent render(E state, Map<String, TextFormatting> colors);
 }

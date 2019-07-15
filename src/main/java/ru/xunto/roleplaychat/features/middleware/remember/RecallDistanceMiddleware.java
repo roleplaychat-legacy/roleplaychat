@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.Distance;
+import ru.xunto.roleplaychat.framework.MiddlewareCallback;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -25,12 +26,8 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
         return Stage.PRE;
     }
 
-    private void sendSetDistanceMessage(EntityPlayer requester, Distance distance) {
-        sendSetMessage(requester,
-            String.format(Translations.DISTANCE_SET, Translations.stringifyDistance(distance)));
-    }
-
-    @Override public void process(Request request, Environment environment, Runnable next) {
+    @Override
+    public void process(Request request, Environment environment, MiddlewareCallback next) {
         Distance storedRange = ranges.getOrDefault(request.getRequester().getUniqueID(), null);
 
         if (isSetRequest(request.getText(), new String[] {"!", "="})) {
@@ -52,6 +49,11 @@ public class RecallDistanceMiddleware extends AbstractRecallMiddleware {
         if (storedRange != null)
             environment.getState().setValue(DISTANCE, storedRange);
 
-        next.run();
+        next.call();
+    }
+
+    private void sendSetDistanceMessage(EntityPlayer requester, Distance distance) {
+        sendSetMessage(requester,
+            String.format(Translations.DISTANCE_SET, Translations.stringifyDistance(distance)));
     }
 }

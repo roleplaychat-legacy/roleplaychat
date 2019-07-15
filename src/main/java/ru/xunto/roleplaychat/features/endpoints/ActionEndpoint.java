@@ -19,6 +19,7 @@ import java.util.Map;
             - TextFormatting
 */
 
+
 public class ActionEndpoint extends Endpoint {
     public static final IProperty<String[]> ACTION_PARTS = new Property<>("action_parts");
     public static final IProperty<Boolean> START_WITH_ACTION = new Property<>("start_with_action");

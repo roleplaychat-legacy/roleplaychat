@@ -11,6 +11,8 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.framework.CoreChat;
 import ru.xunto.roleplaychat.framework.api.Request;
 
+import java.util.List;
+
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(modid = RoleplayChat.MODID, name = RoleplayChat.NAME, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
@@ -21,18 +23,21 @@ public class RoleplayChat {
 
     public final static CoreChat chat = new CoreChat();
 
+    public void createComaptEvent(ServerChatEvent event, ITextComponent component) {
+
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ServerChatEvent event) {
         if (event instanceof CompatServerChatEvent)
             return;
 
-        ITextComponent component = chat.process(
+        List<ITextComponent> components = chat.process(
             new Request(event.getMessage(), event.getPlayer(), event.getPlayer().getServerWorld()));
 
-        event.setComponent(component);
         event.setCanceled(true);
 
-        if (component != null) {
+        for (ITextComponent component : components) {
             EVENT_BUS.post(
                 new CompatServerChatEvent(event.getPlayer(), component.getUnformattedText(),
                     component));

@@ -15,6 +15,7 @@ import java.util.Map;
             - TextFormatting
 */
 
+
 public class OOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 

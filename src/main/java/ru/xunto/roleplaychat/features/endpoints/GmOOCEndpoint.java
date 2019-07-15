@@ -23,6 +23,7 @@ import java.util.Set;
             - PermissionAPI
 */
 
+
 public class GmOOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextFormatting> colors = new HashMap<>();
 

@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.framework.api;
 
+import ru.xunto.roleplaychat.framework.MiddlewareCallback;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
@@ -40,6 +41,11 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         return false;
     }
 
+    @Override public void preProcessEndpoint(Request request, Environment environment,
+        MiddlewareCallback next) {
+        removePrefix(environment);
+    }
+
     public void removePrefix(Environment environment) {
         MessageState state = environment.getState();
         String text = state.getValue(Environment.TEXT);
@@ -50,11 +56,6 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
                 state.setValue(Environment.TEXT, text);
             }
         }
-    }
-
-    @Override
-    public void preProcessEndpoint(Request request, Environment environment, Runnable next) {
-        removePrefix(environment);
     }
 
     public String getName() {

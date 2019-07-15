@@ -27,11 +27,11 @@ public abstract class AbstractRecallMiddleware extends Middleware {
         return controls && text.isEmpty();
     }
 
-    @Override public Stage getStage() {
-        return Stage.PRE;
-    }
-
     @Override public Priority getPriority() {
         return Priority.HIGH;
+    }
+
+    @Override public Stage getStage() {
+        return Stage.PRE;
     }
 }
