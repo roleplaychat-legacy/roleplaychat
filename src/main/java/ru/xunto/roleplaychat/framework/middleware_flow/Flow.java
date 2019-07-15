@@ -35,11 +35,6 @@ public class Flow {
         newFlow.next();
     }
 
-    public void fork(Environment environment) {
-        Flow newFlow = new Flow(middlewareQueue, request, environment, endCallback);
-        newFlow.next();
-    }
-
     public void next() {
         if (stopped)
             return;
@@ -52,6 +47,11 @@ public class Flow {
         }
 
         nextMiddleware.process(request, environment, this);
+    }
+
+    public void fork(Environment environment) {
+        Flow newFlow = new Flow(middlewareQueue, request, environment, endCallback);
+        newFlow.next();
     }
 
     public void stop() {
