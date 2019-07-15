@@ -18,7 +18,9 @@ import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /*
     TODO:
@@ -70,7 +72,7 @@ public class CoreChat {
     public List<ITextComponent> process(Request request, Environment environment) {
         environment.setCore(this);
 
-        Set<Environment> toSend = new HashSet<>();
+        List<Environment> toSend = new ArrayList<>();
         Flow next = new Flow(this.middleware, request, environment, toSend::add);
         next.call();
 
