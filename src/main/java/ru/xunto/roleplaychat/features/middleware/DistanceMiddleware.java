@@ -40,29 +40,20 @@ public class DistanceMiddleware extends Middleware {
         return shift;
     }
 
-    public static Distance processDistanceState(Request request, Environment environment) {
-        MessageState state = environment.getState();
-        String text = request.getText();
+    @Override public void process(Request request, Environment environment, Runnable next) {
+        JTwigState state = environment.getState();
+        Boolean canceled = state.getValue(CANCEL);
+        if (canceled != null && canceled)
+            return;
 
         Distance range = state.getValue(DISTANCE);
+        if (range == null)
+            range = processDistanceState(request, environment);
+        Set<EntityPlayer> recipients = fetchRecipients(request, environment, range);
 
-        int plus = countRangeShifts(request.getText(), '!');
-        int minus = countRangeShifts(request.getText(), '=');
+        environment.getRecipients().addAll(recipients);
 
-        if (plus - minus != 0 || range == null) {
-            text = text.substring(minus + plus);
-            range = DEFAULT_RANGE.shift(plus - minus);
-        }
-
-        state.setValue(DISTANCE, range);
-
-        String label = Translations.stringifyDistance(range);
-        if (label != null)
-            state.setValue(Environment.LABEL, label);
-
-        state.setValue(Environment.TEXT, text);
-
-        return range;
+        next.run();
     }
 
     public static Set<EntityPlayer> fetchRecipients(Request request, Environment environment,
@@ -80,18 +71,29 @@ public class DistanceMiddleware extends Middleware {
         return recipients;
     }
 
-    @Override public void process(Request request, Environment environment, Runnable next) {
-        JTwigState state = environment.getState();
-        Boolean canceled = state.getValue(CANCEL);
-        if (canceled != null && canceled)
-            return;
+    public static Distance processDistanceState(Request request, Environment environment) {
+        MessageState state = environment.getState();
+        String text = state.getValue(Environment.TEXT);
 
-        Distance range = processDistanceState(request, environment);
-        Set<EntityPlayer> recipients = fetchRecipients(request, environment, range);
+        Distance range = state.getValue(DISTANCE);
 
-        environment.getRecipients().addAll(recipients);
+        int plus = countRangeShifts(text, '!');
+        int minus = countRangeShifts(text, '=');
 
-        next.run();
+        if (plus - minus != 0 || range == null) {
+            text = text.substring(minus + plus);
+            range = DEFAULT_RANGE.shift(plus - minus);
+        }
+
+        state.setValue(DISTANCE, range);
+
+        String label = Translations.stringifyDistance(range);
+        if (label != null)
+            state.setValue(Environment.LABEL, label);
+
+        state.setValue(Environment.TEXT, text);
+
+        return range;
     }
 
     @Override public Priority getPriority() {
