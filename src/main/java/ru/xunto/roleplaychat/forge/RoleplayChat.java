@@ -23,10 +23,6 @@ public class RoleplayChat {
 
     public final static CoreChat chat = new CoreChat();
 
-    public void createComaptEvent(ServerChatEvent event, ITextComponent component) {
-
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ServerChatEvent event) {
         if (event instanceof CompatServerChatEvent)
