@@ -1,0 +1,4 @@
+rootProject.name = 'roleplay_chat'
+
+include 'roleplay_chat-common', 'roleplay_chat-forge-1.12.2'
+
