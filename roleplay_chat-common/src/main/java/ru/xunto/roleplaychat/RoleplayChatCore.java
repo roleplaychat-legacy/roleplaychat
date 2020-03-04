@@ -41,8 +41,6 @@ public class RoleplayChatCore {
         } catch (PrefixMatchEndpoint.EmptyPrefixException e) {
             e.printStackTrace();
         }
-
-        this.warmUpRenderer();
     }
 
     public void register(Middleware newMiddleware) {
@@ -51,7 +49,7 @@ public class RoleplayChatCore {
     }
 
     // Initialize the JTwig in advance 'cause there may be freezes
-    private void warmUpRenderer() {
+    public void warmUpRenderer() {
         JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
 

@@ -81,6 +81,7 @@ public class RoleplayChat {
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
+        RoleplayChatCore.instance.warmUpRenderer();
         PermissionAPI.registerNode("gm", DefaultPermissionLevel.OP, "Game Master permission");
     }
 }

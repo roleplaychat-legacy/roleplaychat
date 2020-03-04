@@ -80,5 +80,6 @@ public class RoleplayChat {
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
+        RoleplayChatCore.instance.warmUpRenderer();
     }
 }
