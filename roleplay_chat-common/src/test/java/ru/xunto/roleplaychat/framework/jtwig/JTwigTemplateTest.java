@@ -1,9 +1,9 @@
 package ru.xunto.roleplaychat.framework.jtwig;
 
-import net.minecraft.util.text.TextFormatting;
 import org.junit.Test;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.renderer.ITemplate;
+import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import static ru.xunto.roleplaychat.features.endpoints.ActionEndpoint.START_WITH
 
 public class JTwigTemplateTest {
     public static void testCase(ITemplate template, JTwigState state, String expectedResult) {
-        Map<String, TextFormatting> colors = new HashMap<>();
+        Map<String, TextColor> colors = new HashMap<>();
         String result = template.render(state, colors).getUnformattedText();
         assertEquals(result, expectedResult);
     }

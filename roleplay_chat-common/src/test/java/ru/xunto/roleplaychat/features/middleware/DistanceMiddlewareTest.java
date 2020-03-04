@@ -1,32 +1,30 @@
 package ru.xunto.roleplaychat.features.middleware;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import ru.xunto.roleplaychat.ChatTest;
 import ru.xunto.roleplaychat.TestUtility;
+import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.api.Position;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.*;
 
 public class DistanceMiddlewareTest extends ChatTest {
 
-    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     private Middleware instance = new DistanceMiddleware();
 
-    @Test public void testDistanceFromMessage()  {
+    @Test
+    public void testDistanceFromMessage() {
         testDistanceFromMessageCase("test", DistanceMiddleware.Distance.NORMAL);
         testDistanceFromMessageCase("= test", DistanceMiddleware.Distance.QUITE);
         testDistanceFromMessageCase("== test", DistanceMiddleware.Distance.WHISPER);
@@ -49,16 +47,18 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(distance, environment.getState().getValue(DistanceMiddleware.DISTANCE));
     }
 
-    @Test public void testRecipientHandling() {
-        List<EntityPlayer> players = Arrays
-            .asList(setUpPlayer(new Vec3d(Distance.QUITE_WHISPER.getDistance(), 0, 0)),
-                setUpPlayer(new Vec3d(Distance.QUITE.getDistance(), 0, 0)),
-                setUpPlayer(new Vec3d(Distance.NORMAL.getDistance(), 0, 0)),
-                setUpPlayer(new Vec3d(Distance.LOUD.getDistance(), 0, 0)),
-                setUpPlayer(new Vec3d(Distance.SHOUT.getDistance(), 0, 0)),
-                setUpPlayer(new Vec3d(Distance.LOUD_SHOUT.getDistance(), 0, 0)));
+    @Test
+    public void testRecipientHandling() {
+        ISpeaker[] players = new ISpeaker[]{
+                setUpPlayer(new Position(Distance.QUITE_WHISPER.getDistance(), 0, 0)),
+                setUpPlayer(new Position(Distance.QUITE.getDistance(), 0, 0)),
+                setUpPlayer(new Position(Distance.NORMAL.getDistance(), 0, 0)),
+                setUpPlayer(new Position(Distance.LOUD.getDistance(), 0, 0)),
+                setUpPlayer(new Position(Distance.SHOUT.getDistance(), 0, 0)),
+                setUpPlayer(new Position(Distance.LOUD_SHOUT.getDistance(), 0, 0))
+        };
 
-        doReturn(players).when(world).getPlayers(eq(EntityPlayer.class), any());
+        Mockito.doReturn(players).when(world).getPlayers();
 
         testRecipientHandlingCase(Distance.QUITE_WHISPER, 1);
         testRecipientHandlingCase(Distance.QUITE, 2);
@@ -78,8 +78,9 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(number, environment.getRecipients().size());
     }
 
-    @Test public void ensurePreferInMessageDistance() {
-        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+    @Test
+    public void ensurePreferInMessageDistance() {
+        Mockito.doReturn(new ISpeaker[0]).when(world).getPlayers();
 
         Request request = setUpRequest("=test");
         Environment environment = setUpEnvironment("=test");
@@ -89,8 +90,9 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(Distance.QUITE, environment.getState().getValue(DISTANCE));
     }
 
-    @Test public void testForcedEnvironment() {
-        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+    @Test
+    public void testForcedEnvironment() {
+        Mockito.doReturn(new ISpeaker[0]).when(world).getPlayers();
 
         Request request = setUpRequest("=test");
         Environment environment = setUpEnvironment("");
@@ -101,8 +103,9 @@ public class DistanceMiddlewareTest extends ChatTest {
         assertEquals(Distance.LOUD_SHOUT, environment.getState().getValue(DISTANCE));
     }
 
-    @Test public void testForcedDistance() {
-        doReturn(new ArrayList<>()).when(world).getPlayers(eq(EntityPlayer.class), any());
+    @Test
+    public void testForcedDistance() {
+        Mockito.doReturn(new ISpeaker[0]).when(world).getPlayers();
 
         Request request = setUpRequest("test");
         Environment environment = setUpEnvironment("");

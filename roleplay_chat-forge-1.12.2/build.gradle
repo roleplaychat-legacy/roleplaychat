@@ -34,11 +34,6 @@ minecraft {
 
 dependencies {
     compile project(":roleplay_chat-common")
-
-    testCompile 'org.testng:testng:6.10'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.7.22'
-    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
 }
 
 jar {

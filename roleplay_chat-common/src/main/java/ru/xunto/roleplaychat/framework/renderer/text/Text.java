@@ -26,4 +26,13 @@ public class Text {
     public void setDefaultColor(TextColor defaultColor) {
         this.defaultColor = defaultColor;
     }
+
+    public String getUnformattedText() {
+        StringBuilder builder = new StringBuilder();
+        for (TextComponent component : components) {
+            builder.append(component.getContent());
+        }
+
+        return builder.toString();
+    }
 }
