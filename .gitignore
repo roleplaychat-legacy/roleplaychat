@@ -188,3 +188,8 @@ modules.xml
 hs_err_pid*
 
 # End of https://www.gitignore.io/api/java,eclipse,forgegradle,intellij+all
+
+.idea
+*/.gradle/*
+*/build/*
+/roleplay_chat-forge-1.7.10/eclipse/

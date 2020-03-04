@@ -1,67 +1,19 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
     }
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
+subprojects {
+    apply plugin: 'java'
 
-version = modVersion
-group = modGroup
-archivesBaseName = modBaseName
+    group = project.modGroup
+    version = project.modVersion
 
-configurations {
-    shade
-    compile.extendsFrom shade
-}
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 
-minecraft {
-    version = project.forgeVersion
-    runDir = "run"
-    mappings = project.mcpVersion
-
-    replaceIn "RoleplayChat.java"
-    replace "@MODID@", modBaseName
-    replace "@VERSION@", forgeVersion
-}
-
-dependencies {
-    shade("org.jtwig:jtwig-core:5.87.0.RELEASE") {
-        exclude group: 'com.google.guava', module: 'guava'
-        exclude group: 'org.ow2.asm', module: 'asm'
-    }
-
-    testCompile 'org.testng:testng:6.10'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.7.22'
-    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
-}
-
-jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand "version": project.version, "mcversion": project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
+    repositories {
+        mavenCentral()
     }
 }

@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "@@MODID@@",
+    "name": "RoleplayChat Mod",
+    "description": "Chat for roleplay.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "xunto",
+      "Sargar"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
