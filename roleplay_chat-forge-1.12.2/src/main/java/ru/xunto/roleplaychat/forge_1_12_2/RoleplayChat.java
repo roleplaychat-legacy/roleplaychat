@@ -26,10 +26,9 @@ public class RoleplayChat {
     public static final String NAME = "@MODID@";
     public static final String VERSION = "@VERSION@";
 
-
     public static TextFormatting toMinecraftFormatting(TextColor color) {
         for (TextFormatting value : TextFormatting.values()) {
-            if (value.name() == color.name()) return value;
+            if (value.name().equals(color.name())) return value;
         }
 
         return TextFormatting.WHITE;

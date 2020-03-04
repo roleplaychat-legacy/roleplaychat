@@ -192,3 +192,4 @@ hs_err_pid*
 .idea
 */.gradle/*
 */build/*
+/roleplay_chat-forge-1.7.10/eclipse/
