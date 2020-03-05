@@ -39,8 +39,13 @@ minecraft {
     replace "@@VERSION@@", project.version
 }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
 dependencies {
-    compile project(":roleplay_chat-common")
+    shade project(":roleplay_chat-common")
 }
 
 processResources {
@@ -54,5 +59,13 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
     }
 }
