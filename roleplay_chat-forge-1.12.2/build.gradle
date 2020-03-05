@@ -33,15 +33,7 @@ minecraft {
 }
 
 dependencies {
-    compile project(":roleplay_chat-common")
-}
-
-jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
+    shade project(":roleplay_chat-common")
 }
 
 processResources {
@@ -58,3 +50,10 @@ processResources {
     }
 }
 
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+}
