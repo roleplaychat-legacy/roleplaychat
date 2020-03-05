@@ -26,6 +26,11 @@ compileJava   {
     targetCompatibility = '1.8'
 }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "eclipse"
@@ -37,11 +42,6 @@ minecraft {
     replaceIn "mcmod.info"
     replace "@@MODID@@", archivesBaseName
     replace "@@VERSION@@", project.version
-}
-
-configurations {
-    shade
-    compile.extendsFrom shade
 }
 
 dependencies {
