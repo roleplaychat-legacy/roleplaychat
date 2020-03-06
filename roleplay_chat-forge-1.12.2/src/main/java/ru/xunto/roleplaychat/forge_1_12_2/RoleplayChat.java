@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.forge_1_12_2;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -35,8 +36,9 @@ public class RoleplayChat {
     }
 
     private static ITextComponent coloredComponent(String content, TextColor color) {
-        ITextComponent component = new TextComponentString(content);
+        ITextComponent component = new TextComponentString("").appendSibling(ForgeHooks.newChatWithLinks(content));
         component.getStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
+
         return component;
     }
 

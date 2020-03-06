@@ -8,6 +8,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -33,7 +34,7 @@ public class RoleplayChat {
     }
 
     private static IChatComponent coloredComponent(String content, TextColor color) {
-        IChatComponent component = new ChatComponentText(content);
+        IChatComponent component = new ChatComponentText("").appendSibling(ForgeHooks.newChatWithLinks(content));
         component.getChatStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
 
         return component;
