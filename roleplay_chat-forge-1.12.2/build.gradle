@@ -32,9 +32,8 @@ minecraft {
     mappings = project.mcpVersion
 
     replaceIn "RoleplayChat.java"
-    replace "@MODID@", modBaseName
-    replace "@VERSION@", forgeVersion
-
+    replace "@@MODID@@", modBaseName
+    replace "@@VERSION@@", project.version
 }
 
 reobf {

@@ -36,11 +36,11 @@ minecraft {
     runDir = "eclipse"
 
     replaceIn "RoleplayChat.java"
-    replace "@@MODID@@", archivesBaseName
+    replace "@@MODID@@", modBaseName
     replace "@@VERSION@@", project.version
 
     replaceIn "mcmod.info"
-    replace "@@MODID@@", archivesBaseName
+    replace "@@MODID@@", modBaseName
     replace "@@VERSION@@", project.version
 
     srgExtra "PK: org/slf4j ru/xunto/org/slf4j"

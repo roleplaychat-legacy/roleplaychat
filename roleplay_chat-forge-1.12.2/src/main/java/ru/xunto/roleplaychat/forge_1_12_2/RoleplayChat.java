@@ -24,9 +24,9 @@ import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(modid = RoleplayChat.MODID, name = RoleplayChat.NAME, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
 public class RoleplayChat {
-    public static final String MODID = "@MODID@";
-    public static final String NAME = "@MODID@";
-    public static final String VERSION = "@VERSION@";
+    public static final String MODID = "@@MODID@@";
+    public static final String NAME = "@@MODID@@";
+    public static final String VERSION = "@@VERSION@@";
 
     public static TextFormatting toMinecraftFormatting(TextColor color) {
         for (TextFormatting value : TextFormatting.values()) {
