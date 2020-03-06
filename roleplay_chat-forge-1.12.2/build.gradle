@@ -15,7 +15,7 @@ apply plugin: "net.minecraftforge.gradle.forge"
 
 version = modVersion
 group = modGroup
-archivesBaseName = modBaseName
+archivesBaseName = "$modBaseName-forge-1.12.2"
 
 configurations {
     shade

@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 version = modVersion
 group = modGroup
-archivesBaseName = modBaseName
+archivesBaseName = "$modBaseName-forge-1.7.10"
 
 compileJava   {
     sourceCompatibility = '1.8'
