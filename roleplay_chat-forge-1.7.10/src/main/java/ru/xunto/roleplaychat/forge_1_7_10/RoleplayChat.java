@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.forge_1_7_10;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -76,9 +77,11 @@ public class RoleplayChat {
 
         for (Text text : texts) {
             IChatComponent component = RoleplayChat.toTextComponent(text);
-            EVENT_BUS.post(
+            boolean isCanceled = EVENT_BUS.post(
                     new CompatServerChatEvent(event.player, component.getUnformattedText(), component)
             );
+
+            if (!isCanceled) FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(component);
         }
     }
 

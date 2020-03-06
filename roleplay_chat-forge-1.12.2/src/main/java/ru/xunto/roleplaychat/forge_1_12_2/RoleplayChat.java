@@ -5,6 +5,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -78,9 +79,11 @@ public class RoleplayChat {
 
         for (Text text : texts) {
             ITextComponent component = RoleplayChat.toTextComponent(text);
-            EVENT_BUS.post(
+            boolean isCanceled = EVENT_BUS.post(
                     new CompatServerChatEvent(event.getPlayer(), component.getUnformattedText(), component)
             );
+
+            if (!isCanceled) FMLCommonHandler.instance().getMinecraftServerInstance().sendMessage(component);
         }
     }
 
