@@ -19,7 +19,7 @@ import java.util.List;
 
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
-@Mod(modid = RoleplayChat.MODID, version = RoleplayChat.VERSION)
+@Mod(modid = RoleplayChat.MODID, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
 public class RoleplayChat {
     public static final String MODID = "@@MODID@@";
     public static final String VERSION = "@@VERSION@@";
