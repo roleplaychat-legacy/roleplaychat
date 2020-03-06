@@ -43,6 +43,9 @@ public class RoleplayChat {
     }
 
     public static ITextComponent toTextComponent(Text text) {
+        Object cache = text.getCache();
+        if (cache instanceof ITextComponent) return (ITextComponent) cache;
+
         ITextComponent result = RoleplayChat.coloredComponent("", text.getDefaultColor());
 
         for (TextComponent component : text.getComponents()) {
@@ -54,6 +57,7 @@ public class RoleplayChat {
             );
         }
 
+        text.setCache(result);
         return result;
     }
 
