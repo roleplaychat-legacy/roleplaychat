@@ -31,10 +31,12 @@ public class Flow {
 
     /**
      * Light fork creates new flow which doesn't count as separate flow (as opposed to hard fork).
-     * It is mostly used to send message to somebody who is not usually allowed to see
-     * it (@see ToGmMiddleware for examples). It doesn't have separate log entry end etc.
+     * It is mostly used to send the same message with some minor alterations to some recipients.
+     * <p>
+     * It doesn't have separate log entry end treated as single message by external modules.
      *
      * @param environment message generation environment for new Flow.
+     * @see ru.xunto.roleplaychat.features.middleware.ToGmMiddleware for examples
      */
     public void lightFork(Environment environment) {
         Flow newFlow = new Flow(middlewareQueue, request, environment, endCallback);
