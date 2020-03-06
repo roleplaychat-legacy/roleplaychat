@@ -22,6 +22,10 @@ configurations {
     compile.extendsFrom shade
 }
 
+dependencies {
+    shade project(":roleplay_chat-common")
+}
+
 minecraft {
     version = project.forgeVersion
     runDir = "run"
@@ -30,10 +34,13 @@ minecraft {
     replaceIn "RoleplayChat.java"
     replace "@MODID@", modBaseName
     replace "@VERSION@", forgeVersion
+
 }
 
-dependencies {
-    shade project(":roleplay_chat-common")
+reobf {
+    jar {
+        extraLines "PK: org/slf4j ru/xunto/org/slf4j"
+    }
 }
 
 processResources {

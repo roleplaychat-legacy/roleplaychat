@@ -42,6 +42,8 @@ minecraft {
     replaceIn "mcmod.info"
     replace "@@MODID@@", archivesBaseName
     replace "@@VERSION@@", project.version
+
+    srgExtra "PK: org/slf4j ru/xunto/org/slf4j"
 }
 
 dependencies {
