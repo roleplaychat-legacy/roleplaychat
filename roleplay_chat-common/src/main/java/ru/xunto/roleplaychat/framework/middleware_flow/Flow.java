@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.framework.middleware_flow;
 
+import ru.xunto.roleplaychat.features.middleware.distance.ToGmMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -36,7 +37,7 @@ public class Flow {
      * It doesn't have separate log entry end treated as single message by external modules.
      *
      * @param environment message generation environment for new Flow.
-     * @see ru.xunto.roleplaychat.features.middleware.ToGmMiddleware for examples
+     * @see ToGmMiddleware for examples
      */
     public void lightFork(Environment environment) {
         Flow newFlow = new Flow(middlewareQueue, request, environment, endCallback);

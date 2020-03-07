@@ -2,13 +2,15 @@ package ru.xunto.roleplaychat;
 
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
+import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.commands.HearingCommand;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
-import ru.xunto.roleplaychat.features.middleware.DistanceMiddleware;
-import ru.xunto.roleplaychat.features.middleware.ToGmMiddleware;
+import ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware;
+import ru.xunto.roleplaychat.features.middleware.distance.ToGmMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallDistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
@@ -26,6 +28,7 @@ public class RoleplayChatCore {
     public final static RoleplayChatCore instance = new RoleplayChatCore();
 
     private List<Middleware> middleware = new ArrayList<>();
+    private List<ICommand> commands = new ArrayList<>();
 
     public RoleplayChatCore() {
         this.register(new RecallDistanceMiddleware());
@@ -41,11 +44,21 @@ public class RoleplayChatCore {
         } catch (PrefixMatchEndpoint.EmptyPrefixException e) {
             e.printStackTrace();
         }
+
+        this.register(new HearingCommand());
+    }
+
+    public void onPlayerLeave(ISpeaker speaker) {
+        ToGmMiddleware.resetHearingMode(speaker);
     }
 
     public void register(Middleware newMiddleware) {
         middleware.add(newMiddleware);
         middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
+    }
+
+    public void register(ICommand command) {
+        commands.add(command);
     }
 
     // Initialize the JTwig in advance 'cause there may be freezes
@@ -90,5 +103,9 @@ public class RoleplayChatCore {
 
     public List<Middleware> getMiddleware() {
         return middleware;
+    }
+
+    public List<ICommand> getCommands() {
+        return this.commands;
     }
 }

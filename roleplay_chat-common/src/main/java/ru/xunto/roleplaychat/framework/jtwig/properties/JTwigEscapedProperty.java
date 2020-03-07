@@ -8,7 +8,8 @@ public class JTwigEscapedProperty extends JTwigProperty {
         super(value);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return JTwigTemplate.escape(super.toString());
     }
 }

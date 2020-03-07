@@ -13,17 +13,20 @@ import static ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint.FORCED_END
 public class RecallEndpointMiddleware extends AbstractRecallMiddleware {
     private HashMap<UUID, PrefixMatchEndpoint> endpoints = new HashMap<>();
 
-    @Override public Priority getPriority() {
+    @Override
+    public Priority getPriority() {
         return Priority.HIGHEST;
     }
 
-    @Override public Stage getStage() {
+    @Override
+    public Stage getStage() {
         return Stage.PRE;
     }
 
-    @Override public void process(Request request, Environment environment, Flow flow) {
+    @Override
+    public void process(Request request, Environment environment, Flow flow) {
         PrefixMatchEndpoint storedEndpoint =
-            endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
+                endpoints.getOrDefault(request.getRequester().getUniqueID(), null);
         PrefixMatchEndpoint forcedEndpoint = getForcedEndpoint(request, environment);
 
         if (forcedEndpoint != null) {

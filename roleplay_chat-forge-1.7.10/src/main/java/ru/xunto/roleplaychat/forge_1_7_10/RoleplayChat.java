@@ -5,12 +5,17 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import net.minecraft.command.ServerCommandManager;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import ru.xunto.roleplaychat.RoleplayChatCore;
+import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -33,7 +38,7 @@ public class RoleplayChat {
         return EnumChatFormatting.WHITE;
     }
 
-    private static IChatComponent coloredComponent(String content, TextColor color) {
+    public static IChatComponent createComponent(String content, TextColor color) {
         IChatComponent component = new ChatComponentText("").appendSibling(ForgeHooks.newChatWithLinks(content));
         component.getChatStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
 
@@ -44,11 +49,11 @@ public class RoleplayChat {
         Object cache = text.getCache();
         if (cache instanceof IChatComponent) return (IChatComponent) cache;
 
-        IChatComponent result = RoleplayChat.coloredComponent("", text.getDefaultColor());
+        IChatComponent result = RoleplayChat.createComponent("", text.getDefaultColor());
 
         for (TextComponent component : text.getComponents()) {
             result.appendSibling(
-                    RoleplayChat.coloredComponent(
+                    RoleplayChat.createComponent(
                             component.getContent(),
                             component.getColor()
                     )
@@ -80,9 +85,23 @@ public class RoleplayChat {
         }
     }
 
+    @SubscribeEvent
+    public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        RoleplayChatCore.instance.onPlayerLeave(new ForgeSpeaker((EntityPlayerMP) event.player));
+        System.out.println("leave");
+    }
+
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
         RoleplayChatCore.instance.warmUpRenderer();
+
+        MinecraftServer server = MinecraftServer.getServer();
+        ServerCommandManager manager = (ServerCommandManager) server.getCommandManager();
+
+        for (ICommand command : RoleplayChatCore.instance.getCommands()) {
+            manager.registerCommand(new ForgeCommand(command));
+        }
     }
 }

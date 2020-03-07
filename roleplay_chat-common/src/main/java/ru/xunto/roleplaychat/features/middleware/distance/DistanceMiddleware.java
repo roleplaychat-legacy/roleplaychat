@@ -1,4 +1,4 @@
-package ru.xunto.roleplaychat.features.middleware;
+package ru.xunto.roleplaychat.features.middleware.distance;
 
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
@@ -61,16 +61,6 @@ public class DistanceMiddleware extends Middleware {
         return recipients;
     }
 
-    @Override
-    public Priority getPriority() {
-        return Priority.HIGH;
-    }
-
-    @Override
-    public Stage getStage() {
-        return Stage.PRE;
-    }
-
     public static Distance processDistanceState(Request request, Environment environment) {
         MessageState state = environment.getState();
         String text = state.getValue(Environment.TEXT);
@@ -97,6 +87,16 @@ public class DistanceMiddleware extends Middleware {
     }
 
     @Override
+    public Priority getPriority() {
+        return Priority.HIGH;
+    }
+
+    @Override
+    public Stage getStage() {
+        return Stage.PRE;
+    }
+
+    @Override
     public void process(Request request, Environment environment, Flow flow) {
         JTwigState state = environment.getState();
         Boolean canceled = state.getValue(CANCEL, false);
@@ -117,41 +117,4 @@ public class DistanceMiddleware extends Middleware {
         flow.next();
     }
 
-    public enum Distance {
-        QUITE_WHISPER(0, 1), WHISPER(1, 3), QUITE(2, 9), NORMAL(3, 18), LOUD(4, 36), SHOUT(5,
-                60), LOUD_SHOUT(6, 80);
-
-        private static final Distance[] VALUES = new Distance[7];
-
-        static {
-            for (Distance value : Distance.values()) {
-                VALUES[value.index] = value;
-            }
-        }
-
-        private final int index;
-        private final int distance;
-
-        Distance(int index, int distance) {
-            this.index = index;
-            this.distance = distance;
-        }
-
-        public static Distance get(int index) {
-            return VALUES[index];
-        }
-
-        public Distance shift(int shift) {
-            int index = Math.max(Math.min(this.index + shift, VALUES.length - 1), 0);
-            return Distance.VALUES[index];
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        public int getDistance() {
-            return distance;
-        }
-    }
 }

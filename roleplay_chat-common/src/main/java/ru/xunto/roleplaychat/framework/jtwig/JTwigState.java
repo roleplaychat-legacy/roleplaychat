@@ -15,13 +15,6 @@ public class JTwigState extends MessageState {
     private JtwigModel model = new JtwigModel();
     private Map<String, Object> jTwigState = new HashMap<>();
 
-    @Override public <E> void setValue(IProperty<E> property, E value) {
-        Object jTwigValue = JTwigState.getProperty(property, value);
-        model = model.with(property.getName(), jTwigValue);
-        jTwigState.put(property.getName(), jTwigValue);
-        super.setValue(property, value);
-    }
-
     public static Object getProperty(IProperty property, Object value) {
         if (value instanceof String) {
             if (property != null && property.isColorful()) {
@@ -42,7 +35,16 @@ public class JTwigState extends MessageState {
         return value;
     }
 
-    @Override public JTwigState clone() throws CloneNotSupportedException {
+    @Override
+    public <E> void setValue(IProperty<E> property, E value) {
+        Object jTwigValue = JTwigState.getProperty(property, value);
+        model = model.with(property.getName(), jTwigValue);
+        jTwigState.put(property.getName(), jTwigValue);
+        super.setValue(property, value);
+    }
+
+    @Override
+    public JTwigState clone() throws CloneNotSupportedException {
         JTwigState clone = (JTwigState) super.clone();
         clone.jTwigState = new HashMap<>(jTwigState);
         clone.model = JtwigModel.newModel(jTwigState);

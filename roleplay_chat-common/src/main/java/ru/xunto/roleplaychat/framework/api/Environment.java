@@ -66,7 +66,8 @@ public class Environment implements Cloneable {
         this.template = template;
     }
 
-    @Override public Environment clone() {
+    @Override
+    public Environment clone() {
         try {
             Environment environment = (Environment) super.clone();
             environment.colors = new HashMap<>(colors);

@@ -1,0 +1,77 @@
+package ru.xunto.roleplaychat.features.middleware.distance;
+
+import ru.xunto.roleplaychat.api.IServer;
+import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.api.IWorld;
+import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
+import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.NoExtraHearingMode;
+import ru.xunto.roleplaychat.framework.api.Environment;
+import ru.xunto.roleplaychat.framework.api.Middleware;
+import ru.xunto.roleplaychat.framework.api.Request;
+import ru.xunto.roleplaychat.framework.api.Stage;
+import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
+import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+public class ToGmMiddleware extends Middleware {
+    private static Map<UUID, IHearingMode> hearingModes = new HashMap<>();
+
+    public static IHearingMode getHearingMode(ISpeaker speaker) {
+        IHearingMode mode = hearingModes.getOrDefault(speaker.getUniqueID(), null);
+
+        if (mode != null) return mode;
+        // TODO: Introduce config subsystem so this could be optional and persistent:
+        //  if (speaker.hasPermission("gm")) return InfiniteHearingMode.instance;
+
+        return NoExtraHearingMode.instance;
+    }
+
+    public static void setHearingMode(ISpeaker speaker, IHearingMode mode) {
+        ToGmMiddleware.hearingModes.put(speaker.getUniqueID(), mode);
+    }
+
+    public static void resetHearingMode(ISpeaker speaker) {
+        hearingModes.remove(speaker.getUniqueID());
+    }
+
+    @Override
+    public Stage getStage() {
+        return Stage.POST;
+    }
+
+    @Override
+    public void process(Request request, Environment environment, Flow flow) {
+        Environment newEnvironment = environment.clone();
+
+        Set<ISpeaker> originalRecipients = environment.getRecipients();
+        Set<ISpeaker> recipients = newEnvironment.getRecipients();
+        recipients.clear();
+
+        newEnvironment.getColors().clear();
+        newEnvironment.getColors().put("default", TextColor.DARK_GRAY);
+
+        IServer server = request.getRequester().getWorld().getServer();
+        IWorld[] worlds = server.getWorlds();
+
+        for (IWorld world : worlds) {
+            for (ISpeaker player : world.getPlayers()) {
+                boolean allowed = ToGmMiddleware.getHearingMode(player).canAvoidHearingRestriction(
+                        player,
+                        request.getRequester()
+                );
+
+                if (allowed && !originalRecipients.contains(player))
+                    recipients.add(player);
+            }
+        }
+
+        if (recipients.size() > 0)
+            flow.lightFork(newEnvironment);
+
+        flow.next();
+    }
+}
