@@ -11,7 +11,8 @@ public class JTwigColoredProperty extends JTwigEscapedProperty {
         this.property = property;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return JTwigTemplate.wrapWithColor(super.toString(), this.property.getName());
     }
 }

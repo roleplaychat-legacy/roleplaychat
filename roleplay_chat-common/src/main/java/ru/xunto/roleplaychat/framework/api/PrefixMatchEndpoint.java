@@ -24,7 +24,8 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         return prefixes;
     }
 
-    @Override public boolean matchEndpoint(Request request, Environment environment) {
+    @Override
+    public boolean matchEndpoint(Request request, Environment environment) {
         MessageState state = environment.getState();
         String text = state.getValue(Environment.TEXT);
 
@@ -40,7 +41,8 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         return false;
     }
 
-    @Override public void preProcessEndpoint(Request request, Environment environment) {
+    @Override
+    public void preProcessEndpoint(Request request, Environment environment) {
         removePrefix(environment);
     }
 

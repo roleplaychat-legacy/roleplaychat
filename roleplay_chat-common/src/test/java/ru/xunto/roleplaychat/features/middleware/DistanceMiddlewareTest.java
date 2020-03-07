@@ -9,12 +9,15 @@ import ru.xunto.roleplaychat.ChatTest;
 import ru.xunto.roleplaychat.TestUtility;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.Position;
+import ru.xunto.roleplaychat.features.middleware.distance.Distance;
+import ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
 
 import static org.testng.Assert.assertEquals;
-import static ru.xunto.roleplaychat.features.middleware.DistanceMiddleware.*;
+import static ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware.DISTANCE;
+import static ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware.FORCE_ENVIRONMENT;
 
 public class DistanceMiddlewareTest extends ChatTest {
 
@@ -25,21 +28,21 @@ public class DistanceMiddlewareTest extends ChatTest {
 
     @Test
     public void testDistanceFromMessage() {
-        testDistanceFromMessageCase("test", DistanceMiddleware.Distance.NORMAL);
-        testDistanceFromMessageCase("= test", DistanceMiddleware.Distance.QUITE);
-        testDistanceFromMessageCase("== test", DistanceMiddleware.Distance.WHISPER);
-        testDistanceFromMessageCase("=== test", DistanceMiddleware.Distance.QUITE_WHISPER);
-        testDistanceFromMessageCase("==== test", DistanceMiddleware.Distance.QUITE_WHISPER);
-        testDistanceFromMessageCase("! test", DistanceMiddleware.Distance.LOUD);
-        testDistanceFromMessageCase("!! test", DistanceMiddleware.Distance.SHOUT);
-        testDistanceFromMessageCase("!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
-        testDistanceFromMessageCase("!!!! test", DistanceMiddleware.Distance.LOUD_SHOUT);
+        testDistanceFromMessageCase("test", Distance.NORMAL);
+        testDistanceFromMessageCase("= test", Distance.QUITE);
+        testDistanceFromMessageCase("== test", Distance.WHISPER);
+        testDistanceFromMessageCase("=== test", Distance.QUITE_WHISPER);
+        testDistanceFromMessageCase("==== test", Distance.QUITE_WHISPER);
+        testDistanceFromMessageCase("! test", Distance.LOUD);
+        testDistanceFromMessageCase("!! test", Distance.SHOUT);
+        testDistanceFromMessageCase("!!! test", Distance.LOUD_SHOUT);
+        testDistanceFromMessageCase("!!!! test", Distance.LOUD_SHOUT);
 
-        testDistanceFromMessageCase("!=! test", DistanceMiddleware.Distance.LOUD);
-        testDistanceFromMessageCase("=!= test", DistanceMiddleware.Distance.QUITE);
+        testDistanceFromMessageCase("!=! test", Distance.LOUD);
+        testDistanceFromMessageCase("=!= test", Distance.QUITE);
     }
 
-    private void testDistanceFromMessageCase(String text, DistanceMiddleware.Distance distance) {
+    private void testDistanceFromMessageCase(String text, Distance distance) {
         Request request = setUpRequest(text);
         Environment environment = setUpEnvironment(text);
         instance.process(request, environment, TestUtility.DO_NOTHING);

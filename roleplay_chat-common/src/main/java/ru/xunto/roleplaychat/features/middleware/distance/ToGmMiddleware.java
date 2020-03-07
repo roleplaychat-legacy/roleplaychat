@@ -1,8 +1,11 @@
-package ru.xunto.roleplaychat.features.middleware;
+package ru.xunto.roleplaychat.features.middleware.distance;
 
 import ru.xunto.roleplaychat.api.IServer;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
+import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
+import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.InfiniteHearingMode;
+import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.NoExtraHearingMode;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -10,14 +13,34 @@ import ru.xunto.roleplaychat.framework.api.Stage;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class ToGmMiddleware extends Middleware {
-    @Override public Stage getStage() {
+    private static Map<UUID, IHearingMode> hearingModes = new HashMap<>();
+
+    public static IHearingMode getHearingMode(ISpeaker speaker) {
+        IHearingMode mode = hearingModes.getOrDefault(speaker.getUniqueID(), null);
+
+        if (mode != null) return mode;
+        if (speaker.hasPermission("gm")) return InfiniteHearingMode.instance;
+
+        return NoExtraHearingMode.instance;
+    }
+
+    public static void setHearingMode(ISpeaker speaker, IHearingMode mode) {
+        ToGmMiddleware.hearingModes.put(speaker.getUniqueID(), mode);
+    }
+
+    @Override
+    public Stage getStage() {
         return Stage.POST;
     }
 
-    @Override public void process(Request request, Environment environment, Flow flow) {
+    @Override
+    public void process(Request request, Environment environment, Flow flow) {
         Environment newEnvironment = environment.clone();
 
         Set<ISpeaker> originalRecipients = environment.getRecipients();
@@ -32,7 +55,11 @@ public class ToGmMiddleware extends Middleware {
 
         for (IWorld world : worlds) {
             for (ISpeaker player : world.getPlayers()) {
-                boolean allowed = player.hasPermission("gm");
+                boolean allowed = ToGmMiddleware.getHearingMode(player).canAvoidHearingRestriction(
+                        player,
+                        request.getRequester()
+                );
+
                 if (allowed && !originalRecipients.contains(player))
                     recipients.add(player);
             }

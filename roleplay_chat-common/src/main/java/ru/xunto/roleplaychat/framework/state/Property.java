@@ -13,11 +13,13 @@ public class Property<T> implements IProperty<T>, Cloneable {
         this.colorful = colorful;
     }
 
-    @Override public String getName() {
+    @Override
+    public String getName() {
         return name;
     }
 
-    @Override public String stringify(T value) {
+    @Override
+    public String stringify(T value) {
         return value.toString();
     }
 
@@ -25,7 +27,8 @@ public class Property<T> implements IProperty<T>, Cloneable {
         return colorful;
     }
 
-    @Override protected Object clone() throws CloneNotSupportedException {
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 }

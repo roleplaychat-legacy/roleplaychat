@@ -34,7 +34,8 @@ public class MessageState implements Cloneable {
         state.put(property, value);
     }
 
-    @Override public MessageState clone() throws CloneNotSupportedException {
+    @Override
+    public MessageState clone() throws CloneNotSupportedException {
         MessageState clone = (MessageState) super.clone();
         clone.properties = new HashMap<>(properties);
         clone.state = new HashMap<>(state);

@@ -15,8 +15,8 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
     private final static String COLOR_MARKER = "$";
     private final static String COLOR_MARKER_ESCAPED = "\16";
     private final static EnvironmentConfiguration CONF =
-        EnvironmentConfigurationBuilder.configuration().functions().add(new WrapColorFunction())
-            .and().build();
+            EnvironmentConfigurationBuilder.configuration().functions().add(new WrapColorFunction())
+                    .and().build();
     private JtwigTemplate template;
 
     public JTwigTemplate(String path) {

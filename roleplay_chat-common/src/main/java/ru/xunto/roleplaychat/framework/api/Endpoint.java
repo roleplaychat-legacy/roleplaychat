@@ -3,11 +3,13 @@ package ru.xunto.roleplaychat.framework.api;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 
 public abstract class Endpoint extends Middleware {
-    @Override public Stage getStage() {
+    @Override
+    public Stage getStage() {
         return Stage.ENDPOINT;
     }
 
-    @Override public void process(Request request, Environment environment, Flow flow) {
+    @Override
+    public void process(Request request, Environment environment, Flow flow) {
         this.processWrapped(request, environment, flow);
         flow.next();
     }

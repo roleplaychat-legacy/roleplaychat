@@ -10,7 +10,8 @@ public class JTwigIterableProperty extends JTwigProperty<Iterable> implements It
         super(value);
     }
 
-    @Override public Iterator iterator() {
+    @Override
+    public Iterator iterator() {
         ArrayList<Object> objects = new ArrayList<>();
 
         for (Object o : this.value) {

@@ -5,12 +5,15 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.command.ServerCommandManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import ru.xunto.roleplaychat.RoleplayChatCore;
+import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -82,7 +85,15 @@ public class RoleplayChat {
 
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
+        System.out.println("ths");
         EVENT_BUS.register(this);
         RoleplayChatCore.instance.warmUpRenderer();
+
+        MinecraftServer server = MinecraftServer.getServer();
+        ServerCommandManager manager = (ServerCommandManager) server.getCommandManager();
+
+        for (ICommand command : RoleplayChatCore.instance.getCommands()) {
+            manager.registerCommand(new ForgeCommand(command));
+        }
     }
 }

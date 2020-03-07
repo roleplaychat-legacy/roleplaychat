@@ -24,7 +24,8 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
         super("_");
     }
 
-    @Override public void processEndpoint(Request request, Environment environment) {
+    @Override
+    public void processEndpoint(Request request, Environment environment) {
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
     }
