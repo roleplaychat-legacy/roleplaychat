@@ -4,7 +4,6 @@ import ru.xunto.roleplaychat.api.IServer;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
-import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.InfiniteHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.NoExtraHearingMode;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
@@ -25,7 +24,8 @@ public class ToGmMiddleware extends Middleware {
         IHearingMode mode = hearingModes.getOrDefault(speaker.getUniqueID(), null);
 
         if (mode != null) return mode;
-        if (speaker.hasPermission("gm")) return InfiniteHearingMode.instance;
+        // TODO: Introduce config subsystem so this could be optional and persistent:
+        //  if (speaker.hasPermission("gm")) return InfiniteHearingMode.instance;
 
         return NoExtraHearingMode.instance;
     }
