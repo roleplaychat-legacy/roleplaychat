@@ -34,6 +34,10 @@ public class ToGmMiddleware extends Middleware {
         ToGmMiddleware.hearingModes.put(speaker.getUniqueID(), mode);
     }
 
+    public static void resetHearingMode(ISpeaker speaker) {
+        hearingModes.remove(speaker.getUniqueID());
+    }
+
     @Override
     public Stage getStage() {
         return Stage.POST;

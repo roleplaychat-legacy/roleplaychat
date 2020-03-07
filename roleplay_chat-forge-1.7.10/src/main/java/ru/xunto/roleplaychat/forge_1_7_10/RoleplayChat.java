@@ -5,7 +5,9 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -83,9 +85,16 @@ public class RoleplayChat {
         }
     }
 
+    @SubscribeEvent
+    public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        RoleplayChatCore.instance.onPlayerLeave(new ForgeSpeaker((EntityPlayerMP) event.player));
+        System.out.println("leave");
+    }
+
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
         RoleplayChatCore.instance.warmUpRenderer();
 
         MinecraftServer server = MinecraftServer.getServer();

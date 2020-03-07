@@ -48,6 +48,10 @@ public class RoleplayChatCore {
         this.register(new HearingCommand());
     }
 
+    public void onPlayerLeave(ISpeaker speaker) {
+        ToGmMiddleware.resetHearingMode(speaker);
+    }
+
     public void register(Middleware newMiddleware) {
         middleware.add(newMiddleware);
         middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
