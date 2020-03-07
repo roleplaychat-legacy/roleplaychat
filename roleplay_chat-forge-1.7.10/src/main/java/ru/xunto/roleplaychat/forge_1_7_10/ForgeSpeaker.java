@@ -1,7 +1,6 @@
 package ru.xunto.roleplaychat.forge_1_7_10;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.api.Position;
@@ -20,9 +19,7 @@ public class ForgeSpeaker implements ISpeaker {
 
     @Override
     public void sendMessage(String text, TextColor color) {
-        ChatComponentText component = new ChatComponentText(text);
-        component.getChatStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
-        player.addChatMessage(component);
+        player.addChatMessage(RoleplayChat.createComponent(text, color));
     }
 
     @Override

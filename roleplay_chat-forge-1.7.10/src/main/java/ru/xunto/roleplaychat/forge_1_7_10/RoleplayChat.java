@@ -36,7 +36,7 @@ public class RoleplayChat {
         return EnumChatFormatting.WHITE;
     }
 
-    private static IChatComponent coloredComponent(String content, TextColor color) {
+    public static IChatComponent createComponent(String content, TextColor color) {
         IChatComponent component = new ChatComponentText("").appendSibling(ForgeHooks.newChatWithLinks(content));
         component.getChatStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
 
@@ -47,11 +47,11 @@ public class RoleplayChat {
         Object cache = text.getCache();
         if (cache instanceof IChatComponent) return (IChatComponent) cache;
 
-        IChatComponent result = RoleplayChat.coloredComponent("", text.getDefaultColor());
+        IChatComponent result = RoleplayChat.createComponent("", text.getDefaultColor());
 
         for (TextComponent component : text.getComponents()) {
             result.appendSibling(
-                    RoleplayChat.coloredComponent(
+                    RoleplayChat.createComponent(
                             component.getContent(),
                             component.getColor()
                     )

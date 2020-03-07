@@ -37,7 +37,7 @@ public class RoleplayChat {
         return TextFormatting.WHITE;
     }
 
-    private static ITextComponent coloredComponent(String content, TextColor color) {
+    public static ITextComponent createComponent(String content, TextColor color) {
         ITextComponent component = new TextComponentString("").appendSibling(ForgeHooks.newChatWithLinks(content));
         component.getStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
 
@@ -48,11 +48,11 @@ public class RoleplayChat {
         Object cache = text.getCache();
         if (cache instanceof ITextComponent) return (ITextComponent) cache;
 
-        ITextComponent result = RoleplayChat.coloredComponent("", text.getDefaultColor());
+        ITextComponent result = RoleplayChat.createComponent("", text.getDefaultColor());
 
         for (TextComponent component : text.getComponents()) {
             result.appendSibling(
-                    RoleplayChat.coloredComponent(
+                    RoleplayChat.createComponent(
                             component.getContent(),
                             component.getColor()
                     )
