@@ -15,7 +15,8 @@ Chat created for RP means. It is diesign to be highly abstracted from any specif
 | -ГМ, можешь подлететь?             | ∞              | None (to GM): (( ГМ, можешь подлететь? ))      |
 | *улыбается как дурак               | 18             | * None улыбается как дурак                     |
 
-[Downloads](https://github.com/roleplaychat/RoleplayChat/releases)
+# Downloads
+You can get lastest stable build on [github release page](https://github.com/roleplaychat/RoleplayChat/releases)
 
 # Extensions
 [RoleplayChatDices](https://github.com/roleplaychat/RoleplayChatDices) - extension that adds d* dices to the game, result message distance is controlled by RoleplayChatCore.
