@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.features;
 
 import ru.xunto.roleplaychat.features.middleware.distance.Distance;
 
+// TODO: Move this to config at some point
 public class Translations {
     public static final String DISTANCE_SET = "Установлена дальность общения: %s.";
     public static final String DISTANCE_RESET = "Дальность общения сброшена.";
@@ -11,16 +12,13 @@ public class Translations {
 
     public static final String HEARING_ARGUMENT_EXPECTED = "Введите число или никнейм.";
     public static final String HEARING_LESS_ARGUMENT_EXPECTED = "Слишком много аргументов.";
-    public static final String HEARING_MODE_CHANGED = "Режим слышимости игрока %s установлен на [%s]";
+    public static final String HEARING_MODE_CHANGED = "Режим слышимости игрока %s изменился на [%s]";
 
-    public static final String HEARING_MODE_DISTANCE = "Дистанцая:%d блоков";
+    public static final String HEARING_MODE_DISTANCE = "Дистанция:%d блоков";
     public static final String HEARING_MODE_INFINITY = "Полный";
     public static final String HEARING_MODE_DEFAULT = "Обычный";
 
     public static String stringifyDistance(Distance range) {
-        /* TODO:
-                    remove this hardcode; maybe add to localisation
-        */
         switch (range) {
             case QUITE_WHISPER:
                 return "едва слышно";
