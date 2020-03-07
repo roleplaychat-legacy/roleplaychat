@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware.distance.hearing_gm;
 
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.Translations;
 
 public class DistanceHearingMode implements IHearingMode {
     private int distance;
@@ -16,6 +17,6 @@ public class DistanceHearingMode implements IHearingMode {
 
     @Override
     public String getHumanReadable() {
-        return String.format("distance[%d]", distance);
+        return String.format(Translations.HEARING_MODE_DISTANCE, distance);
     }
 }

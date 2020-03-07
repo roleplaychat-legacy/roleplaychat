@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.api.IServer;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.features.middleware.distance.ToGmMiddleware;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.DistanceHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
@@ -15,10 +16,8 @@ import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 
 public class HearingCommand implements ICommand {
-
     @Override
     public String getCommandName() {
         return "hearing";
@@ -32,15 +31,6 @@ public class HearingCommand implements ICommand {
     @Override
     public boolean canExecute(ISpeaker speaker) {
         return speaker.hasPermission("gm");
-    }
-
-    public DistanceHearingMode parseDistance(String string) throws CommandException {
-        try {
-            int distance = Integer.parseInt(string);
-            return new DistanceHearingMode(distance);
-        } catch (NumberFormatException e) {
-            throw new CommandException("Number expected");
-        }
     }
 
     @Override
@@ -60,7 +50,6 @@ public class HearingCommand implements ICommand {
             }
         }
 
-        UUID targetUUID = target.getUniqueID();
         IHearingMode hearingMode = ToGmMiddleware.getHearingMode(target);
         IHearingMode newMode;
 
@@ -68,14 +57,19 @@ public class HearingCommand implements ICommand {
             if (hearingMode == NoExtraHearingMode.instance) newMode = InfiniteHearingMode.instance;
             else newMode = NoExtraHearingMode.instance;
         } else if (args.length == 1) {
-            newMode = this.parseDistance(args[0]);
+            try {
+                int distance = Integer.parseInt(args[0]);
+                newMode = new DistanceHearingMode(distance);
+            } catch (NumberFormatException e) {
+                throw new CommandException(Translations.HEARING_ARGUMENT_EXPECTED);
+            }
         } else {
-            throw new CommandException("Too much arguments");
+            throw new CommandException(Translations.HEARING_LESS_ARGUMENT_EXPECTED);
         }
 
         ToGmMiddleware.setHearingMode(target, newMode);
         speaker.sendMessage(String.format(
-                "%s's hearing mode changed to %s",
+                Translations.HEARING_MODE_CHANGED,
                 target.getName(),
                 newMode.getHumanReadable()
         ), TextColor.GREEN);

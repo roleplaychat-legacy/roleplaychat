@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware.distance.hearing_gm;
 
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.Translations;
 
 public class NoExtraHearingMode implements IHearingMode {
     public static NoExtraHearingMode instance = new NoExtraHearingMode();
@@ -12,6 +13,6 @@ public class NoExtraHearingMode implements IHearingMode {
 
     @Override
     public String getHumanReadable() {
-        return "default";
+        return Translations.HEARING_MODE_DEFAULT;
     }
 }

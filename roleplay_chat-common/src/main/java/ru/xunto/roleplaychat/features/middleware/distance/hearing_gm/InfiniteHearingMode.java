@@ -1,6 +1,7 @@
 package ru.xunto.roleplaychat.features.middleware.distance.hearing_gm;
 
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.Translations;
 
 public class InfiniteHearingMode implements IHearingMode {
     public static InfiniteHearingMode instance = new InfiniteHearingMode();
@@ -12,6 +13,6 @@ public class InfiniteHearingMode implements IHearingMode {
 
     @Override
     public String getHumanReadable() {
-        return "infinite";
+        return Translations.HEARING_MODE_INFINITY;
     }
 }
