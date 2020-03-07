@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.forge_1_7_10;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.api.Position;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 
@@ -28,6 +29,11 @@ public class ForgeSpeaker implements ISpeaker {
     @Override
     public Position getPosition() {
         return new Position((int) player.posX, (int) player.posY, (int) player.posZ);
+    }
+
+    @Override
+    public IWorld getWorld() {
+        return new ForgeWorld(player.getServerForPlayer());
     }
 
     @Override

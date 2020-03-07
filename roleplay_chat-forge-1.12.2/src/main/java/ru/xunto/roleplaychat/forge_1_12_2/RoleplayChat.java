@@ -68,11 +68,7 @@ public class RoleplayChat {
             return;
 
         List<Text> texts = RoleplayChatCore.instance.process(
-                new Request(
-                        event.getMessage(),
-                        new ForgeSpeaker(event.getPlayer()),
-                        new ForgeWorld(event.getPlayer().getServerWorld())
-                )
+                new Request(event.getMessage(), new ForgeSpeaker(event.getPlayer()))
         );
 
         event.setCanceled(true);

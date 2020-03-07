@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.forge_1_12_2;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
 import ru.xunto.roleplaychat.api.IServer;
 import ru.xunto.roleplaychat.api.ISpeaker;
@@ -19,6 +20,8 @@ public class ForgeWorld implements IWorld {
 
     @Override
     public ISpeaker[] getPlayers() {
-        return world.playerEntities.stream().map(ForgeSpeaker::new).toArray(ISpeaker[]::new);
+        return world.playerEntities.stream().map(
+                (p) -> (EntityPlayerMP) p
+        ).map(ForgeSpeaker::new).toArray(ISpeaker[]::new);
     }
 }

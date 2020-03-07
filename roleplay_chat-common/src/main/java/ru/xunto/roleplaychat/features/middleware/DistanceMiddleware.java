@@ -47,8 +47,9 @@ public class DistanceMiddleware extends Middleware {
 
     public static Set<ISpeaker> fetchRecipients(Request request, Environment environment,
                                                 Distance range) {
-        IWorld world = request.getWorld();
-        Position position = request.getRequester().getPosition();
+        ISpeaker requester = request.getRequester();
+        IWorld world = requester.getWorld();
+        Position position = requester.getPosition();
 
         Set<ISpeaker> recipients = new HashSet<>();
         for (ISpeaker recipient : world.getPlayers()) {

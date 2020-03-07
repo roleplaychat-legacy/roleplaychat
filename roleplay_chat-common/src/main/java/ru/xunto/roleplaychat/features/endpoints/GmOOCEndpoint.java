@@ -35,7 +35,7 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
         Set<ISpeaker> recipients = environment.getRecipients();
         recipients.clear();
 
-        IWorld[] worlds = request.getServer().getWorlds();
+        IWorld[] worlds = request.getRequester().getWorld().getServer().getWorlds();
         for (IWorld world : worlds) {
             for (ISpeaker player : world.getPlayers()) {
                 if (player.hasPermission("gm"))

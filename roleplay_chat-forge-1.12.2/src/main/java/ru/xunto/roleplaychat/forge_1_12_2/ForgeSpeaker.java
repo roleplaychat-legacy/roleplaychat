@@ -1,9 +1,10 @@
 package ru.xunto.roleplaychat.forge_1_12_2;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.api.Position;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 
@@ -11,9 +12,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ForgeSpeaker implements ISpeaker {
-    private EntityPlayer player;
+    private EntityPlayerMP player;
 
-    public ForgeSpeaker(EntityPlayer player) {
+    public ForgeSpeaker(EntityPlayerMP player) {
         this.player = player;
     }
 
@@ -31,6 +32,11 @@ public class ForgeSpeaker implements ISpeaker {
     public Position getPosition() {
         BlockPos position = player.getPosition();
         return new Position(position.getX(), position.getY(), position.getZ());
+    }
+
+    @Override
+    public IWorld getWorld() {
+        return new ForgeWorld(player.getServerWorld());
     }
 
     @Override

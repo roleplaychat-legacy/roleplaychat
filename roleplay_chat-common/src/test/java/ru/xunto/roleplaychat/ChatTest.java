@@ -17,35 +17,32 @@ public class ChatTest {
     @Before
     public void beforeEveryTest() {
         server = Mockito.mock(IServer.class);
+        world = Mockito.mock(IWorld.class);
 
         player = setUpPlayer(new Position(0, 0, 0));
-        world = setUpWorld(server, player);
+
+        Mockito.doReturn(new ISpeaker[]{player}).when(world).getPlayers();
+        Mockito.doReturn(server).when(world).getServer();
 
         Mockito.doReturn(new IWorld[]{world}).when(server).getWorlds();
     }
 
-    private IWorld setUpWorld(IServer server, ISpeaker... player) {
-        IWorld world = Mockito.mock(IWorld.class);
-        Mockito.doReturn(player).when(world).getPlayers();
-        Mockito.doReturn(server).when(world).getServer();
-
-        return world;
-    }
-
-    protected ISpeaker setUpPlayer(Position vec3d) {
-        return setUpPlayer("username", vec3d);
+    protected ISpeaker setUpPlayer(Position position) {
+        return setUpPlayer("username", position);
     }
 
     protected ISpeaker setUpPlayer(String username, Position position) {
         ISpeaker player = Mockito.mock(ISpeaker.class);
+
         Mockito.doReturn(position).when(player).getPosition();
         Mockito.doReturn(username).when(player).getName();
+        Mockito.doReturn(world).when(player).getWorld();
 
         return player;
     }
 
     protected Request setUpRequest(String text) {
-        return new Request(text, player, world);
+        return new Request(text, player);
     }
 
     protected Environment setUpEnvironment(String text) {

@@ -8,7 +8,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import ru.xunto.roleplaychat.RoleplayChatCore;
@@ -66,11 +65,7 @@ public class RoleplayChat {
             return;
 
         List<Text> texts = RoleplayChatCore.instance.process(
-                new Request(
-                        event.message,
-                        new ForgeSpeaker(event.player),
-                        new ForgeWorld((WorldServer) event.player.worldObj)
-                )
+                new Request(event.message, new ForgeSpeaker(event.player))
         );
 
         event.setCanceled(true);

@@ -27,7 +27,7 @@ public class ToGmMiddleware extends Middleware {
         newEnvironment.getColors().clear();
         newEnvironment.getColors().put("default", TextColor.DARK_GRAY);
 
-        IServer server = request.getServer();
+        IServer server = request.getRequester().getWorld().getServer();
         IWorld[] worlds = server.getWorlds();
 
         for (IWorld world : worlds) {

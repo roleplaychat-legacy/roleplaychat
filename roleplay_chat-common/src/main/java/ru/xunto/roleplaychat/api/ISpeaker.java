@@ -11,6 +11,8 @@ public interface ISpeaker {
 
     Position getPosition();
 
+    IWorld getWorld();
+
     UUID getUniqueID();
 
     boolean hasPermission(String permission);
