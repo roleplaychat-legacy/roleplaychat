@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+    compile project(':roleplay_chat-common')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        expand 'version': project.version
+    }
+}
+
+shadowJar {
+    dependencies {
+        include(dependency(':roleplay_chat-common'))
+    }
+}
