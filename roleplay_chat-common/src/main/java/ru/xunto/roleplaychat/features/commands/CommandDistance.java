@@ -10,12 +10,12 @@ import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.commands.CommandException;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
 
-public class CommandDistance<T extends Distance> implements ICommand {
+public class CommandDistance implements ICommand {
     private final String name;
     private RoleplayChatCore core;
-    private T distance;
+    private Distance distance;
 
-    public CommandDistance(RoleplayChatCore core, String name, T distance) {
+    public CommandDistance(RoleplayChatCore core, String name, Distance distance) {
         this.core = core;
         this.name = name;
         this.distance = distance;
@@ -36,10 +36,32 @@ public class CommandDistance<T extends Distance> implements ICommand {
         return true;
     }
 
+    private String addDistance(String msg) {
+        String prefix = "";
+        switch (distance) {
+            case QUITE_WHISPER:
+                prefix = "==";
+                break;
+            case QUITE:
+                prefix = "=";
+                break;
+            case LOUD:
+                prefix = "!";
+                break;
+            case LOUD_SHOUT:
+                prefix = "!!";
+                break;
+            default:
+                prefix = "";
+        }
+
+        return prefix + msg.trim();
+    }
+
     @Override
     public void execute(ISpeaker speaker, String[] args) throws CommandException {
         String msg = String.join(" ", args);
-        Request request = new Request(msg, speaker);
+        Request request = new Request(this.addDistance(msg), speaker);
         Environment environment = new Environment(speaker.getName(), msg);
 
         JTwigState state = environment.getState();
