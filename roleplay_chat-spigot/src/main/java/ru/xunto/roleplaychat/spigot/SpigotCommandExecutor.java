@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.spigot;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,14 +18,20 @@ public class SpigotCommandExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (!(commandSender instanceof Player)) return false;
-        try {
-            this.command.execute(
-                    new SpigotSpeaker((Player) commandSender),
-                    strings
-            );
-        } catch (CommandException e) {
-            e.printStackTrace();
+
+        SpigotSpeaker speaker = new SpigotSpeaker((Player) commandSender);
+
+        if (!this.command.canExecute(speaker)) {
+            commandSender.sendMessage(ChatColor.RED + "You cannot run this command.");
+            return false;
         }
-        return false;
+
+        try {
+            this.command.execute(speaker, strings);
+        } catch (CommandException e) {
+            commandSender.sendMessage(e.getMessage());
+            return false;
+        }
+        return true;
     }
 }
