@@ -24,17 +24,6 @@ public class DistanceMiddleware extends Middleware {
     public DistanceMiddleware() {
     }
 
-    public static void main(String[] args) {
-        System.out.println(countRangeShifts("", '='));
-        System.out.println(countRangeShifts("test", '='));
-        System.out.println(countRangeShifts("=", '='));
-        System.out.println(countRangeShifts("==", '='));
-        System.out.println(countRangeShifts("===", '='));
-        System.out.println(countRangeShifts("=test", '='));
-        System.out.println(countRangeShifts("==test", '='));
-        System.out.println(countRangeShifts("===test", '='));
-    }
-
     private static int countRangeShifts(String text, char symbol) {
         int shift = 0;
 
@@ -76,11 +65,6 @@ public class DistanceMiddleware extends Middleware {
         }
 
         state.setValue(DISTANCE, range);
-
-        String label = Translations.stringifyDistance(range);
-        if (label != null)
-            state.setValue(Environment.LABEL, label);
-
         state.setValue(Environment.TEXT, text);
 
         return range;
@@ -106,10 +90,14 @@ public class DistanceMiddleware extends Middleware {
         Distance range;
         Boolean forceEnvironment = state.getValue(FORCE_ENVIRONMENT, false);
 
+        // TODO: Improve forced environment behaviour to be clearer
         if (forceEnvironment)
             range = state.getValue(DISTANCE, DEFAULT_RANGE);
         else
             range = processDistanceState(request, environment);
+
+        String label = Translations.stringifyDistance(range);
+        if (label != null) state.setValue(Environment.LABEL, label);
 
         Set<ISpeaker> recipients = fetchRecipients(request, environment, range);
         environment.getRecipients().addAll(recipients);

@@ -5,7 +5,7 @@ import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.api.IServer;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.features.Translations;
-import ru.xunto.roleplaychat.features.middleware.distance.ToGmMiddleware;
+import ru.xunto.roleplaychat.features.middleware.distance.ListenMiddleware;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.DistanceHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.InfiniteHearingMode;
@@ -51,7 +51,7 @@ public class CommandListen implements ICommand {
             }
         }
 
-        IHearingMode hearingMode = ToGmMiddleware.getHearingMode(target);
+        IHearingMode hearingMode = ListenMiddleware.getHearingMode(target);
         IHearingMode newMode;
 
         if (args.length == 0) {
@@ -68,7 +68,7 @@ public class CommandListen implements ICommand {
             throw new CommandException(Translations.HEARING_LESS_ARGUMENT_EXPECTED);
         }
 
-        ToGmMiddleware.setHearingMode(target, newMode);
+        ListenMiddleware.setHearingMode(target, newMode);
         speaker.sendMessage(String.format(
                 Translations.HEARING_MODE_CHANGED,
                 target.getName(),

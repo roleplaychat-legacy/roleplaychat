@@ -11,13 +11,17 @@ import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.api.Stage;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
+import ru.xunto.roleplaychat.framework.state.IProperty;
+import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class ToGmMiddleware extends Middleware {
+public class ListenMiddleware extends Middleware {
+    public final static IProperty<Boolean> AVOID = new Property<>("avoid_listen");
+
     private static Map<UUID, IHearingMode> hearingModes = new HashMap<>();
 
     public static IHearingMode getHearingMode(ISpeaker speaker) {
@@ -31,7 +35,7 @@ public class ToGmMiddleware extends Middleware {
     }
 
     public static void setHearingMode(ISpeaker speaker, IHearingMode mode) {
-        ToGmMiddleware.hearingModes.put(speaker.getUniqueID(), mode);
+        ListenMiddleware.hearingModes.put(speaker.getUniqueID(), mode);
     }
 
     public static void resetHearingMode(ISpeaker speaker) {
@@ -59,7 +63,7 @@ public class ToGmMiddleware extends Middleware {
 
         for (IWorld world : worlds) {
             for (ISpeaker player : world.getPlayers()) {
-                boolean allowed = ToGmMiddleware.getHearingMode(player).canAvoidHearingRestriction(
+                boolean allowed = ListenMiddleware.getHearingMode(player).canAvoidHearingRestriction(
                         player,
                         request.getRequester()
                 );

@@ -5,13 +5,15 @@ import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.commands.CommandDistance;
 import ru.xunto.roleplaychat.features.commands.CommandListen;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
+import ru.xunto.roleplaychat.features.middleware.distance.Distance;
 import ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware;
-import ru.xunto.roleplaychat.features.middleware.distance.ToGmMiddleware;
+import ru.xunto.roleplaychat.features.middleware.distance.ListenMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallDistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddleware;
 import ru.xunto.roleplaychat.features.permissions.PermissionGM;
@@ -38,7 +40,7 @@ public class RoleplayChatCore {
         this.register(new RecallDistanceMiddleware());
         this.register(new RecallEndpointMiddleware());
         this.register(new DistanceMiddleware());
-        this.register(new ToGmMiddleware());
+        this.register(new ListenMiddleware());
         this.register(new ActionEndpoint());
 
         try {
@@ -51,6 +53,10 @@ public class RoleplayChatCore {
 
         // Commands
         this.register(new CommandListen());
+        this.register(new CommandDistance<>(this, "w", Distance.QUITE_WHISPER));
+        this.register(new CommandDistance<>(this, "q", Distance.QUITE));
+        this.register(new CommandDistance<>(this, "l", Distance.LOUD));
+        this.register(new CommandDistance<>(this, "s", Distance.LOUD_SHOUT));
 
         // Permission
         this.register(PermissionGM.instance);
@@ -71,7 +77,7 @@ public class RoleplayChatCore {
     }
 
     public void onPlayerLeave(ISpeaker speaker) {
-        ToGmMiddleware.resetHearingMode(speaker);
+        ListenMiddleware.resetHearingMode(speaker);
     }
 
     public void register(Middleware newMiddleware) {

@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
+import ru.xunto.roleplaychat.features.middleware.distance.ListenMiddleware;
 import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
@@ -32,6 +33,8 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
 
     @Override
     public void processEndpoint(Request request, Environment environment) {
+        environment.getState().setValue(ListenMiddleware.AVOID, true);
+        
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
 
