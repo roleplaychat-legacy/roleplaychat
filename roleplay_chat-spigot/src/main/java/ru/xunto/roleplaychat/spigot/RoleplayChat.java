@@ -65,7 +65,7 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
             String component = text.getUnformattedText();
             CompatPlayerChatEvent compatEvent = new CompatPlayerChatEvent(event.getPlayer(), component);
             Bukkit.getPluginManager().callEvent(compatEvent);
-            if (!compatEvent.isCancelled()) logger.info(component);
+            if (!compatEvent.isCancelled()) logger.info(ChatColor.stripColor(component));
         }
     }
 
