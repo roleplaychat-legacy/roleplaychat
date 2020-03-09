@@ -43,7 +43,7 @@ public class CommandListen implements ICommand {
             String tryUsername = args[0];
             ISpeaker[] players = CommandUtils.getPlayers(server);
 
-            Optional<ISpeaker> search = Arrays.stream(players).filter((v) -> v.getName().equals(tryUsername)).findFirst();
+            Optional<ISpeaker> search = Arrays.stream(players).filter((v) -> v.getRealName().equals(tryUsername)).findFirst();
 
             if (search.isPresent()) {
                 target = search.get();

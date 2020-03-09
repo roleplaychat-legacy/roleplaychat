@@ -10,7 +10,9 @@ public interface ISpeaker {
 
     void sendMessage(Text components);
 
-    String getName();
+    String getName(); // Name used for rendering
+
+    String getRealName(); // Name used fore user-input (for command, for example)
 
     Position getPosition();
 

@@ -32,7 +32,12 @@ public class ForgeSpeaker implements ISpeaker {
 
     @Override
     public String getName() {
-        return player.getName();
+        return player.getDisplayName().getFormattedText();
+    }
+
+    @Override
+    public String getRealName() {
+        return this.player.getName();
     }
 
     @Override

@@ -33,7 +33,9 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
     }
 
     public static String createComponent(String content, TextColor color) {
-        return RoleplayChat.toMinecraftFormatting(color) + content;
+        ChatColor chatColor = RoleplayChat.toMinecraftFormatting(color);
+        content = content.replace(TextColor.WHITE.toString(), chatColor.toString());
+        return chatColor + content;
     }
 
     public static String toTextComponent(Text text) {
@@ -46,6 +48,7 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
         for (TextComponent component : text.getComponents()) {
             builder.append(RoleplayChat.toMinecraftFormatting(component.getColor()));
             builder.append(component.getContent());
+            builder.append(RoleplayChat.toMinecraftFormatting(text.getDefaultColor()));
         }
 
         String result = builder.toString();

@@ -34,6 +34,11 @@ public class ForgeSpeaker implements ISpeaker {
     }
 
     @Override
+    public String getRealName() {
+        return player.getCommandSenderName();
+    }
+
+    @Override
     public Position getPosition() {
         return new Position((int) player.posX, (int) player.posY, (int) player.posZ);
     }

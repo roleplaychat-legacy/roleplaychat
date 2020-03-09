@@ -37,6 +37,11 @@ public class SpigotSpeaker implements ISpeaker {
     }
 
     @Override
+    public String getRealName() {
+        return player.getName();
+    }
+
+    @Override
     public Position getPosition() {
         Location location = this.player.getLocation();
         return new Position(location.getBlockX(), location.getBlockY(), location.getBlockZ());
