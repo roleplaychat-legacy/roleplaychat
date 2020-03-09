@@ -27,14 +27,14 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_ooc.twig");
 
-    public GmOOCEndpoint(RoleplayChatCore core) throws EmptyPrefixException {
+    public GmOOCEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "-");
     }
 
     @Override
     public void processEndpoint(Request request, Environment environment) {
         environment.getState().setValue(ListenMiddleware.AVOID, true);
-        
+
         environment.setTemplate(template);
         environment.getColors().putAll(colors);
 

@@ -21,7 +21,7 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
 
     private JTwigTemplate template = new JTwigTemplate("templates/ooc.twig");
 
-    public OOCEndpoint(RoleplayChatCore core) throws EmptyPrefixException {
+    public OOCEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "_");
     }
 

@@ -19,7 +19,6 @@ import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddlewa
 import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
-import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
@@ -43,13 +42,9 @@ public class RoleplayChatCore {
         this.register(new ListenMiddleware());
         this.register(new ActionEndpoint());
 
-        try {
-            this.register(new OOCEndpoint(this).registerCommand("o"));
-            this.register(new GmOOCEndpoint(this).registerCommand("gmo"));
-            this.register(new GmActionEndpoint(this).registerCommand("gmsay"));
-        } catch (PrefixMatchEndpoint.EmptyPrefixException e) {
-            e.printStackTrace();
-        }
+        this.register(new OOCEndpoint(this).registerCommand("o"));
+        this.register(new GmOOCEndpoint(this).registerCommand("gmo"));
+        this.register(new GmActionEndpoint(this).registerCommand("gmsay"));
 
         // Commands
         this.register(new CommandListen());

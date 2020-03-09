@@ -16,10 +16,10 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
     private final String[] prefixes;
     private RoleplayChatCore core;
 
-    public PrefixMatchEndpoint(RoleplayChatCore core, String... prefixes) throws EmptyPrefixException {
+    public PrefixMatchEndpoint(RoleplayChatCore core, String... prefixes) throws EmptyPrefixError {
         this.core = core;
         if (prefixes.length == 0)
-            throw new EmptyPrefixException();
+            throw new EmptyPrefixError();
 
         Arrays.sort(prefixes, Comparator.comparingInt(String::length).reversed());
         this.prefixes = prefixes;
@@ -76,6 +76,6 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
         return this;
     }
 
-    public class EmptyPrefixException extends Exception {
+    public static class EmptyPrefixError extends Error {
     }
 }

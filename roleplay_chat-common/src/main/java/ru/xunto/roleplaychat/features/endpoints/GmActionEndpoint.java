@@ -21,7 +21,7 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_action.twig");
 
-    public GmActionEndpoint(RoleplayChatCore core) throws EmptyPrefixException {
+    public GmActionEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "#", "№");
     }
 
