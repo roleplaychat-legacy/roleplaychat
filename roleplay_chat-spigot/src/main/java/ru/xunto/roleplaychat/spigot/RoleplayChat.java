@@ -1,22 +1,34 @@
 package ru.xunto.roleplaychat.spigot;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
+import ru.xunto.roleplaychat.framework.renderer.text.TextComponent;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public final class RoleplayChat extends JavaPlugin implements Listener {
-    public static String createComponent(String content, TextColor color) {
-//        IChatComponent component = new ChatComponentText("").appendSibling(ForgeHooks.newChatWithLinks(content));
-//        component.getChatStyle().setColor(RoleplayChat.toMinecraftFormatting(color));
+    Logger logger = Logger.getLogger("RoleplayChat");
 
-        return content;
+    public static ChatColor toMinecraftFormatting(TextColor color) {
+        for (ChatColor value : ChatColor.values()) {
+            if (value.name().equals(color.name())) return value;
+        }
+
+        return ChatColor.WHITE;
+    }
+
+    public static String createComponent(String content, TextColor color) {
+        return RoleplayChat.toMinecraftFormatting(color) + content;
     }
 
     public static String toTextComponent(Text text) {
@@ -24,17 +36,22 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
         if (cache instanceof String) return (String) cache;
 
         StringBuilder builder = new StringBuilder();
+        builder.append(RoleplayChat.toMinecraftFormatting(text.getDefaultColor()));
 
-        String result = text.getUnformattedText();
+        for (TextComponent component : text.getComponents()) {
+            builder.append(RoleplayChat.toMinecraftFormatting(component.getColor()));
+            builder.append(component.getContent());
+        }
 
+        String result = builder.toString();
         text.setCache(result);
         return result;
     }
 
     @EventHandler
-    public void onChatEvent(PlayerChatEvent event) {
-//        if (event instanceof CompatPlayerChatEvent)
-//            return;
+    public void onChatEvent(AsyncPlayerChatEvent event) {
+        if (event instanceof CompatPlayerChatEvent)
+            return;
 
         List<Text> texts = RoleplayChatCore.instance.process(
                 new Request(event.getMessage(), new SpigotSpeaker(event.getPlayer()))
@@ -42,22 +59,21 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
 
         event.setCancelled(true);
 
-//        for (Text text : texts) {
-//            BaseComponent component = RoleplayChat.toTextComponent(text);
-//
-//            Bukkit.getPluginManager().callEvent(new CompatPlayerChatEvent(true, event.getPlayer(), component.getInsertion(), component));
-//            boolean isCanceled = EVENT_BUS.post(
-//
-//            );
-//
-//            if (!isCanceled) FMLCommonHandler.instance().getMinecraftServerInstance().sendMessage(component);
-//        }
+        for (Text text : texts) {
+            String component = text.getUnformattedText();
+            CompatPlayerChatEvent compatEvent = new CompatPlayerChatEvent(event.getPlayer(), component);
+            Bukkit.getPluginManager().callEvent(compatEvent);
+            if (!compatEvent.isCancelled()) logger.info(component);
+        }
     }
 
     @Override
     public void onEnable() {
+        PluginManager manager = getServer().getPluginManager();
         RoleplayChatCore.instance.warmUpRenderer();
-        getServer().getPluginManager().registerEvents(this, this);
+        manager.registerEvents(this, this);
+
+        // TODO: Add commands
     }
 
     @Override
