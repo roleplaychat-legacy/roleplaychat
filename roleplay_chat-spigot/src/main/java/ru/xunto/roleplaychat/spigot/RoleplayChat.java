@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.xunto.roleplaychat.RoleplayChatCore;
+import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -17,7 +18,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public final class RoleplayChat extends JavaPlugin implements Listener {
-    Logger logger = Logger.getLogger("RoleplayChat");
+    private Logger logger = Logger.getLogger("RoleplayChat");
+    private RuntimeCommandRegistration commands = new RuntimeCommandRegistration(this);
 
     public static ChatColor toMinecraftFormatting(TextColor color) {
         for (ChatColor value : ChatColor.values()) {
@@ -73,7 +75,10 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
         RoleplayChatCore.instance.warmUpRenderer();
         manager.registerEvents(this, this);
 
-        // TODO: Add commands
+        for (ICommand command : RoleplayChatCore.instance.getCommands()) {
+            this.commands.registerCommand(command.getCommandName());
+            this.getCommand(command.getCommandName()).setExecutor(new SpigotCommandExecutor(command));
+        }
     }
 
     @Override
