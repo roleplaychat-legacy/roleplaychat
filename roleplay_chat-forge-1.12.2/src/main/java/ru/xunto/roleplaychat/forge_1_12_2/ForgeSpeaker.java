@@ -51,21 +51,20 @@ public class ForgeSpeaker implements ISpeaker {
     }
 
     @Override
+    public boolean hasPermission(String permission) {
+        return PermissionAPI.hasPermission(this.player, permission);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ForgeSpeaker)) return false;
         ForgeSpeaker that = (ForgeSpeaker) o;
-
-        return that.getUniqueID() == that.getUniqueID();
+        return Objects.equals(player, that.player);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(player);
-    }
-
-    @Override
-    public boolean hasPermission(String permission) {
-        return PermissionAPI.hasPermission(this.player, permission);
     }
 }
