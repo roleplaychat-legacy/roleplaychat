@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.api.ICommand;
+import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.features.commands.CommandListen;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
@@ -13,6 +14,7 @@ import ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.distance.ToGmMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallDistanceMiddleware;
 import ru.xunto.roleplaychat.features.middleware.remember.RecallEndpointMiddleware;
+import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
@@ -29,8 +31,10 @@ public class RoleplayChatCore {
 
     private List<Middleware> middleware = new ArrayList<>();
     private List<ICommand> commands = new ArrayList<>();
+    private List<IPermission> permissions = new ArrayList<>();
 
     public RoleplayChatCore() {
+        // Middleware
         this.register(new RecallDistanceMiddleware());
         this.register(new RecallEndpointMiddleware());
         this.register(new DistanceMiddleware());
@@ -45,7 +49,15 @@ public class RoleplayChatCore {
             e.printStackTrace();
         }
 
+        // Commands
         this.register(new CommandListen());
+
+        // Permission
+        this.register(PermissionGM.instance);
+    }
+
+    private void register(IPermission permission) {
+        this.permissions.add(permission);
     }
 
     public <T extends Middleware> T findMiddleware(Class<T> clazz) {
@@ -117,5 +129,9 @@ public class RoleplayChatCore {
 
     public List<ICommand> getCommands() {
         return this.commands;
+    }
+
+    public List<IPermission> getPermissions() {
+        return permissions;
     }
 }

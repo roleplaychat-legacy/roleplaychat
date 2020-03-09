@@ -5,10 +5,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ICommand;
+import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -74,6 +77,14 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
         PluginManager manager = getServer().getPluginManager();
         RoleplayChatCore.instance.warmUpRenderer();
         manager.registerEvents(this, this);
+
+        for (IPermission permission : RoleplayChatCore.instance.getPermissions()) {
+            manager.addPermission(new Permission(
+                    permission.getName(),
+                    permission.getDescription(),
+                    PermissionDefault.FALSE
+            ));
+        }
 
         for (ICommand command : RoleplayChatCore.instance.getCommands()) {
             this.commands.registerCommand(command.getCommandName());

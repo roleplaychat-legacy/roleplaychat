@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.forge_1_12_2;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.permission.PermissionAPI;
+import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.api.Position;
@@ -51,8 +52,8 @@ public class ForgeSpeaker implements ISpeaker {
     }
 
     @Override
-    public boolean hasPermission(String permission) {
-        return PermissionAPI.hasPermission(this.player, permission);
+    public boolean hasPermission(IPermission permission) {
+        return PermissionAPI.hasPermission(this.player, permission.getName());
     }
 
     @Override

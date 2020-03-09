@@ -18,5 +18,5 @@ public interface ISpeaker {
 
     UUID getUniqueID();
 
-    boolean hasPermission(String permission);
+    boolean hasPermission(IPermission permission);
 }

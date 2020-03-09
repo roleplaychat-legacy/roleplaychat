@@ -16,6 +16,7 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ICommand;
+import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -95,7 +96,15 @@ public class RoleplayChat {
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
         RoleplayChatCore.instance.warmUpRenderer();
-        PermissionAPI.registerNode("gm", DefaultPermissionLevel.OP, "Game Master permission");
+
+
+        for (IPermission permission : RoleplayChatCore.instance.getPermissions()) {
+            PermissionAPI.registerNode(
+                    permission.getName(),
+                    DefaultPermissionLevel.OP,
+                    permission.getDescription()
+            );
+        }
 
         for (ICommand command : RoleplayChatCore.instance.getCommands()) {
             event.registerServerCommand(new ForgeCommand(command));

@@ -10,6 +10,7 @@ import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.DistanceHea
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.InfiniteHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.NoExtraHearingMode;
+import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.commands.CommandException;
 import ru.xunto.roleplaychat.framework.commands.CommandUtils;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -30,7 +31,7 @@ public class CommandListen implements ICommand {
 
     @Override
     public boolean canExecute(ISpeaker speaker) {
-        return speaker.hasPermission("gm");
+        return speaker.hasPermission(PermissionGM.instance);
     }
 
     @Override

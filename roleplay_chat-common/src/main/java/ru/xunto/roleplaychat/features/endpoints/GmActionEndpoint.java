@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -26,7 +27,7 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
 
     @Override
     public boolean canSay(ISpeaker speaker) {
-        return speaker.hasPermission("gm");
+        return speaker.hasPermission(PermissionGM.instance);
     }
 
     @Override

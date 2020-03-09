@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.spigot;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.api.Position;
@@ -52,8 +53,8 @@ public class SpigotSpeaker implements ISpeaker {
     }
 
     @Override
-    public boolean hasPermission(String permission) {
-        return this.player.hasPermission(permission);
+    public boolean hasPermission(IPermission permission) {
+        return this.player.hasPermission(permission.getName());
     }
 
     @Override

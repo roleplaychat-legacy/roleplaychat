@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.features.endpoints;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
+import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -40,7 +41,7 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
         IWorld[] worlds = request.getRequester().getWorld().getServer().getWorlds();
         for (IWorld world : worlds) {
             for (ISpeaker player : world.getPlayers()) {
-                if (player.hasPermission("gm"))
+                if (player.hasPermission(PermissionGM.instance))
                     recipients.add(player);
             }
         }
