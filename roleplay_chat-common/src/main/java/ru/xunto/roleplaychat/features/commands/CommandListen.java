@@ -74,6 +74,13 @@ public class CommandListen implements ICommand {
                 target.getName(),
                 newMode.getHumanReadable()
         ), TextColor.GREEN);
+
+        if (target != speaker) {
+            target.sendMessage(String.format(
+                    Translations.YOUR_HEARING_MODE_CHANGED,
+                    newMode.getHumanReadable()
+            ), TextColor.GREEN);
+        }
     }
 
 }

@@ -13,6 +13,7 @@ public class Translations {
     public static final String HEARING_ARGUMENT_EXPECTED = "Введите число или никнейм.";
     public static final String HEARING_LESS_ARGUMENT_EXPECTED = "Слишком много аргументов.";
     public static final String HEARING_MODE_CHANGED = "Режим слышимости игрока %s изменился на [%s]";
+    public static final String YOUR_HEARING_MODE_CHANGED = "Ваше режим слышимости изменился на [%s]";
 
     public static final String HEARING_MODE_DISTANCE = "Дистанция:%d блоков";
     public static final String HEARING_MODE_INFINITY = "Полный";
