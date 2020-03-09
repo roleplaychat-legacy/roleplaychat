@@ -49,6 +49,9 @@ public class ListenMiddleware extends Middleware {
 
     @Override
     public void process(Request request, Environment environment, Flow flow) {
+        Boolean avoid = environment.getState().getValue(AVOID, false);
+        if (avoid) return;
+
         Environment newEnvironment = environment.clone();
 
         Set<ISpeaker> originalRecipients = environment.getRecipients();
