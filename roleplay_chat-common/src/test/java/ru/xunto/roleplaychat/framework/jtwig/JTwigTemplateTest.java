@@ -44,7 +44,7 @@ public class JTwigTemplateTest {
     @Test public void testRenderGmOOC() {
         JTwigState state = setUpState();
         ITemplate template = new JTwigTemplate("templates/gm_ooc.twig");
-        testCase(template, state, "username (To GM): (( text ))");
+        testCase(template, state, "[To GM] username: (( text ))");
     }
 
     @Test public void testRenderOOC() {
@@ -53,9 +53,9 @@ public class JTwigTemplateTest {
 
         state = setUpState();
         template = new JTwigTemplate("templates/ooc.twig");
-        testCase(template, state, "username (OOC): (( text ))");
+        testCase(template, state, "[ООС] username: (( text ))");
         state.setValue(Environment.LABEL, "label");
-        testCase(template, state, "username (label): (( text ))");
+        testCase(template, state, "[ООС] username (label): (( text ))");
     }
 
     @Test public void testRenderAction() {
