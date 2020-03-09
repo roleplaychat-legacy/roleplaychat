@@ -20,12 +20,14 @@ public class SpigotSpeaker implements ISpeaker {
 
     @Override
     public void sendMessage(String text, TextColor color) {
-        this.player.sendMessage(text);
+        String result = RoleplayChat.createComponent(text, color);
+        this.player.sendMessage(result);
     }
 
     @Override
-    public void sendMessage(Text components) {
-        this.player.sendMessage(components.getUnformattedText());
+    public void sendMessage(Text text) {
+        String result = RoleplayChat.toTextComponent(text);
+        this.player.sendMessage(result);
     }
 
     @Override
