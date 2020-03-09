@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
+import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -20,8 +21,8 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
 
     private JTwigTemplate template = new JTwigTemplate("templates/ooc.twig");
 
-    public OOCEndpoint() throws EmptyPrefixException {
-        super("_");
+    public OOCEndpoint(RoleplayChatCore core) throws EmptyPrefixException {
+        super(core, "_");
     }
 
     @Override

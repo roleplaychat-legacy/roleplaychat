@@ -17,10 +17,10 @@ import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class HearingCommand implements ICommand {
+public class CommandListen implements ICommand {
     @Override
     public String getCommandName() {
-        return "hearing";
+        return "listen";
     }
 
     @Override

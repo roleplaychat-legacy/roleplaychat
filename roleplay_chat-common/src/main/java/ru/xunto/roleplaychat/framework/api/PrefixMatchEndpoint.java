@@ -1,5 +1,8 @@
 package ru.xunto.roleplaychat.framework.api;
 
+import ru.xunto.roleplaychat.RoleplayChatCore;
+import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.commands.CommandEndpoint;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
@@ -11,8 +14,10 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
     public final static IProperty<PrefixMatchEndpoint> FORCED_ENDPOINT = new Property<>("endpoint");
 
     private final String[] prefixes;
+    private RoleplayChatCore core;
 
-    public PrefixMatchEndpoint(String... prefixes) throws EmptyPrefixException {
+    public PrefixMatchEndpoint(RoleplayChatCore core, String... prefixes) throws EmptyPrefixException {
+        this.core = core;
         if (prefixes.length == 0)
             throw new EmptyPrefixException();
 
@@ -60,6 +65,15 @@ public abstract class PrefixMatchEndpoint extends Endpoint {
 
     public String getName() {
         return this.getClass().getSimpleName();
+    }
+
+    public boolean canSay(ISpeaker speaker) {
+        return true;
+    }
+
+    public PrefixMatchEndpoint registerCommand(String name) {
+        this.core.register(new CommandEndpoint<>(this.core, name, this));
+        return this;
     }
 
     public class EmptyPrefixException extends Exception {

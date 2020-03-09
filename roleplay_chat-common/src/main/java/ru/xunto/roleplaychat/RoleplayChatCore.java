@@ -4,7 +4,6 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.api.ISpeaker;
-import ru.xunto.roleplaychat.features.commands.HearingCommand;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
@@ -38,14 +37,22 @@ public class RoleplayChatCore {
         this.register(new ActionEndpoint());
 
         try {
-            this.register(new OOCEndpoint());
-            this.register(new GmOOCEndpoint());
-            this.register(new GmActionEndpoint());
+            this.register(new OOCEndpoint(this).registerCommand("o"));
+            this.register(new GmOOCEndpoint(this).registerCommand("gmo"));
+            this.register(new GmActionEndpoint(this).registerCommand("gmsay"));
         } catch (PrefixMatchEndpoint.EmptyPrefixException e) {
             e.printStackTrace();
         }
+    }
 
-        this.register(new HearingCommand());
+    public <T extends Middleware> T findMiddleware(Class<T> clazz) {
+        for (Middleware middleware1 : middleware) {
+            if (middleware1.getClass().equals(clazz)) {
+                return (T) middleware1;
+            }
+        }
+
+        return null;
     }
 
     public void onPlayerLeave(ISpeaker speaker) {

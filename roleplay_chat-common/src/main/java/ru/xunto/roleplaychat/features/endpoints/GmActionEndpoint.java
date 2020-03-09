@@ -1,5 +1,7 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
+import ru.xunto.roleplaychat.RoleplayChatCore;
+import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -18,13 +20,18 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_action.twig");
 
-    public GmActionEndpoint() throws EmptyPrefixException {
-        super("#", "№");
+    public GmActionEndpoint(RoleplayChatCore core) throws EmptyPrefixException {
+        super(core, "#", "№");
+    }
+
+    @Override
+    public boolean canSay(ISpeaker speaker) {
+        return speaker.hasPermission("gm");
     }
 
     @Override
     public boolean matchEndpoint(Request request, Environment environment) {
-        return super.matchEndpoint(request, environment) && request.getRequester().hasPermission("gm");
+        return super.matchEndpoint(request, environment) && this.canSay(request.getRequester());
     }
 
     @Override

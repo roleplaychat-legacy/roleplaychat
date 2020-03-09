@@ -1,5 +1,6 @@
 package ru.xunto.roleplaychat.features.endpoints;
 
+import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.framework.api.Environment;
@@ -24,8 +25,8 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_ooc.twig");
 
-    public GmOOCEndpoint() throws EmptyPrefixException {
-        super("-");
+    public GmOOCEndpoint(RoleplayChatCore core) throws EmptyPrefixException {
+        super(core, "-");
     }
 
     @Override
