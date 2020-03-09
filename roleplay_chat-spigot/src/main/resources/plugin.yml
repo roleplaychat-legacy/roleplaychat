@@ -1,3 +1,3 @@
 name: RoleplayChat
-version: @version@
+version: "1.10"
 main: ru.xunto.roleplaychat.spigot.RoleplayChat
