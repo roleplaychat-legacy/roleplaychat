@@ -4,6 +4,7 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.api.ICommand;
 import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.features.commands.CommandListen;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
@@ -43,6 +44,8 @@ public class RoleplayChatCore {
         } catch (PrefixMatchEndpoint.EmptyPrefixException e) {
             e.printStackTrace();
         }
+
+        this.register(new CommandListen());
     }
 
     public <T extends Middleware> T findMiddleware(Class<T> clazz) {
