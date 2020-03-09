@@ -34,8 +34,7 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
 
     public static String createComponent(String content, TextColor color) {
         ChatColor chatColor = RoleplayChat.toMinecraftFormatting(color);
-        content = content.replace(TextColor.WHITE.toString(), chatColor.toString());
-        return chatColor + content;
+        return chatColor + content.replace(ChatColor.RESET.toString(), chatColor.toString());
     }
 
     public static String toTextComponent(Text text) {
