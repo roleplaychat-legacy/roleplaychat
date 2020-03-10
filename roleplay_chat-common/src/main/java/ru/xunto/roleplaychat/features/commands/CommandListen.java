@@ -69,18 +69,18 @@ public class CommandListen implements ICommand {
         }
 
         ListenMiddleware.setHearingMode(target, newMode);
-        speaker.sendMessage(String.format(
-                Translations.HEARING_MODE_CHANGED,
-                target.getName(),
+
+        target.sendMessage(String.format(
+                Translations.YOUR_HEARING_MODE_CHANGED,
                 newMode.getHumanReadable()
         ), TextColor.GREEN);
 
-        if (target != speaker) {
-            target.sendMessage(String.format(
-                    Translations.YOUR_HEARING_MODE_CHANGED,
+        if (!target.equals(speaker)) {
+            speaker.sendMessage(String.format(
+                    Translations.HEARING_MODE_CHANGED,
+                    target.getName(),
                     newMode.getHumanReadable()
             ), TextColor.GREEN);
         }
     }
-
 }

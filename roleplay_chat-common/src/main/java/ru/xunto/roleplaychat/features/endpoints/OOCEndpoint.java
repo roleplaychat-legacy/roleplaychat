@@ -15,8 +15,7 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
 
     static {
         colors.put("username", TextColor.GREEN);
-        colors.put("default", TextColor.LIGHT_PURPLE);
-        colors.put("label", TextColor.WHITE);
+        colors.put("default", TextColor.GREEN);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/ooc.twig");

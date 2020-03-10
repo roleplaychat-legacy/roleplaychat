@@ -20,9 +20,8 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextColor> colors = new HashMap<>();
 
     static {
-        colors.put("default", TextColor.GOLD);
-        colors.put("username", TextColor.GREEN);
-        colors.put("label", TextColor.WHITE);
+        colors.put("default", TextColor.BLUE);
+        colors.put("username", TextColor.BLUE);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_ooc.twig");
