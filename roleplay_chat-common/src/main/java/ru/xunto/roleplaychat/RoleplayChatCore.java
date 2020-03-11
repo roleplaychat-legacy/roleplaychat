@@ -121,7 +121,7 @@ public class RoleplayChatCore {
                 shouldLog |= iCompat.compat(request.getRequester(), text);
             }
 
-            if (!shouldLog) this.logger.log(text);
+            if (shouldLog) this.logger.log(text);
         }
 
         return result;

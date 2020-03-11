@@ -99,9 +99,14 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         Player player = Bukkit.getServer().getPlayer(speaker.getRealName());
 
         String component = text.getUnformattedText();
-        CompatPlayerChatEvent compatEvent = new CompatPlayerChatEvent(player, component);
-        Bukkit.getPluginManager().callEvent(compatEvent);
 
+        this.getServer().getScheduler().runTaskAsynchronously(this, () -> {
+            CompatPlayerChatEvent compatEvent = new CompatPlayerChatEvent(player, component);
+            Bukkit.getPluginManager().callEvent(compatEvent);
+        });
+
+        // TODO: Always return true for now, switch to callback later
+        //  (to support async frameworks)
         return true;
     }
 
