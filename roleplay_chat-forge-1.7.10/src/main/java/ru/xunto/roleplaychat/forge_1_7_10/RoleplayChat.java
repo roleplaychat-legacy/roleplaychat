@@ -16,6 +16,9 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ICommand;
+import ru.xunto.roleplaychat.api.ICompat;
+import ru.xunto.roleplaychat.api.ILogger;
+import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -26,7 +29,7 @@ import java.util.List;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(modid = RoleplayChat.MODID, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
-public class RoleplayChat {
+public class RoleplayChat implements ILogger, ICompat {
     public static final String MODID = "@@MODID@@";
     public static final String VERSION = "@@VERSION@@";
 
@@ -74,28 +77,21 @@ public class RoleplayChat {
         );
 
         event.setCanceled(true);
-
-        for (Text text : texts) {
-            IChatComponent component = RoleplayChat.toTextComponent(text);
-            boolean isCanceled = EVENT_BUS.post(
-                    new CompatServerChatEvent(event.player, component.getUnformattedText(), component)
-            );
-
-            if (!isCanceled) FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(component);
-        }
     }
 
     @SubscribeEvent
     public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         RoleplayChatCore.instance.onPlayerLeave(new ForgeSpeaker((EntityPlayerMP) event.player));
-        System.out.println("leave");
     }
 
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
+
         RoleplayChatCore.instance.warmUpRenderer();
+        RoleplayChatCore.instance.setLogger(this);
+        RoleplayChatCore.instance.registerCompat(this);
 
         MinecraftServer server = MinecraftServer.getServer();
         ServerCommandManager manager = (ServerCommandManager) server.getCommandManager();
@@ -103,5 +99,22 @@ public class RoleplayChat {
         for (ICommand command : RoleplayChatCore.instance.getCommands()) {
             manager.registerCommand(new ForgeCommand(command));
         }
+    }
+
+    public boolean compat(ISpeaker speaker, Text text) {
+        EntityPlayerMP mcPlayer = MinecraftServer.getServer().getConfigurationManager().func_152612_a(speaker.getRealName());
+
+        if (mcPlayer == null) return false;
+
+        IChatComponent component = RoleplayChat.toTextComponent(text);
+        return EVENT_BUS.post(
+                new CompatServerChatEvent(mcPlayer, component.getUnformattedText(), component)
+        );
+    }
+
+    @Override
+    public void log(Text text) {
+        IChatComponent component = RoleplayChat.toTextComponent(text);
+        FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(component);
     }
 }

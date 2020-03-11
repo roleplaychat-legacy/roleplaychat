@@ -12,11 +12,11 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.RoleplayChatCore;
-import ru.xunto.roleplaychat.api.ICommand;
-import ru.xunto.roleplaychat.api.IPermission;
+import ru.xunto.roleplaychat.api.*;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -27,7 +27,7 @@ import java.util.List;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(modid = RoleplayChat.MODID, name = RoleplayChat.NAME, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
-public class RoleplayChat {
+public class RoleplayChat implements ILogger, ICompat {
     public static final String MODID = "@@MODID@@";
     public static final String NAME = "@@MODID@@";
     public static final String VERSION = "@@VERSION@@";
@@ -76,15 +76,6 @@ public class RoleplayChat {
         );
 
         event.setCanceled(true);
-
-        for (Text text : texts) {
-            ITextComponent component = RoleplayChat.toTextComponent(text);
-            boolean isCanceled = EVENT_BUS.post(
-                    new CompatServerChatEvent(event.getPlayer(), component.getUnformattedText(), component)
-            );
-
-            if (!isCanceled) FMLCommonHandler.instance().getMinecraftServerInstance().sendMessage(component);
-        }
     }
 
     @SubscribeEvent
@@ -95,8 +86,10 @@ public class RoleplayChat {
     @Mod.EventHandler
     public void startServer(FMLServerStartingEvent event) {
         EVENT_BUS.register(this);
-        RoleplayChatCore.instance.warmUpRenderer();
 
+        RoleplayChatCore.instance.warmUpRenderer();
+        RoleplayChatCore.instance.setLogger(this);
+        RoleplayChatCore.instance.registerCompat(this);
 
         for (IPermission permission : RoleplayChatCore.instance.getPermissions()) {
             PermissionAPI.registerNode(
@@ -109,5 +102,23 @@ public class RoleplayChat {
         for (ICommand command : RoleplayChatCore.instance.getCommands()) {
             event.registerServerCommand(new ForgeCommand(command));
         }
+    }
+
+    public boolean compat(ISpeaker speaker, Text text) {
+        EntityPlayerMP mcPlayer = FMLServerHandler.instance().getServer()
+                .getPlayerList().getPlayerByUsername(speaker.getRealName());
+
+        if (mcPlayer == null) return false;
+
+        ITextComponent component = RoleplayChat.toTextComponent(text);
+        return EVENT_BUS.post(
+                new CompatServerChatEvent(mcPlayer, component.getUnformattedText(), component)
+        );
+    }
+
+    @Override
+    public void log(Text text) {
+        ITextComponent component = RoleplayChat.toTextComponent(text);
+        FMLCommonHandler.instance().getMinecraftServerInstance().sendMessage(component);
     }
 }

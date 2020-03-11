@@ -2,9 +2,7 @@ package ru.xunto.roleplaychat;
 
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-import ru.xunto.roleplaychat.api.ICommand;
-import ru.xunto.roleplaychat.api.IPermission;
-import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.api.*;
 import ru.xunto.roleplaychat.features.commands.CommandDistance;
 import ru.xunto.roleplaychat.features.commands.CommandListen;
 import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
@@ -23,12 +21,14 @@ import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class RoleplayChatCore {
     public final static RoleplayChatCore instance = new RoleplayChatCore();
+
+    private ILogger logger;
+    private Set<ICompat> compats = new HashSet<>();
+
 
     private List<Middleware> middleware = new ArrayList<>();
     private List<ICommand> commands = new ArrayList<>();
@@ -57,7 +57,11 @@ public class RoleplayChatCore {
         this.register(PermissionGM.instance);
     }
 
-    private void register(IPermission permission) {
+    public void registerCompat(ICompat compat) {
+        this.compats.add(compat);
+    }
+
+    public void register(IPermission permission) {
         this.permissions.add(permission);
     }
 
@@ -111,6 +115,15 @@ public class RoleplayChatCore {
             }
         }
 
+        for (Text text : result) {
+            boolean shouldLog = false;
+            for (ICompat iCompat : compats) {
+                shouldLog |= iCompat.compat(request.getRequester(), text);
+            }
+
+            if (!shouldLog) this.logger.log(text);
+        }
+
         return result;
     }
 
@@ -134,5 +147,9 @@ public class RoleplayChatCore {
 
     public List<IPermission> getPermissions() {
         return permissions;
+    }
+
+    public void setLogger(ILogger logger) {
+        this.logger = logger;
     }
 }

@@ -2,6 +2,7 @@ package ru.xunto.roleplaychat.spigot;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -10,8 +11,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.xunto.roleplaychat.RoleplayChatCore;
-import ru.xunto.roleplaychat.api.ICommand;
-import ru.xunto.roleplaychat.api.IPermission;
+import ru.xunto.roleplaychat.api.*;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -20,7 +20,7 @@ import ru.xunto.roleplaychat.framework.renderer.text.TextComponent;
 import java.util.List;
 import java.util.logging.Logger;
 
-public final class RoleplayChat extends JavaPlugin implements Listener {
+public final class RoleplayChat extends JavaPlugin implements Listener, ILogger, ICompat {
     private Logger logger = Logger.getLogger("RoleplayChat");
     private RuntimeCommandRegistration commands = new RuntimeCommandRegistration(this);
 
@@ -65,20 +65,16 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
         );
 
         event.setCancelled(true);
-
-        for (Text text : texts) {
-            String component = text.getUnformattedText();
-            CompatPlayerChatEvent compatEvent = new CompatPlayerChatEvent(event.getPlayer(), component);
-            Bukkit.getPluginManager().callEvent(compatEvent);
-            if (!compatEvent.isCancelled()) logger.info(ChatColor.stripColor(component));
-        }
     }
 
     @Override
     public void onEnable() {
         PluginManager manager = getServer().getPluginManager();
-        RoleplayChatCore.instance.warmUpRenderer();
         manager.registerEvents(this, this);
+
+        RoleplayChatCore.instance.warmUpRenderer();
+        RoleplayChatCore.instance.setLogger(this);
+        RoleplayChatCore.instance.registerCompat(this);
 
         for (IPermission permission : RoleplayChatCore.instance.getPermissions()) {
             manager.addPermission(new Permission(
@@ -96,5 +92,22 @@ public final class RoleplayChat extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+    }
+
+    @Override
+    public boolean compat(ISpeaker speaker, Text text) {
+        Player player = Bukkit.getServer().getPlayer(speaker.getRealName());
+
+        String component = text.getUnformattedText();
+        CompatPlayerChatEvent compatEvent = new CompatPlayerChatEvent(player, component);
+        Bukkit.getPluginManager().callEvent(compatEvent);
+
+        return true;
+    }
+
+    @Override
+    public void log(Text text) {
+        String component = toTextComponent(text);
+        logger.info(ChatColor.stripColor(component));
     }
 }
