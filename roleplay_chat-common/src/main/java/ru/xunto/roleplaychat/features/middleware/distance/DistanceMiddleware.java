@@ -87,19 +87,19 @@ public class DistanceMiddleware extends Middleware {
         if (canceled)
             return;
 
-        Distance range;
+        Distance distance;
         Boolean forceEnvironment = state.getValue(FORCE_ENVIRONMENT, false);
 
         // TODO: Improve forced environment behaviour to be clearer
         if (forceEnvironment)
-            range = state.getValue(DISTANCE, DEFAULT_RANGE);
+            distance = state.getValue(DISTANCE, DEFAULT_RANGE);
         else
-            range = processDistanceState(request, environment);
+            distance = processDistanceState(request, environment);
 
-        String label = Translations.stringifyDistance(range);
+        String label = Translations.stringifyDistance(distance);
         if (label != null) state.setValue(Environment.LABEL, label);
 
-        Set<ISpeaker> recipients = fetchRecipients(request, environment, range);
+        Set<ISpeaker> recipients = fetchRecipients(request, environment, distance);
         environment.getRecipients().addAll(recipients);
 
         flow.next();

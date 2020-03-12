@@ -48,10 +48,12 @@ public class RoleplayChatCore {
 
         // Commands
         this.register(new CommandListen());
-        this.register(new CommandDistance(this, "w", Distance.QUITE_WHISPER));
+        this.register(new CommandDistance(this, "qqq", Distance.QUITE_WHISPER));
+        this.register(new CommandDistance(this, "qq", Distance.WHISPER));
         this.register(new CommandDistance(this, "q", Distance.QUITE));
         this.register(new CommandDistance(this, "l", Distance.LOUD));
-        this.register(new CommandDistance(this, "s", Distance.LOUD_SHOUT));
+        this.register(new CommandDistance(this, "ll", Distance.SHOUT));
+        this.register(new CommandDistance(this, "lll", Distance.LOUD_SHOUT));
 
         // Permission
         this.register(PermissionGM.instance);

@@ -40,6 +40,9 @@ public class CommandDistance implements ICommand {
         String prefix = "";
         switch (distance) {
             case QUITE_WHISPER:
+                prefix = "===";
+                break;
+            case WHISPER:
                 prefix = "==";
                 break;
             case QUITE:
@@ -48,8 +51,11 @@ public class CommandDistance implements ICommand {
             case LOUD:
                 prefix = "!";
                 break;
-            case LOUD_SHOUT:
+            case SHOUT:
                 prefix = "!!";
+                break;
+            case LOUD_SHOUT:
+                prefix = "!!!";
                 break;
             default:
                 prefix = "";

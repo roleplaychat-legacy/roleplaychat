@@ -62,7 +62,7 @@ public class ListenMiddleware extends Middleware {
         recipients.clear();
 
         newEnvironment.getColors().clear();
-        newEnvironment.getColors().put("default", TextColor.DARK_GRAY);
+        newEnvironment.getColors().put("default", TextColor.GRAY);
 
         IServer server = request.getRequester().getWorld().getServer();
         IWorld[] worlds = server.getWorlds();

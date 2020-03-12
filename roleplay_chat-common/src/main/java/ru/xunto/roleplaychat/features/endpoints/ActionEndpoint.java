@@ -20,9 +20,9 @@ public class ActionEndpoint extends Endpoint {
     private static final Map<String, TextColor> colors = new HashMap<>();
 
     static {
+        colors.put("username", TextColor.GREEN);
         colors.put("text", TextColor.WHITE);
         colors.put("action", TextColor.GRAY);
-        colors.put("username", TextColor.GREEN);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/action.twig");

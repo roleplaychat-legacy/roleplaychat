@@ -16,7 +16,7 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextColor> colors = new HashMap<>();
 
     static {
-        colors.put("default", TextColor.YELLOW);
+        colors.put("default", TextColor.DARK_AQUA);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_action.twig");
