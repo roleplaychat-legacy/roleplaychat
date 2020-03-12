@@ -4,6 +4,8 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import org.jtwig.environment.EnvironmentConfiguration;
 import org.jtwig.environment.EnvironmentConfigurationBuilder;
+import ru.xunto.roleplaychat.framework.jtwig.functions.ColorlessFunction;
+import ru.xunto.roleplaychat.framework.jtwig.functions.WrapColorFunction;
 import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -16,7 +18,7 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
     private final static String COLOR_MARKER_ESCAPED = "\16";
 
     public final static EnvironmentConfigurationBuilder CONF_BUILDER = EnvironmentConfigurationBuilder.configuration()
-            .functions().add(new WrapColorFunction()).and();
+            .functions().add(new WrapColorFunction()).add(new ColorlessFunction()).and();
 
     private final static EnvironmentConfiguration CONF = CONF_BUILDER.build();
     private JtwigTemplate template;

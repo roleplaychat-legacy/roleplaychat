@@ -1,9 +1,9 @@
-package ru.xunto.roleplaychat.framework.jtwig;
+package ru.xunto.roleplaychat.framework.jtwig.functions;
 
 import org.jtwig.functions.FunctionRequest;
-import org.jtwig.functions.SimpleJtwigFunction;
+import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
 
-public class WrapColorFunction extends SimpleJtwigFunction {
+public class WrapColorFunction extends AbstractFunction {
     @Override
     public String name() {
         return "wrapColor";
@@ -17,10 +17,5 @@ public class WrapColorFunction extends SimpleJtwigFunction {
         String colorName = getString(request, 1);
 
         return JTwigTemplate.wrapWithColor(value, colorName);
-    }
-
-    private String getString(FunctionRequest request, int index) {
-        return request.getEnvironment().getValueEnvironment().getStringConverter()
-                .convert(request.get(index));
     }
 }

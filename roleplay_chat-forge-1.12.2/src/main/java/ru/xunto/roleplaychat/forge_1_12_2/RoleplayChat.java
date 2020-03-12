@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import ru.xunto.roleplaychat.RoleplayChatCore;
@@ -105,7 +104,7 @@ public class RoleplayChat implements ILogger, ICompat {
     }
 
     public boolean compat(ISpeaker speaker, Text text) {
-        EntityPlayerMP mcPlayer = FMLServerHandler.instance().getServer()
+        EntityPlayerMP mcPlayer = FMLCommonHandler.instance().getMinecraftServerInstance()
                 .getPlayerList().getPlayerByUsername(speaker.getRealName());
 
         if (mcPlayer == null) return false;

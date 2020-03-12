@@ -14,8 +14,8 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
     private static final Map<String, TextColor> colors = new HashMap<>();
 
     static {
-        colors.put("default", TextColor.DARK_GRAY);
-        colors.put("username", TextColor.GREEN);
+        colors.put("default", TextColor.GRAY);
+        colors.put("username", TextColor.GRAY);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/ooc.twig");
