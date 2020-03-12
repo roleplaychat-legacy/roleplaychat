@@ -22,6 +22,7 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
     static {
         colors.put("default", TextColor.DARK_GREEN);
         colors.put("username", TextColor.GREEN);
+        colors.put("prefix", TextColor.GRAY);
     }
 
     private JTwigTemplate template = new JTwigTemplate("templates/gm_ooc.twig");
