@@ -8,6 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -48,6 +49,22 @@ public class RoleplayChat implements ILogger, ICompat {
         return component;
     }
 
+    public static IChatComponent convertComponent(TextComponent component) {
+        IChatComponent mcComponent = RoleplayChat.createComponent(
+                component.getContent(),
+                component.getColor()
+        );
+
+        Text hoverText = component.getHoverText();
+        if (hoverText != null) {
+            mcComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                    RoleplayChat.toTextComponent(hoverText)
+            ));
+        }
+
+        return mcComponent;
+    }
+
     public static IChatComponent toTextComponent(Text text) {
         Object cache = text.getCache();
         if (cache instanceof IChatComponent) return (IChatComponent) cache;
@@ -55,12 +72,7 @@ public class RoleplayChat implements ILogger, ICompat {
         IChatComponent result = RoleplayChat.createComponent("", text.getDefaultColor());
 
         for (TextComponent component : text.getComponents()) {
-            result.appendSibling(
-                    RoleplayChat.createComponent(
-                            component.getContent(),
-                            component.getColor()
-                    )
-            );
+            result.appendSibling(RoleplayChat.convertComponent(component));
         }
 
         text.setCache(result);

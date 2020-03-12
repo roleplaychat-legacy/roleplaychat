@@ -3,6 +3,7 @@ package ru.xunto.roleplaychat.framework.renderer.text;
 public class TextComponent {
     private final String content;
     private final TextColor color;
+    private Text hoverText = null;
 
     public TextComponent(String content, TextColor color) {
         this.content = content;
@@ -15,5 +16,13 @@ public class TextComponent {
 
     public TextColor getColor() {
         return color;
+    }
+
+    public Text getHoverText() {
+        return hoverText;
+    }
+
+    public void setHoverText(Text hoverText) {
+        this.hoverText = hoverText;
     }
 }

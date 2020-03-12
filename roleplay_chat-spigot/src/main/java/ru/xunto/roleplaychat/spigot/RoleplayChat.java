@@ -45,6 +45,7 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         builder.append(RoleplayChat.toMinecraftFormatting(text.getDefaultColor()));
 
         for (TextComponent component : text.getComponents()) {
+            // TODO: Somehow implement hover event
             builder.append(RoleplayChat.toMinecraftFormatting(component.getColor()));
             builder.append(component.getContent());
             builder.append(RoleplayChat.toMinecraftFormatting(text.getDefaultColor()));
