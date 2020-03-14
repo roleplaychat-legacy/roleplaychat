@@ -1,8 +1,8 @@
 package ru.xunto.roleplaychat.features.middleware.distance;
 
 public enum Distance {
-    QUITE_WHISPER(0, 1), WHISPER(1, 3), QUITE(2, 9), NORMAL(3, 18), LOUD(4, 36), SHOUT(5,
-            60), LOUD_SHOUT(6, 80);
+    QUITE_WHISPER(0, 1), WHISPER(1, 3), QUITE(2, 9), NORMAL(3, 18), LOUD(4, 30), SHOUT(5,
+            50), LOUD_SHOUT(6, 80);
 
     private static final Distance[] VALUES = new Distance[7];
 
