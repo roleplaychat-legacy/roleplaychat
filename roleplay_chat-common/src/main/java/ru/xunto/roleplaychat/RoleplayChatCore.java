@@ -5,7 +5,6 @@ import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.api.*;
 import ru.xunto.roleplaychat.features.commands.CommandDistance;
 import ru.xunto.roleplaychat.features.commands.CommandListen;
-import ru.xunto.roleplaychat.features.endpoints.ActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmActionEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.GmOOCEndpoint;
 import ru.xunto.roleplaychat.features.endpoints.OOCEndpoint;
@@ -40,7 +39,7 @@ public class RoleplayChatCore {
         this.register(new RecallEndpointMiddleware());
         this.register(new DistanceMiddleware());
         this.register(new ListenMiddleware());
-        this.register(new ActionEndpoint());
+//        this.register(new ActionEndpoint());
 
         this.register(new OOCEndpoint(this).registerCommand("o"));
         this.register(new GmOOCEndpoint(this).registerCommand("gmo"));
