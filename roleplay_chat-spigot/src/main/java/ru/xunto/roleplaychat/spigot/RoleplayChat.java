@@ -17,7 +17,6 @@ import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 import ru.xunto.roleplaychat.framework.renderer.text.TextComponent;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public final class RoleplayChat extends JavaPlugin implements Listener, ILogger, ICompat {
@@ -61,11 +60,11 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         if (event instanceof CompatPlayerChatEvent)
             return;
 
-        List<Text> texts = RoleplayChatCore.instance.process(
-                new Request(event.getMessage(), new SpigotSpeaker(event.getPlayer()))
-        );
-
         event.setCancelled(true);
+
+        Bukkit.getScheduler().runTask(this, () -> RoleplayChatCore.instance.process(
+                new Request(event.getMessage(), new SpigotSpeaker(event.getPlayer()))
+        ));
     }
 
     @Override
