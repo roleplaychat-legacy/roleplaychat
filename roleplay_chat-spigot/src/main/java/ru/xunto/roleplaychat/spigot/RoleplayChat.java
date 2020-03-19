@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permission;
@@ -55,7 +56,7 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         return result;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatEvent(AsyncPlayerChatEvent event) {
         if (event instanceof CompatPlayerChatEvent)
             return;
