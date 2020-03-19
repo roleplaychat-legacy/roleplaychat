@@ -20,5 +20,9 @@ public interface ISpeaker {
 
     UUID getUniqueID();
 
-    boolean hasPermission(IPermission permission);
+    default boolean hasPermission(IPermission permission) {
+        return this.hasPermission(permission.getName());
+    }
+
+    boolean hasPermission(String string);
 }

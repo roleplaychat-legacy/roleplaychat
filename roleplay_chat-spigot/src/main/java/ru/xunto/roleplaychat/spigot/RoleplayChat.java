@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permission;
@@ -17,7 +18,6 @@ import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 import ru.xunto.roleplaychat.framework.renderer.text.TextComponent;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public final class RoleplayChat extends JavaPlugin implements Listener, ILogger, ICompat {
@@ -56,16 +56,16 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         return result;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatEvent(AsyncPlayerChatEvent event) {
         if (event instanceof CompatPlayerChatEvent)
             return;
 
-        List<Text> texts = RoleplayChatCore.instance.process(
-                new Request(event.getMessage(), new SpigotSpeaker(event.getPlayer()))
-        );
-
         event.setCancelled(true);
+
+        Bukkit.getScheduler().runTask(this, () -> RoleplayChatCore.instance.process(
+                new Request(event.getMessage(), new SpigotSpeaker(event.getPlayer()))
+        ));
     }
 
     @Override

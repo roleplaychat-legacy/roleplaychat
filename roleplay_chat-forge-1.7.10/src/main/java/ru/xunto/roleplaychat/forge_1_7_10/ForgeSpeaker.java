@@ -1,7 +1,6 @@
 package ru.xunto.roleplaychat.forge_1_7_10;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import ru.xunto.roleplaychat.api.IPermission;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.api.Position;
@@ -54,7 +53,7 @@ public class ForgeSpeaker implements ISpeaker {
     }
 
     @Override
-    public boolean hasPermission(IPermission permission) {
+    public boolean hasPermission(String permission) {
         return this.player.canCommandSenderUseCommand(2, "");
     }
 
