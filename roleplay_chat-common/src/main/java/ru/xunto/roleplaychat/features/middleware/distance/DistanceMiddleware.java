@@ -11,7 +11,9 @@ import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class DistanceMiddleware extends Middleware {
@@ -19,6 +21,7 @@ public class DistanceMiddleware extends Middleware {
     public final static IProperty<Boolean> FORCE_ENVIRONMENT =
             new Property<>("force_environment_distance");
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
+    public final static IProperty<List<Position>> ORIGINS = new Property<>("origins");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
     public DistanceMiddleware() {
@@ -38,12 +41,16 @@ public class DistanceMiddleware extends Middleware {
                                                 Distance range) {
         ISpeaker requester = request.getRequester();
         IWorld world = requester.getWorld();
-        Position position = requester.getPosition();
+
+        List<Position> positions = environment.getState().getValue(ORIGINS, null);
+        if (positions == null) positions = Collections.singletonList(requester.getPosition());
 
         Set<ISpeaker> recipients = new HashSet<>();
-        for (ISpeaker recipient : world.getPlayers()) {
-            if (position.distance(recipient.getPosition()) <= range.getDistance()) {
-                recipients.add(recipient);
+        for (Position position : positions) {
+            for (ISpeaker recipient : world.getPlayers()) {
+                if (position.distance(recipient.getPosition()) <= range.getDistance()) {
+                    recipients.add(recipient);
+                }
             }
         }
 
