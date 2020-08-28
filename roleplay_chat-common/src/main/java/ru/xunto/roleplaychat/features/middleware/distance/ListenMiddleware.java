@@ -4,7 +4,9 @@ import ru.xunto.roleplaychat.api.IServer;
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.IHearingMode;
+import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.InfiniteHearingMode;
 import ru.xunto.roleplaychat.features.middleware.distance.hearing_gm.NoExtraHearingMode;
+import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Middleware;
 import ru.xunto.roleplaychat.framework.api.Request;
@@ -20,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ListenMiddleware extends Middleware {
+    // Should msg bypass Listen
     public final static IProperty<Boolean> AVOID = new Property<>("avoid_listen");
 
     private static Map<UUID, IHearingMode> hearingModes = new HashMap<>();
@@ -28,8 +31,7 @@ public class ListenMiddleware extends Middleware {
         IHearingMode mode = hearingModes.getOrDefault(speaker.getUniqueID(), null);
 
         if (mode != null) return mode;
-        // TODO: Introduce config subsystem so this could be optional and persistent:
-        //  if (speaker.hasPermission("gm")) return InfiniteHearingMode.instance;
+        if (speaker.hasPermission(PermissionGM.instance)) return InfiniteHearingMode.instance;
 
         return NoExtraHearingMode.instance;
     }
