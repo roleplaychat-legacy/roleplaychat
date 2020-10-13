@@ -2,7 +2,6 @@ package ru.xunto.roleplaychat.features.middleware.distance;
 
 import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
-import ru.xunto.roleplaychat.api.Position;
 import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
 import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
@@ -21,7 +20,7 @@ public class DistanceMiddleware extends Middleware {
     public final static IProperty<Boolean> FORCE_ENVIRONMENT =
             new Property<>("force_environment_distance");
     public final static IProperty<Distance> DISTANCE = new Property<>("distance");
-    public final static IProperty<List<Position>> ORIGINS = new Property<>("origins");
+    public final static IProperty<List<ISpeaker>> ORIGINS = new Property<>("origins");
     private final static Distance DEFAULT_RANGE = Distance.NORMAL;
 
     public DistanceMiddleware() {
@@ -42,13 +41,13 @@ public class DistanceMiddleware extends Middleware {
         ISpeaker requester = request.getRequester();
         IWorld world = requester.getWorld();
 
-        List<Position> positions = environment.getState().getValue(ORIGINS, null);
-        if (positions == null) positions = Collections.singletonList(requester.getPosition());
+        List<ISpeaker> origins = environment.getState().getValue(ORIGINS, null);
+        if (origins == null) origins = Collections.singletonList(requester);
 
         Set<ISpeaker> recipients = new HashSet<>();
-        for (Position position : positions) {
+        for (ISpeaker origin : origins) {
             for (ISpeaker recipient : world.getPlayers()) {
-                if (position.distance(recipient.getPosition()) <= range.getDistance()) {
+                if (origin.getPosition().distance(recipient.getPosition()) <= range.getDistance()) {
                     recipients.add(recipient);
                 }
             }
