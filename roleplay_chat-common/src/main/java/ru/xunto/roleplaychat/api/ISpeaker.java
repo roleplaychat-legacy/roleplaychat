@@ -25,4 +25,6 @@ public interface ISpeaker {
     }
 
     boolean hasPermission(String string);
+
+    int hashCode();
 }
