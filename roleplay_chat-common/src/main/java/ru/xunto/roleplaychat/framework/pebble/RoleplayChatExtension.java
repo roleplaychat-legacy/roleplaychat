@@ -13,6 +13,7 @@ public class RoleplayChatExtension extends AbstractExtension {
     public Map<String, Function> getFunctions() {
         HashMap<String, Function> functions = new HashMap<>();
         functions.put("wrapColor", new WrapColorFunction.Function());
+        functions.put("batch", new BatchFunction());
         return functions;
     }
 

@@ -32,7 +32,7 @@ public class WrapColorFunction {
         @Override
         public Object apply(Object input, Map<String, Object> args, PebbleTemplate self, EvaluationContext context, int lineNumber) throws PebbleException {
             String colorName = (String) args.getOrDefault("colorName", "");
-            return PebbleChatTemplate.wrapWithColor((String) input, colorName);
+            return PebbleChatTemplate.wrapWithColor(String.valueOf(input), colorName);
         }
 
         @Override
