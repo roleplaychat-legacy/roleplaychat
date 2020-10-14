@@ -1,7 +1,7 @@
-{%- import 'color_markers.twig' as markers -%}
+{%- import 'templates/color_markers.twig' as markers -%}
 
 {%- set a = start_with_action -%}
-{%- set b = odd(length(action_parts)) -%}
+{%- set b = (action_parts | length) % 2 == 1 -%}
 
 {%- set end_with_action = (a and b ) or (not a and not b) -%}
 
@@ -14,11 +14,11 @@
 
 {%- set parts = [] -%}
 {%- for part in action_parts -%}
-    {%- if (odd(loop.index)) -%}
-        {%- set parts = merge(parts, wrapColor(part, odd_label)) -%}
+    {%- if (loop.index % 2 == 0) -%}
+        {%- set parts = parts + [wrapColor(part, odd_label)] -%}
     {%- else %}
-        {%- set parts = merge(parts, wrapColor(part, even_label)) -%}
+        {%- set parts = parts + [wrapColor(part, even_label)] -%}
     {%- endif -%}
 {%- endfor -%}
 
-{{- start -}} {{ username }}{{- markers.label(label) -}}{{- not start_with_action ? ":" : "" }} {{ join(parts, " " ~ sep ~ " ") }} {{- end -}}
+{{- start -}} {{ username }}{{- markers.label(label) -}}{{- not start_with_action ? ":" : "" }} {{ parts | join(" " ~ sep ~ " ") }} {{- end -}}

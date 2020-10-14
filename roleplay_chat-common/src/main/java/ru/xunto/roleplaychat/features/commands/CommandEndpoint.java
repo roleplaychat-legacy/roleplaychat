@@ -7,7 +7,7 @@ import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.commands.CommandException;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
+import ru.xunto.roleplaychat.framework.state.MessageState;
 
 public class CommandEndpoint<T extends PrefixMatchEndpoint> implements ICommand {
     private final String name;
@@ -40,7 +40,7 @@ public class CommandEndpoint<T extends PrefixMatchEndpoint> implements ICommand 
         String msg = String.join(" ", args);
         Request request = new Request(msg, speaker);
         Environment environment = new Environment(speaker.getName(), msg);
-        JTwigState state = environment.getState();
+        MessageState state = environment.getState();
         state.setValue(PrefixMatchEndpoint.FORCED_ENDPOINT, endpoint);
         core.process(request, environment);
     }

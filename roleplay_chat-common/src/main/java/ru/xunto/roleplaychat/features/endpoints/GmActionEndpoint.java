@@ -6,7 +6,8 @@ import ru.xunto.roleplaychat.features.permissions.PermissionGM;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
+import ru.xunto.roleplaychat.framework.pebble.PebbleChatTemplate;
+import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
         colors.put("default", TextColor.DARK_AQUA);
     }
 
-    private JTwigTemplate template = new JTwigTemplate("templates/gm_action.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/gm_action.twig");
 
     public GmActionEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "#", "№");

@@ -4,7 +4,8 @@ import ru.xunto.roleplaychat.framework.api.Endpoint;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Priority;
 import ru.xunto.roleplaychat.framework.api.Request;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
+import ru.xunto.roleplaychat.framework.pebble.PebbleChatTemplate;
+import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
@@ -25,7 +26,7 @@ public class ActionEndpoint extends Endpoint {
         colors.put("action", TextColor.GRAY);
     }
 
-    private JTwigTemplate template = new JTwigTemplate("templates/action.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/action.twig");
 
     @Override
     public Priority getPriority() {

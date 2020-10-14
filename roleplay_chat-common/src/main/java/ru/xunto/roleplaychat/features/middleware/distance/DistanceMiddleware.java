@@ -4,7 +4,6 @@ import ru.xunto.roleplaychat.api.ISpeaker;
 import ru.xunto.roleplaychat.api.IWorld;
 import ru.xunto.roleplaychat.features.Translations;
 import ru.xunto.roleplaychat.framework.api.*;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.state.IProperty;
 import ru.xunto.roleplaychat.framework.state.MessageState;
@@ -88,7 +87,7 @@ public class DistanceMiddleware extends Middleware {
 
     @Override
     public void process(Request request, Environment environment, Flow flow) {
-        JTwigState state = environment.getState();
+        MessageState state = environment.getState();
         Boolean canceled = state.getValue(CANCEL, false);
         if (canceled)
             return;

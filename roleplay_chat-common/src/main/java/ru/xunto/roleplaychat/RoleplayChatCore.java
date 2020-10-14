@@ -1,7 +1,5 @@
 package ru.xunto.roleplaychat;
 
-import org.jtwig.JtwigModel;
-import org.jtwig.JtwigTemplate;
 import ru.xunto.roleplaychat.api.*;
 import ru.xunto.roleplaychat.features.commands.CommandDistance;
 import ru.xunto.roleplaychat.features.commands.CommandListen;
@@ -90,9 +88,9 @@ public class RoleplayChatCore {
         commands.add(command);
     }
 
-    // Initialize the JTwig in advance 'cause there may be freezes
+//     Initialize the JTwig in advance 'cause there may be freezes
     public void warmUpRenderer() {
-        JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
+//        JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
 
     public List<Text> process(Request request) {

@@ -1,34 +1,27 @@
-package ru.xunto.roleplaychat.framework.jtwig;
+package ru.xunto.roleplaychat.framework.pebble;
 
-import org.jtwig.JtwigModel;
-import org.jtwig.JtwigTemplate;
-import org.jtwig.environment.EnvironmentConfiguration;
-import org.jtwig.environment.EnvironmentConfigurationBuilder;
-import ru.xunto.roleplaychat.framework.jtwig.functions.ColorlessFunction;
-import ru.xunto.roleplaychat.framework.jtwig.functions.WrapColorFunction;
+import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 import ru.xunto.roleplaychat.framework.renderer.text.TextComponent;
+import ru.xunto.roleplaychat.framework.state.MessageState;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Map;
 
-public class JTwigTemplate implements ITemplate<JTwigState> {
+public class PebbleChatTemplate implements ITemplate {
+    public final static PebbleEngine engine = new PebbleEngine.Builder()
+            .extension(new RoleplayChatExtension()).build();
     private final static String COLOR_MARKER = "$";
     private final static String COLOR_MARKER_ESCAPED = "\16";
+    PebbleTemplate compiledTemplate;
 
-    public final static EnvironmentConfigurationBuilder CONF_BUILDER = EnvironmentConfigurationBuilder.configuration()
-            .functions().add(new WrapColorFunction()).add(new ColorlessFunction()).and();
-
-    private final static EnvironmentConfiguration CONF = CONF_BUILDER.build();
-    private JtwigTemplate template;
-
-    public JTwigTemplate(String path) {
-        this(path, CONF);
-    }
-
-    public JTwigTemplate(String path, EnvironmentConfiguration conf) {
-        this.template = JtwigTemplate.classpathTemplate(path, conf);
+    public PebbleChatTemplate(String templatePath) {
+        this.compiledTemplate = PebbleChatTemplate.engine.getTemplate(templatePath);
     }
 
     public static String wrapWithColor(String value, String colorName) {
@@ -78,15 +71,20 @@ public class JTwigTemplate implements ITemplate<JTwigState> {
         return text;
     }
 
-    @Override
-    public Text render(JTwigState state, Map<String, TextColor> colors) {
-        JtwigModel model = state.getModel();
-        String content = template.render(model);
-
-        return this.renderText(content, colors);
-    }
-
     private TextComponent coloredComponent(String content, TextColor color) {
         return new TextComponent(content, color);
+    }
+
+    @Override
+    public Text render(MessageState state, Map<String, TextColor> colors) {
+        Writer writer = new StringWriter();
+
+        try {
+            compiledTemplate.evaluate(writer, state.getContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return this.renderText(writer.toString(), colors);
     }
 }

@@ -8,7 +8,7 @@ import ru.xunto.roleplaychat.features.middleware.distance.DistanceMiddleware;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.commands.CommandException;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
+import ru.xunto.roleplaychat.framework.state.MessageState;
 
 public class CommandDistance implements ICommand {
     private final String name;
@@ -70,7 +70,7 @@ public class CommandDistance implements ICommand {
         Request request = new Request(this.addDistance(msg), speaker);
         Environment environment = new Environment(speaker.getName(), msg);
 
-        JTwigState state = environment.getState();
+        MessageState state = environment.getState();
         state.setValue(DistanceMiddleware.FORCE_ENVIRONMENT, true);
         state.setValue(DistanceMiddleware.DISTANCE, distance);
 

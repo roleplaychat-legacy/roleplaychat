@@ -4,7 +4,8 @@ import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.framework.api.Environment;
 import ru.xunto.roleplaychat.framework.api.PrefixMatchEndpoint;
 import ru.xunto.roleplaychat.framework.api.Request;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
+import ru.xunto.roleplaychat.framework.pebble.PebbleChatTemplate;
+import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
         colors.put("username", TextColor.GRAY);
     }
 
-    private JTwigTemplate template = new JTwigTemplate("templates/ooc.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/ooc.twig");
 
     public OOCEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "_");

@@ -2,11 +2,11 @@ package ru.xunto.roleplaychat.framework.api;
 
 import ru.xunto.roleplaychat.RoleplayChatCore;
 import ru.xunto.roleplaychat.api.ISpeaker;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigState;
-import ru.xunto.roleplaychat.framework.jtwig.JTwigTemplate;
+import ru.xunto.roleplaychat.framework.pebble.PebbleChatTemplate;
 import ru.xunto.roleplaychat.framework.renderer.ITemplate;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 import ru.xunto.roleplaychat.framework.state.IProperty;
+import ru.xunto.roleplaychat.framework.state.MessageState;
 import ru.xunto.roleplaychat.framework.state.Property;
 
 import java.util.HashMap;
@@ -28,10 +28,10 @@ public class Environment implements Cloneable {
     public final static IProperty<String> TEXT = new Property<>("text");
 
     private RoleplayChatCore core;
-    private ITemplate<JTwigState> template = new JTwigTemplate("templates/default.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/default.twig");
     private boolean processed = false;
 
-    private JTwigState state = new JTwigState();
+    private MessageState state = new MessageState();
     private Map<String, TextColor> colors = new HashMap<>();
     private Set<ISpeaker> recipients = new HashSet<>();
 
@@ -58,11 +58,11 @@ public class Environment implements Cloneable {
         return recipients;
     }
 
-    public ITemplate<JTwigState> getTemplate() {
+    public ITemplate getTemplate() {
         return template;
     }
 
-    public void setTemplate(JTwigTemplate template) {
+    public void setTemplate(ITemplate template) {
         this.template = template;
     }
 
@@ -80,7 +80,7 @@ public class Environment implements Cloneable {
         }
     }
 
-    public JTwigState getState() {
+    public MessageState getState() {
         return state;
     }
 
