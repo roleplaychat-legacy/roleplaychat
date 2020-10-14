@@ -19,7 +19,7 @@ public class OOCEndpoint extends PrefixMatchEndpoint {
         colors.put("username", TextColor.GRAY);
     }
 
-    private ITemplate template = new PebbleChatTemplate("templates/ooc.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/ooc.pebble.twig");
 
     public OOCEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "_");

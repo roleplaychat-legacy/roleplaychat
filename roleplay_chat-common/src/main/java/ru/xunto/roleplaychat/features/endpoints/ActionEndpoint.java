@@ -26,7 +26,7 @@ public class ActionEndpoint extends Endpoint {
         colors.put("action", TextColor.GRAY);
     }
 
-    private ITemplate template = new PebbleChatTemplate("templates/action.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/action.pebble.twig");
 
     @Override
     public Priority getPriority() {

@@ -28,7 +28,7 @@ public class Environment implements Cloneable {
     public final static IProperty<String> TEXT = new Property<>("text");
 
     private RoleplayChatCore core;
-    private ITemplate template = new PebbleChatTemplate("templates/default.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/default.pebble.twig");
     private boolean processed = false;
 
     private MessageState state = new MessageState();

@@ -25,7 +25,7 @@ public class GmOOCEndpoint extends PrefixMatchEndpoint {
         colors.put("username", TextColor.GOLD);
     }
 
-    private ITemplate template = new PebbleChatTemplate("templates/gm_ooc.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/gm_ooc.pebble.twig");
 
     public GmOOCEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "-");

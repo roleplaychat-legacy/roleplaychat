@@ -20,7 +20,7 @@ public class GmActionEndpoint extends PrefixMatchEndpoint {
         colors.put("default", TextColor.DARK_AQUA);
     }
 
-    private ITemplate template = new PebbleChatTemplate("templates/gm_action.twig");
+    private ITemplate template = new PebbleChatTemplate("templates/gm_action.pebble.twig");
 
     public GmActionEndpoint(RoleplayChatCore core) throws EmptyPrefixError {
         super(core, "#", "№");
