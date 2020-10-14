@@ -88,9 +88,7 @@ public class RoleplayChatCore {
         commands.add(command);
     }
 
-//     Initialize the JTwig in advance 'cause there may be freezes
     public void warmUpRenderer() {
-//        JtwigTemplate.inlineTemplate("warm up").render(new JtwigModel());
     }
 
     public List<Text> process(Request request) {
