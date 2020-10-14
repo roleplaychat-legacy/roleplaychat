@@ -1,58 +1,16 @@
 package ru.xunto.roleplaychat.forge_1_12_2;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.permission.PermissionAPI;
-import ru.xunto.roleplaychat.api.ISpeaker;
-import ru.xunto.roleplaychat.api.IWorld;
-import ru.xunto.roleplaychat.api.Position;
-import ru.xunto.roleplaychat.framework.renderer.text.Text;
-import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
 
 import java.util.Objects;
-import java.util.UUID;
 
-public class ForgeSpeaker implements ISpeaker {
+public class ForgeSpeaker extends ForgeEntitySpeaker {
     private EntityPlayerMP player;
 
     public ForgeSpeaker(EntityPlayerMP player) {
+        super(player);
         this.player = player;
-    }
-
-    @Override
-    public void sendMessage(String text, TextColor color) {
-        player.sendMessage(RoleplayChat.createComponent(text, color));
-    }
-
-    @Override
-    public void sendMessage(Text text) {
-        player.sendMessage(RoleplayChat.toTextComponent(text));
-    }
-
-    @Override
-    public String getName() {
-        return player.getDisplayName().getFormattedText();
-    }
-
-    @Override
-    public String getRealName() {
-        return this.player.getName();
-    }
-
-    @Override
-    public Position getPosition() {
-        BlockPos position = player.getPosition();
-        return new Position(position.getX(), position.getY(), position.getZ());
-    }
-
-    @Override
-    public IWorld getWorld() {
-        return new ForgeWorld(player.getServerWorld());
-    }
-
-    @Override
-    public UUID getUniqueID() {
-        return player.getUniqueID();
     }
 
     @Override
@@ -66,10 +24,5 @@ public class ForgeSpeaker implements ISpeaker {
         if (!(o instanceof ForgeSpeaker)) return false;
         ForgeSpeaker that = (ForgeSpeaker) o;
         return Objects.equals(player, that.player);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(player);
     }
 }
