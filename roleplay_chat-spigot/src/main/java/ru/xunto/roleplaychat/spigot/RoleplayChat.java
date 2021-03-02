@@ -2,6 +2,8 @@ package ru.xunto.roleplaychat.spigot;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +22,7 @@ import ru.xunto.roleplaychat.framework.renderer.text.TextComponent;
 
 import java.util.logging.Logger;
 
-public final class RoleplayChat extends JavaPlugin implements Listener, ILogger, ICompat {
+public final class RoleplayChat extends JavaPlugin implements Listener, IHandler {
     private Logger logger = Logger.getLogger("RoleplayChat");
     private RuntimeCommandRegistration commands = new RuntimeCommandRegistration(this);
 
@@ -74,8 +76,7 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         manager.registerEvents(this, this);
 
         RoleplayChatCore.instance.warmUpRenderer();
-        RoleplayChatCore.instance.setLogger(this);
-        RoleplayChatCore.instance.registerCompat(this);
+        RoleplayChatCore.instance.register(this);
 
         for (IPermission permission : RoleplayChatCore.instance.getPermissions()) {
             manager.addPermission(new Permission(
@@ -109,6 +110,30 @@ public final class RoleplayChat extends JavaPlugin implements Listener, ILogger,
         // TODO: Always return true for now, switch to callback later
         //  (to support async frameworks)
         return true;
+    }
+
+    @Override
+    public ISpeaker getSpeaker(Object object) {
+        if (object instanceof Player) {
+            return new SpigotSpeaker((Player) object);
+        }
+        return null;
+    }
+
+    @Override
+    public IWorld getWorld(Object object) {
+        if (object instanceof World) {
+            return new SpigotWorld((World) object);
+        }
+        return null;
+    }
+
+    @Override
+    public IServer getServer(Object object) {
+        if (object instanceof Server) {
+            return new SpigotServer((Server) object);
+        }
+        return null;
     }
 
     @Override

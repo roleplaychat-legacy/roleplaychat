@@ -13,13 +13,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import ru.xunto.roleplaychat.RoleplayChatCore;
-import ru.xunto.roleplaychat.api.ICommand;
-import ru.xunto.roleplaychat.api.ICompat;
-import ru.xunto.roleplaychat.api.ILogger;
-import ru.xunto.roleplaychat.api.ISpeaker;
+import ru.xunto.roleplaychat.api.*;
 import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 import ru.xunto.roleplaychat.framework.renderer.text.TextColor;
@@ -30,7 +28,7 @@ import java.util.List;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(modid = RoleplayChat.MODID, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
-public class RoleplayChat implements ILogger, ICompat {
+public class RoleplayChat implements IHandler {
     public static final String MODID = "@@MODID@@";
     public static final String VERSION = "@@VERSION@@";
 
@@ -102,8 +100,7 @@ public class RoleplayChat implements ILogger, ICompat {
         FMLCommonHandler.instance().bus().register(this);
 
         RoleplayChatCore.instance.warmUpRenderer();
-        RoleplayChatCore.instance.setLogger(this);
-        RoleplayChatCore.instance.registerCompat(this);
+        RoleplayChatCore.instance.register(this);
 
         MinecraftServer server = MinecraftServer.getServer();
         ServerCommandManager manager = (ServerCommandManager) server.getCommandManager();
@@ -122,6 +119,30 @@ public class RoleplayChat implements ILogger, ICompat {
         return EVENT_BUS.post(
                 new CompatServerChatEvent(mcPlayer, component.getUnformattedText(), component)
         );
+    }
+
+    @Override
+    public ISpeaker getSpeaker(Object object) {
+        if (object instanceof EntityPlayerMP) {
+            return new ForgeSpeaker((EntityPlayerMP) object);
+        }
+        return null;
+    }
+
+    @Override
+    public IWorld getWorld(Object object) {
+        if (object instanceof WorldServer) {
+            return new ForgeWorld((WorldServer) object);
+        }
+        return null;
+    }
+
+    @Override
+    public IServer getServer(Object object) {
+        if (object instanceof MinecraftServer) {
+            return new ForgeServer((MinecraftServer) object);
+        }
+        return null;
     }
 
     @Override

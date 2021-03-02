@@ -1,10 +1,12 @@
 package ru.xunto.roleplaychat.forge_1_12_2;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -27,7 +29,7 @@ import java.util.List;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
 @Mod(modid = RoleplayChat.MODID, name = RoleplayChat.NAME, version = RoleplayChat.VERSION, acceptableRemoteVersions = "*")
-public class RoleplayChat implements ILogger, ICompat {
+public class RoleplayChat implements IHandler {
     public static final String MODID = "@@MODID@@";
     public static final String NAME = "@@MODID@@";
     public static final String VERSION = "@@VERSION@@";
@@ -99,8 +101,7 @@ public class RoleplayChat implements ILogger, ICompat {
         EVENT_BUS.register(this);
 
         RoleplayChatCore.instance.warmUpRenderer();
-        RoleplayChatCore.instance.setLogger(this);
-        RoleplayChatCore.instance.registerCompat(this);
+        RoleplayChatCore.instance.register(this);
 
         for (IPermission permission : RoleplayChatCore.instance.getPermissions()) {
             PermissionAPI.registerNode(
@@ -125,6 +126,30 @@ public class RoleplayChat implements ILogger, ICompat {
         return EVENT_BUS.post(
                 new CompatServerChatEvent(mcPlayer, component.getUnformattedText(), component)
         );
+    }
+
+    @Override
+    public ISpeaker getSpeaker(Object object) {
+        if (object instanceof EntityPlayerMP) {
+            return new ForgeSpeaker((EntityPlayerMP) object);
+        }
+        return null;
+    }
+
+    @Override
+    public IWorld getWorld(Object object) {
+        if (object instanceof WorldServer) {
+            return new ForgeWorld((WorldServer) object);
+        }
+        return null;
+    }
+
+    @Override
+    public IServer getServer(Object object) {
+        if (object instanceof MinecraftServer) {
+            return new ForgeServer((MinecraftServer) object);
+        }
+        return null;
     }
 
     @Override

@@ -19,14 +19,14 @@ import ru.xunto.roleplaychat.framework.api.Request;
 import ru.xunto.roleplaychat.framework.middleware_flow.Flow;
 import ru.xunto.roleplaychat.framework.renderer.text.Text;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class RoleplayChatCore {
     public final static RoleplayChatCore instance = new RoleplayChatCore();
 
-    private ILogger logger;
-    private Set<ICompat> compats = new HashSet<>();
-
+    private List<IHandler> handlers = new ArrayList<>();
 
     private List<Middleware> middleware = new ArrayList<>();
     private List<ICommand> commands = new ArrayList<>();
@@ -57,12 +57,21 @@ public class RoleplayChatCore {
         this.register(PermissionGM.instance);
     }
 
-    public void registerCompat(ICompat compat) {
-        this.compats.add(compat);
+    public void register(IHandler handler) {
+        this.handlers.add(handler);
     }
 
     public void register(IPermission permission) {
         this.permissions.add(permission);
+    }
+
+    public void register(Middleware newMiddleware) {
+        middleware.add(newMiddleware);
+        middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
+    }
+
+    public void register(ICommand command) {
+        commands.add(command);
     }
 
     public <T extends Middleware> T findMiddleware(Class<T> clazz) {
@@ -77,15 +86,6 @@ public class RoleplayChatCore {
 
     public void onPlayerLeave(ISpeaker speaker) {
         ListenMiddleware.resetHearingMode(speaker);
-    }
-
-    public void register(Middleware newMiddleware) {
-        middleware.add(newMiddleware);
-        middleware.sort(Comparator.comparing(Middleware::getStage).thenComparing(Middleware::getPriority));
-    }
-
-    public void register(ICommand command) {
-        commands.add(command);
     }
 
     public void warmUpRenderer() {
@@ -115,11 +115,14 @@ public class RoleplayChatCore {
 
         for (Text text : result) {
             boolean shouldLog = false;
-            for (ICompat iCompat : compats) {
+            for (IHandler iCompat : handlers) {
                 shouldLog |= iCompat.compat(request.getRequester(), text);
             }
 
-            if (shouldLog) this.logger.log(text);
+            if (shouldLog && this.handlers.size() > 0) {
+                IHandler logger = this.handlers.get(0);
+                logger.log(text);
+            }
         }
 
         return result;
@@ -135,6 +138,33 @@ public class RoleplayChatCore {
         return text;
     }
 
+    public ISpeaker getSpeaker(Object object) {
+        for (IHandler handler : handlers) {
+            ISpeaker speaker = handler.getSpeaker(object);
+            if (speaker != null) return speaker;
+        }
+
+        return null;
+    }
+
+    public IWorld getWorld(Object object) {
+        for (IHandler handler : handlers) {
+            IWorld world = handler.getWorld(object);
+            if (world != null) return world;
+        }
+
+        return null;
+    }
+
+    public IServer getServer(Object object) {
+        for (IHandler handler : handlers) {
+            IServer server = handler.getServer(object);
+            if (server != null) return server;
+        }
+
+        return null;
+    }
+
     public List<Middleware> getMiddleware() {
         return middleware;
     }
@@ -145,9 +175,5 @@ public class RoleplayChatCore {
 
     public List<IPermission> getPermissions() {
         return permissions;
-    }
-
-    public void setLogger(ILogger logger) {
-        this.logger = logger;
     }
 }
