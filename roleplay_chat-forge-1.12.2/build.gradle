@@ -19,10 +19,6 @@ version = modVersion
 group = modGroup
 archivesBaseName = "$modBaseName-forge-1.12.2"
 
-dependencies {
-    implementation project(":roleplay_chat-common")
-}
-
 minecraft {
     version = "1.12.2-14.23.4.2747"
     runDir = "run"
@@ -33,10 +29,8 @@ minecraft {
     replace "@@VERSION@@", project.version
 }
 
-reobf {
-    jar {
-        extraLines "PK: org/slf4j ru/xunto/org/slf4j"
-    }
+dependencies {
+    implementation project(":roleplay_chat-common")
 }
 
 processResources {
@@ -50,13 +44,5 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
-    }
-}
-
-jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
-        }
     }
 }
