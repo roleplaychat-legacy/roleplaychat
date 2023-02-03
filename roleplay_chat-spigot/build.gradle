@@ -12,9 +12,9 @@ buildscript {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
-    compile project(':roleplay_chat-common')
-    compile group: 'org.ow2.asm', name: 'asm', version: '5.0.3'
-    compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
+    implementation project(':roleplay_chat-common')
+    implementation group: 'org.ow2.asm', name: 'asm', version: '5.0.3'
+    implementation group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compileOnly fileTree(include: ['*.jar'], dir: 'libs')
 }
 

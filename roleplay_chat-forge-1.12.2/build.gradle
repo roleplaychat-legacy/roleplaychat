@@ -3,11 +3,13 @@ buildscript {
         jcenter()
         maven {
             name = "forge"
-            url = "https://files.minecraftforge.net/maven"
+            url = "https://maven.minecraftforge.net"
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
+            changing = true
+        }
     }
 }
 
@@ -17,19 +19,14 @@ version = modVersion
 group = modGroup
 archivesBaseName = "$modBaseName-forge-1.12.2"
 
-configurations {
-    shade
-    compile.extendsFrom shade
-}
-
 dependencies {
-    shade project(":roleplay_chat-common")
+    implementation project(":roleplay_chat-common")
 }
 
 minecraft {
-    version = project.forgeVersion
+    version = "1.12.2-14.23.4.2747"
     runDir = "run"
-    mappings = project.mcpVersion
+    mappings = "snapshot_20180811"
 
     replaceIn "RoleplayChat.java"
     replace "@@MODID@@", modBaseName
